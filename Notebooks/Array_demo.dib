@@ -103,9 +103,10 @@ $"{array6.GetLength(0)}-{array6.GetLength(1)}"
 string[,] array7 = new string[,]{
     {"row1-col1", "row1-col2", "row1-col3"},
     {"row2-col1", "row2-col2", "row2-col3"},
-    {"row3-col1", "row3-col2", "row3-col3"}
+    {"row3-col1", "row3-col2", "row3-col3"},
+    {"row4-col1", "row4-col2", "row4-col3"}
 };
-array7[1, 1]
+$"{array7.GetLength(0)}-{array7.GetLength(1)}"
 
 #!csharp
 

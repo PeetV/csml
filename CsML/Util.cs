@@ -70,11 +70,11 @@ public class Array
     /// To do: test if a List is faster than an an array for append
     /// operations.
     /// </remarks>
-    public static Tuple<double[], double[]> Split(
-        double[] input,
+    public static Tuple<T[], T[]> Split<T>(
+        T[] input,
         bool[] filter)
     {
-        double[] lhs = new double[] { }, rhs = new double[] { };
+        T[] lhs = new T[] { }, rhs = new T[] { };
         for (int index = 0; index < input.Length; index++)
         {
             if (filter[index])
