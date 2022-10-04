@@ -93,9 +93,9 @@ public class Statistics
     /// </summary>
     public static double Gini<T>(IEnumerable<T> vector) where T : notnull
     {
-        uint length = 0;
+        int length = 0;
         // Get bin counts
-        Dictionary<T, uint> counts = new Dictionary<T, uint>();
+        Dictionary<T, int> counts = new Dictionary<T, int>();
         foreach (T val in vector)
         {
             if (counts.ContainsKey(val)) counts[val] += 1;
@@ -107,7 +107,7 @@ public class Statistics
         // Calculate the Gini index
         double result = 1.0;
         double calc;
-        foreach (KeyValuePair<T, uint> entry in counts)
+        foreach (KeyValuePair<T, int> entry in counts)
         {
             calc = entry.Value / (double)length;
             result -= calc * calc;
