@@ -21,9 +21,9 @@ public class Array
     /// function specified through the purityfn parameter.
     /// </returns>
     public static Tuple<double, double> BestSplit<T>(
-            double[] vector,
-            T[] target,
-            Func<T[], double> purityfn)
+        double[] vector,
+        T[] target,
+        Func<T[], double> purityfn)
         where T : notnull
     {
         double bestsplit = 0.0, bestgain = 0.0;
@@ -150,7 +150,7 @@ public class Matrix
     /// <param name="purityfn">Function that calculates purity of an array.</param>
     /// <param name="randomFeatures">
     /// If randomFeatures is greater than 0, select a random number of specified columns
-    ///to include (used to add randomisation to a Random Forest).
+    /// to include (used to add randomisation to a Random Forest).
     /// </param>
     /// <returns>
     /// A tuple containing the index of the column with best gain and a tuple
@@ -158,10 +158,10 @@ public class Matrix
     /// function specified through the purityfn parameter.
     /// </returns>
     public static Tuple<int, Tuple<double, double>> BestSplit<T>(
-            double[,] matrix,
-            T[] target,
-            Func<T[], double> purityfn,
-            int randomFeatures)
+        double[,] matrix,
+        T[] target,
+        Func<T[], double> purityfn,
+        int randomFeatures)
         where T : notnull
     {
         Span2D<double> matrixSpan = matrix;
@@ -230,7 +230,6 @@ public class Matrix
     /// and boolean filter array. The filter array can be applied to
     /// other arrays using Split1D.
     /// </returns>
-    // public static Tuple<Tuple<double[,], double[,]>, bool[]>
     public static Tuple<Tuple<double[,], double[,]>, bool[]>
         Split(
             double[,] matrix,
