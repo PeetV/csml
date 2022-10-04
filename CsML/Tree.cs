@@ -82,6 +82,7 @@ public class BinaryTree<T>
         this.treemode = treemode;
         this.purityfn = purityfn;
     }
+
     /// <summary>
     /// Perform decision tree induction from the dataset contained in the matrix
     /// parameter and values contained in target parameter.
