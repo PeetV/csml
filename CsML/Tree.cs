@@ -97,7 +97,7 @@ public class BinaryTree<T>
         _inputRecordCount = matrix.GetLength(0);
         if (_mode == "classification")
             classes = target.Distinct().ToArray();
-        Grow(matrix, target, 0);
+        Grow((double[,])matrix.Clone(), (T[])target.Clone(), 0);
     }
 
     private void AddLeaf(T[] target)
@@ -114,28 +114,44 @@ public class BinaryTree<T>
         };
     }
 
-    private void Grow(double[,] matrix, T[] target, int parentDepth)
+    private int Grow(double[,]? matrix, T[]? target, int parentDepth)
     {
         _recursions += 1;
         int depth = parentDepth + 1;
+        int recordCount = matrix!.GetLength(0);
         if (depth > _depth) _depth = depth;
         if (_recursions > maxrecursions ||
             _depth > maxdepth ||
-            matrix.GetLength(0) < minrows ||
-            target.All(val => val.Equals(target[0])) ||
+            recordCount < minrows ||
+            target!.All(val => val.Equals(target![0])) ||
             _splitCount > maxsplits)
-            AddLeaf(target);
+            AddLeaf(target!);
         Func<T[], double> purityfn = LookupPurityfn(_purityfn);
-        var bs = Util.Matrix.BestSplit(
-            matrix, target, purityfn, randomfeatures);
+        var bs = Util.Matrix.BestSplit(matrix, target!, purityfn, randomfeatures);
         var sm = Util.Matrix.Split(matrix, bs.Item1, bs.Item2.Item1);
-        var st = Util.Array.Split(target, sm.Item2);
+        var st = Util.Array.Split(target!, sm.Item2);
         int yesLength = sm.Item1.Item1.GetLength(0);
         int noLength = sm.Item1.Item2.GetLength(0);
         if (yesLength == 0 ||
             noLength == 0 ||
             yesLength < minrows ||
             noLength < minrows)
-            AddLeaf(target);
+            AddLeaf(target!);
+        // Release memory
+        matrix = null;
+        target = null;
+        int nodeIndex = _nodes.Count;
+        _splitCount += 1;
+        BinaryNode<T> node = new BinaryNode<T>();
+        node.index = nodeIndex;
+        node.isLeaf = false;
+        node.columnIndex = bs.Item1;
+        node.splitPoint = bs.Item2.Item1;
+        node.purityGain = bs.Item2.Item2;
+        node.recordCount = recordCount;
+        _nodes.Add(node);
+        node.yesIndex = Grow(sm.Item1.Item1, st.Item1, depth);
+        node.noIndex = Grow(sm.Item1.Item2, st.Item2, depth);
+        return nodeIndex;
     }
 }
