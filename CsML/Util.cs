@@ -89,7 +89,7 @@ public class Array
     /// Convert an array to a dictionary containing the count of ocurrences of each
     /// array element.
     /// </summary>
-    public static IDictionary<T, int> ToElementCounts<T>(T[] input) where T: notnull
+    public static Dictionary<T, int> ToElementCounts<T>(T[] input) where T: notnull
     {
         Dictionary<T, int> counts = new Dictionary<T, int>();
         foreach(T item in input)

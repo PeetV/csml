@@ -4,8 +4,7 @@ namespace CsML.Tree;
 /// A binary decision tree node used to capture decision criteria for 
 /// decision nodes or inference data for leaf nodes.
 /// </summary>
-public struct BinaryNode<T>
-    where T : notnull
+public struct BinaryNode
 {
     public int index;
     public bool isLeaf;
@@ -16,7 +15,7 @@ public struct BinaryNode<T>
     public int? noIndex;
     // Leaf node data
     public int? recordCount;
-    public Dictionary<T, int>? classCounts;
+    public Dictionary<double, int>? classCounts;
     public double? purityGain;
     public double? predicted;
 }
@@ -28,7 +27,7 @@ public class BinaryTree<T>
     where T : notnull
 {
     // Private properties
-    private List<BinaryNode<T>> _nodes;
+    private List<BinaryNode> _nodes;
     private int _recursions;
     private int _splitCount;
     private int _minColumns;
@@ -71,7 +70,7 @@ public class BinaryTree<T>
 
     public BinaryTree(string treemode, string purityfn)
     {
-        _nodes = new List<BinaryNode<T>>();
+        _nodes = new List<BinaryNode>();
         _recursions = 0;
         _splitCount = 0;
         _minColumns = 0;
@@ -90,7 +89,7 @@ public class BinaryTree<T>
     public void Train(double[,] matrix, double[] target)
        
     {
-        _nodes = new List<BinaryNode<T>>();
+        _nodes = new List<BinaryNode>();
         _recursions = 0;
         _splitCount = 0;
         _minColumns = matrix.GetLength(1);
@@ -105,17 +104,25 @@ public class BinaryTree<T>
     {
         int leafIndex = _nodes.Count;
         int recordCount = target.Length;
-        // int? classCounts;
+        Dictionary<double, int>? classCounts;
         double predicted;
         if (_mode == "regresion")
         {
-            // classCounts = null;
+            classCounts = null;
             predicted = target.Average();
         }
         else
         {
-            // classCounts
+            classCounts = CsML.Util.Array.ToElementCounts(target);
+            predicted = classCounts.MaxBy(kvp => kvp.Value).Key;
         }
+        BinaryNode node = new BinaryNode();
+        node.index = leafIndex;
+        node.isLeaf = true;
+        node.recordCount = recordCount;
+        node.classCounts = classCounts;
+        node.predicted = predicted;
+        _nodes.Add(node);
     }
 
     private Func<double[], double> LookupPurityfn(string name)
@@ -155,7 +162,7 @@ public class BinaryTree<T>
         target = null;
         int nodeIndex = _nodes.Count;
         _splitCount += 1;
-        BinaryNode<T> node = new BinaryNode<T>();
+        BinaryNode node = new BinaryNode();
         node.index = nodeIndex;
         node.isLeaf = false;
         node.columnIndex = bs.Item1;
