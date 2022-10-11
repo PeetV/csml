@@ -18,7 +18,7 @@ public struct BinaryNode<T>
     public int? recordCount;
     public Dictionary<T, int>? classCounts;
     public double? purityGain;
-    public Tuple<int, double>? predicted;
+    public double? predicted;
 }
 
 /// <summary>
@@ -41,7 +41,7 @@ public class BinaryTree<T>
     public int maxdepth = 15;
     public int minrows = 3;
     public int randomfeatures = -1;
-    public T[]? classes;
+    public double[]? classes;
 
     // Backing fields
     private string _mode;
@@ -87,7 +87,8 @@ public class BinaryTree<T>
     /// Perform decision tree induction from the dataset contained in the matrix
     /// parameter and values contained in target parameter.
     /// </summary>
-    public void Train(double[,] matrix, T[] target)
+    public void Train(double[,] matrix, double[] target)
+       
     {
         _nodes = new List<BinaryNode<T>>();
         _recursions = 0;
@@ -97,15 +98,23 @@ public class BinaryTree<T>
         _inputRecordCount = matrix.GetLength(0);
         if (_mode == "classification")
             classes = target.Distinct().ToArray();
-        Grow((double[,])matrix.Clone(), (T[])target.Clone(), 0);
+        Grow((double[,])matrix.Clone(), (double[])target.Clone(), 0);
     }
 
-    private void AddLeaf(T[] target)
+    private void AddLeaf(double[] target)
     {
-
+        int leafIndex = _nodes.Count;
+        int recordCount = target.Length;
+        int? classCounts;
+        double predicted;
+        if (_mode == "regresion")
+        {
+            // classCounts = null;
+            // predicted = Array.ConvertAll(target, x => (double)x); //.Average();
+        }
     }
 
-    private Func<T[], double> LookupPurityfn(string name)
+    private Func<double[], double> LookupPurityfn(string name)
     {
         return name switch
         {
@@ -114,7 +123,7 @@ public class BinaryTree<T>
         };
     }
 
-    private int Grow(double[,]? matrix, T[]? target, int parentDepth)
+    private int Grow(double[,]? matrix, double[]? target, int parentDepth)
     {
         _recursions += 1;
         int depth = parentDepth + 1;
@@ -126,8 +135,8 @@ public class BinaryTree<T>
             target!.All(val => val.Equals(target![0])) ||
             _splitCount > maxsplits)
             AddLeaf(target!);
-        Func<T[], double> purityfn = LookupPurityfn(_purityfn);
-        var bs = Util.Matrix.BestSplit(matrix, target!, purityfn, randomfeatures);
+        Func<double[], double> purityfn = LookupPurityfn(_purityfn);
+        var bs = Util.Matrix.BestSplit<double>(matrix, target!, purityfn, randomfeatures);
         var sm = Util.Matrix.Split(matrix, bs.Item1, bs.Item2.Item1);
         var st = Util.Array.Split(target!, sm.Item2);
         int yesLength = sm.Item1.Item1.GetLength(0);
