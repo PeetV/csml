@@ -49,6 +49,15 @@ public class Array
         Assert.Equal(3, lhs.Sum());
         Assert.Equal(4, rhs.Sum());
     }
+
+    [Fact]
+    public void ToElementCounts()
+    {
+        double[] vector = new double[] { 1, 1, 1, 2, 2 };
+        var result = CsML.Util.Array.ToElementCounts(vector);
+        Assert.Equal(3, result[1]);
+        Assert.Equal(2, result[2]);
+    }
 }
 
 public class Statistics

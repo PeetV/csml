@@ -84,6 +84,21 @@ public class Array
         }
         return Tuple.Create(lhs, rhs);
     }
+
+    /// <summary>
+    /// Convert an array to a dictionary containing the count of ocurrences of each
+    /// array element.
+    /// </summary>
+    public static IDictionary<T, int> ToElementCounts<T>(T[] input) where T: notnull
+    {
+        Dictionary<T, int> counts = new Dictionary<T, int>();
+        foreach(T item in input)
+        {
+            if (counts.ContainsKey(item)) counts[item] += 1;
+            else counts[item] = 1;
+        }
+        return counts;
+    }
 }
 
 public class Statistics

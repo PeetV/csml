@@ -105,12 +105,16 @@ public class BinaryTree<T>
     {
         int leafIndex = _nodes.Count;
         int recordCount = target.Length;
-        int? classCounts;
+        // int? classCounts;
         double predicted;
         if (_mode == "regresion")
         {
             // classCounts = null;
-            // predicted = Array.ConvertAll(target, x => (double)x); //.Average();
+            predicted = target.Average();
+        }
+        else
+        {
+            // classCounts
         }
     }
 
