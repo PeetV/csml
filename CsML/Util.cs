@@ -265,8 +265,12 @@ public class Matrix
             else
                 rhs.Add(row);
         }
-        double[,] dlhs = FromList2D(lhs);
-        double[,] drhs = FromList2D(rhs);
+        double[,] dlhs, drhs;
+
+        if (lhs.Count != 0) dlhs = FromList2D(lhs);
+        else dlhs = new double[,]{};
+        if (rhs.Count != 0) drhs = FromList2D(rhs);
+        else drhs = new double[,]{};
         return Tuple.Create(Tuple.Create(dlhs, drhs), filter);
     }
 }

@@ -4,7 +4,7 @@ namespace CsML.Tree;
 /// A binary decision tree node used to capture decision criteria for 
 /// decision nodes or inference data for leaf nodes.
 /// </summary>
-public struct BinaryNode
+public class BinaryNode
 {
     public int index;
     public bool isLeaf;
@@ -23,11 +23,10 @@ public struct BinaryNode
 /// <summary>
 /// A binary decision tree for classification and regression.
 /// </summary>
-public class BinaryTree<T>
-    where T : notnull
+public class BinaryTree
 {
     // Private properties
-    private List<BinaryNode> _nodes;
+    public List<BinaryNode> nodes;
     private int _recursions;
     private int _splitCount;
     private int _minColumns;
@@ -51,7 +50,7 @@ public class BinaryTree<T>
         get { return _mode; }
         set
         {
-            if (value != "classify" | value != "regress")
+            if (value != "classify" & value != "regress")
                 throw new ArgumentException("Mode must be 'classify' or 'regress'");
             _mode = value;
         }
@@ -68,9 +67,9 @@ public class BinaryTree<T>
         }
     }
 
-    public BinaryTree(string treemode, string purityfn)
+    public BinaryTree(string mode, string purityfn)
     {
-        _nodes = new List<BinaryNode>();
+        nodes = new List<BinaryNode>();
         _recursions = 0;
         _splitCount = 0;
         _minColumns = 0;
@@ -78,7 +77,7 @@ public class BinaryTree<T>
         _inputRecordCount = 0;
         _mode = "classify";
         _purityfn = "gini";
-        this.treemode = treemode;
+        this.treemode = mode;
         this.purityfn = purityfn;
     }
 
@@ -86,23 +85,30 @@ public class BinaryTree<T>
     /// Perform decision tree induction from the dataset contained in the matrix
     /// parameter and values contained in target parameter.
     /// </summary>
-    public void Train(double[,] matrix, double[] target)
-       
+    public void Train(double[,] matrix, double[] target, bool skipchecks=false)
     {
-        _nodes = new List<BinaryNode>();
+        _inputRecordCount = matrix.GetLength(0);
+        int targetLength = target.Length;
+        if (!skipchecks)
+        {
+            if (_inputRecordCount == 0 | targetLength == 0)
+                throw new ArgumentException("Empty input");
+            if (_inputRecordCount != targetLength) 
+                throw new ArgumentException("Inputs must be the same length");
+        }
+        nodes = new List<BinaryNode>();
         _recursions = 0;
         _splitCount = 0;
         _minColumns = matrix.GetLength(1);
         _depth = 0;
-        _inputRecordCount = matrix.GetLength(0);
         if (_mode == "classification")
             classes = target.Distinct().ToArray();
         Grow((double[,])matrix.Clone(), (double[])target.Clone(), 0);
     }
 
-    private void AddLeaf(double[] target)
+    private int AddLeaf(double[] target)
     {
-        int leafIndex = _nodes.Count;
+        int leafIndex = nodes.Count;
         int recordCount = target.Length;
         Dictionary<double, int>? classCounts;
         double predicted;
@@ -122,7 +128,8 @@ public class BinaryTree<T>
         node.recordCount = recordCount;
         node.classCounts = classCounts;
         node.predicted = predicted;
-        _nodes.Add(node);
+        nodes.Add(node);
+        return leafIndex;
     }
 
     private Func<double[], double> LookupPurityfn(string name)
@@ -145,7 +152,7 @@ public class BinaryTree<T>
             recordCount < minrows ||
             target!.All(val => val.Equals(target![0])) ||
             _splitCount > maxsplits)
-            AddLeaf(target!);
+            return AddLeaf(target!);
         Func<double[], double> purityfn = LookupPurityfn(_purityfn);
         var bs = Util.Matrix.BestSplit<double>(matrix, target!, purityfn, randomfeatures);
         var sm = Util.Matrix.Split(matrix, bs.Item1, bs.Item2.Item1);
@@ -156,11 +163,11 @@ public class BinaryTree<T>
             noLength == 0 ||
             yesLength < minrows ||
             noLength < minrows)
-            AddLeaf(target!);
+            return AddLeaf(target!);
         // Release memory
         matrix = null;
         target = null;
-        int nodeIndex = _nodes.Count;
+        int nodeIndex = nodes.Count;
         _splitCount += 1;
         BinaryNode node = new BinaryNode();
         node.index = nodeIndex;
@@ -169,7 +176,7 @@ public class BinaryTree<T>
         node.splitPoint = bs.Item2.Item1;
         node.purityGain = bs.Item2.Item2;
         node.recordCount = recordCount;
-        _nodes.Add(node);
+        nodes.Add(node);
         node.yesIndex = Grow(sm.Item1.Item1, st.Item1, depth);
         node.noIndex = Grow(sm.Item1.Item2, st.Item2, depth);
         return nodeIndex;
