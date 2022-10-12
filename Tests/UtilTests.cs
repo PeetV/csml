@@ -147,6 +147,30 @@ public class Matrix
     }
 
     [Fact]
+    public void FromCSV()
+    {
+        var mapping = new Dictionary<int, Dictionary<string, double>>();
+        mapping[4] = new Dictionary<string, double> 
+        { 
+            { "versicolor", 0 }, {"virginica", 1 }, {"setosa", 2}
+        };
+        string strWorkPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        string inpuPath = Path.Combine(strWorkPath, "Data/iris.csv");
+        double[,] matrix = CsML.Util.Matrix.FromCSV(inpuPath, mapping, loadFromRow: 1);
+        Assert.Equal(150, matrix.GetLength(0));
+        Assert.Equal(5.1, matrix[0, 0]);
+        Assert.Equal(3.5, matrix[0, 1]);
+        Assert.Equal(1.4, matrix[0, 2]);
+        Assert.Equal(0.2, matrix[0, 3]);
+        Assert.Equal(2, matrix[0, 4]);
+        Assert.Equal(5.9, matrix[149, 0]);
+        Assert.Equal(3.0, matrix[149, 1]);
+        Assert.Equal(5.1, matrix[149, 2]);
+        Assert.Equal(1.8, matrix[149, 3]);
+        Assert.Equal(1, matrix[149, 4]);
+    }
+
+    [Fact]
     public void Split()
     {
         double[,] matrix = new double[,]{

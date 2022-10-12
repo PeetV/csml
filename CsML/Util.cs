@@ -202,10 +202,47 @@ public class Matrix
         return Tuple.Create(bestColumnIndex, Tuple.Create(bestsplit, bestgain));
     }
 
-    private static double[,] FromList2D(List<double[]> matrix)
+    /// <summary>
+    /// Create a two dimensional double array from a CSV file.
+    /// </summary>
+    /// <param name="inputfile">A Path object point to the CSV file.</param>
+    /// <param name="mapping">
+    /// A dictionary used to convert string columns to numeric values of the format
+    /// { {column id , { {string val, numeric val}, {string val, numeric val} ...}.
+    /// </param>
+    public static double[,] FromCSV(
+        string inputfile,
+        Dictionary<int, Dictionary<string, double>> mapping,
+        string separator = ",",
+        int loadFromRow = 0)
+    {
+        var rawdata = File.ReadLines(inputfile).Select(x => x.Split(separator)).ToArray();
+        int rowcount = rawdata.Length, columncount = rawdata[0].Length;
+        double[,] result = new double[rowcount - loadFromRow, columncount];
+        double cell;
+        string rawval;
+        for (int rowidx = loadFromRow; rowidx < rowcount; rowidx++)
+        {
+            for (int colidx = 0; colidx < columncount; colidx++)
+            {
+                rawval = rawdata[rowidx][colidx];
+                if (mapping.ContainsKey(colidx))
+                    cell = mapping[colidx][rawval];
+                else if (!Double.TryParse(rawval, out cell))
+                    cell = 0.0;
+                result[rowidx - loadFromRow, colidx] = cell;
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Create a two dimensional array from a List.
+    /// </summary>
+    public static T[,] FromList2D<T>(List<T[]> matrix)
     {
         int rows = matrix.Count, cols = matrix[0].Length;
-        double[,] result = new double[rows, cols];
+        T[,] result = new T[rows, cols];
         for (int ri = 0; ri < rows; ri++)
         {
             for (int ci = 0; ci < cols; ci++)
