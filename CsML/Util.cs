@@ -311,3 +311,25 @@ public class Matrix
         return Tuple.Create(Tuple.Create(dlhs, drhs), filter);
     }
 }
+
+public class Features
+{
+    public static Tuple<double[,], double[]> Shuffle(double[,] matrix, double[] target)
+    {
+        int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
+        int[] startingIndex = Enumerable.Range(0, inputLength).ToArray();
+        int[] shuffledIndex = Util.Statistics.SampleTake(startingIndex, inputLength);
+        var fromtoIndex = startingIndex.Zip(shuffledIndex);
+        double[,] newmatrix = new double[inputLength, inputWidth];
+        double[] newtarget = new double[inputLength];
+        foreach (var fromto in fromtoIndex)
+        {
+            newtarget[fromto.Second] = target[fromto.First];
+            for (int colidx = 0; colidx < inputWidth; colidx++)
+            {
+                newmatrix[fromto.Second, colidx] = matrix[fromto.First, colidx];
+            }
+        }
+        return Tuple.Create(newmatrix, newtarget);
+    }
+}

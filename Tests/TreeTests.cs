@@ -1,3 +1,4 @@
+using Microsoft.Toolkit.HighPerformance;
 using Xunit;
 
 namespace Csml.Tests.Tree;
@@ -217,5 +218,31 @@ public class BinaryTree
         Assert.Equal(1.0 * 10.0 / 60.0, gains[0]);
         Assert.Equal(2.0 * 20.0 / 60.0, gains[1]);
         Assert.Equal(3.0 * 30.0 / 60.0, gains[2]);
+    }
+
+    [Fact]
+    public void Train_Predict_iris()
+    {
+        var mapping = new Dictionary<int, Dictionary<string, double>>();
+        mapping[4] = new Dictionary<string, double>
+        {
+            { "versicolor", 0 }, {"virginica", 1 }, {"setosa", 2}
+        };
+        string strWorkPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        string inpuPath = Path.Combine(strWorkPath, "Data/iris.csv");
+        double[,] matrix = CsML.Util.Matrix.FromCSV(inpuPath, mapping, loadFromRow: 1);
+        Span2D<double> matrixSpan = matrix;
+        double[,] train = matrixSpan.Slice(0, 0, 150, 4).ToArray();
+        Assert.Equal(5.1, train[0, 0]);
+        Assert.Equal(3.5, train[0, 1]);
+        Assert.Equal(1.4, train[0, 2]);
+        Assert.Equal(0.2, train[0, 3]);
+        Assert.Equal(150, train.GetLength(0));
+        double[] target = matrixSpan.GetColumn(4).ToArray();
+        Assert.Equal(2, target[0]);
+        Assert.Equal(150, target.Length);
+        CsML.Tree.BinaryTree tree = new CsML.Tree.BinaryTree("classify", "gini");
+        tree.Train(train, target);
+        Assert.True(tree.nodes.Count > 0);
     }
 }
