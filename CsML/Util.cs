@@ -324,10 +324,10 @@ public class Features
         double[] newtarget = new double[inputLength];
         foreach (var fromto in fromtoIndex)
         {
-            newtarget[fromto.Second] = target[fromto.First];
+            newtarget[fromto.First] = target[fromto.Second];
             for (int colidx = 0; colidx < inputWidth; colidx++)
             {
-                newmatrix[fromto.Second, colidx] = matrix[fromto.First, colidx];
+                newmatrix[fromto.First, colidx] = matrix[fromto.Second, colidx];
             }
         }
         return Tuple.Create(newmatrix, newtarget);

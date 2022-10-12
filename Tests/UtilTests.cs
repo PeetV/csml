@@ -221,3 +221,26 @@ public class Matrix
         Assert.True(expectedFilter.SequenceEqual(filter));
     }
 }
+
+public class Features
+{
+    [Fact]
+    public void Shuffle()
+    {
+        double[,] matrix = new double[,]
+        {
+            {1, 1, 1},
+            {2, 2, 2},
+            {3, 3, 3},
+            {4, 4, 4},
+            {5, 5, 5}
+        };
+        double[] target = new double[] { 1, 2, 3, 4, 5 };
+        var result = CsML.Util.Features.Shuffle(matrix, target);
+        double[,] newmatrix = result.Item1;
+        double[] newtarget = result.Item2;
+        Assert.Equal(5, newmatrix.GetLength(0));
+        Assert.Equal(3, newmatrix.GetLength(1));
+        Assert.True(target[0] != newtarget[0]);
+    }
+}
