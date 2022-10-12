@@ -30,6 +30,7 @@ public class BinaryTree
         Assert.False(tree.nodes[0].isLeaf);
         Assert.True(tree.nodes[0].yesIndex > 0);
         Assert.True(tree.nodes[0].noIndex > 0);
+        Assert.Equal(2, tree.minColumns);
     }
 
     [Fact]

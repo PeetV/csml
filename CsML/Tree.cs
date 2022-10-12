@@ -1,8 +1,10 @@
+using Microsoft.Toolkit.HighPerformance;
+
 namespace CsML.Tree;
 
 /// <summary>
-/// A binary decision tree node used to capture decision criteria for 
-/// decision nodes or inference data for leaf nodes.
+/// A binary decision tree node used to capture decision criteria for decision nodes
+/// or inference data for leaf nodes.
 /// </summary>
 public class BinaryNode
 {
@@ -27,9 +29,9 @@ public class BinaryTree
 {
     // Private properties
     public List<BinaryNode> nodes;
+    public int minColumns;
     private int _recursions;
     private int _splitCount;
-    private int _minColumns;
     private int _depth;
     private int _inputRecordCount;
 
@@ -72,7 +74,7 @@ public class BinaryTree
         nodes = new List<BinaryNode>();
         _recursions = 0;
         _splitCount = 0;
-        _minColumns = 0;
+        minColumns = 0;
         _depth = 0;
         _inputRecordCount = 0;
         _mode = "classify";
@@ -99,11 +101,49 @@ public class BinaryTree
         nodes = new List<BinaryNode>();
         _recursions = 0;
         _splitCount = 0;
-        _minColumns = matrix.GetLength(1);
+        minColumns = matrix.GetLength(1);
         _depth = 0;
         if (_mode == "classification")
             classes = target.Distinct().ToArray();
         Grow((double[,])matrix.Clone(), (double[])target.Clone(), 0);
+    }
+
+    /// <summary>
+    /// Infer target values from new data.
+    /// </summary>
+    public double[] Predict(double[,] matrix, bool skipchecks=false)
+    {
+        _inputRecordCount = matrix.GetLength(0);
+        if (!skipchecks)
+        {
+            if (nodes.Count == 0)
+                throw new ArgumentException("Tree is untrained");
+            if (matrix.GetLength(1) != minColumns)
+                throw new ArgumentException("Tree trained on different number of columns");
+            if (_inputRecordCount == 0)
+                throw new ArgumentException("Empty input");
+        }
+        Span2D<double> matrixSpan = matrix;
+        double[] result = new double[_inputRecordCount];
+        for (int i = 0; i < _inputRecordCount; i++)
+        {
+            double[] row = matrixSpan.GetRow(i).ToArray();
+            int iterations = 0;
+            BinaryNode node = nodes[0];
+            while (iterations < maxrecursions)
+            {
+                iterations += 1;
+                if (node.isLeaf)
+                {
+                    result[i] = (double)node.predicted!;
+                    break;
+                }
+                if (row[(int)node.columnIndex!] > node.splitPoint)
+                    node = nodes[(int)node.yesIndex!];
+                else node = nodes[(int)node.noIndex!];
+            }
+        }
+        return result;
     }
 
     private int AddLeaf(double[] target)
