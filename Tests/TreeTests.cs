@@ -112,6 +112,7 @@ public class BinaryTree
         CsML.Tree.BinaryTree tree = new CsML.Tree.BinaryTree("classify", "gini");
         tree.minColumns = 3;
         tree.classes = new double[] { 3, 4, 5, 6 };
+        tree.inputRecordCount = 60;
 
         CsML.Tree.BinaryNode node1 = new CsML.Tree.BinaryNode();
         node1.index = 0;
@@ -207,5 +208,16 @@ public class BinaryTree
             tree.Predict(new double[,] { });
         }
         );
+    }
+
+    [Fact]
+    public void WeightedPurityGains()
+    {
+        CsML.Tree.BinaryTree tree = ManualTree();
+        Assert.Equal(7, tree.nodes.Count);
+        double[] gains = tree.WeightedPurityGains();
+        Assert.Equal(1.0 * 10.0 / 60.0, gains[0]);
+        Assert.Equal(2.0 * 20.0 / 60.0, gains[1]);
+        Assert.Equal(3.0 * 30.0 / 60.0, gains[2]);
     }
 }

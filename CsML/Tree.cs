@@ -30,11 +30,11 @@ public class BinaryTree
     // Private properties
     public List<BinaryNode> nodes;
     public int minColumns;
+    public int inputRecordCount;
     private int _recursions;
     private int _splitCount;
     private int _depth;
-    private int _inputRecordCount;
-
+    
     // Public properties
     public int maxrecursions = 10000;
     public int maxsplits = 10000;
@@ -76,7 +76,7 @@ public class BinaryTree
         _splitCount = 0;
         minColumns = 0;
         _depth = 0;
-        _inputRecordCount = 0;
+        inputRecordCount = 0;
         _mode = "classify";
         _purityfn = "gini";
         this.treemode = mode;
@@ -89,13 +89,13 @@ public class BinaryTree
     /// </summary>
     public void Train(double[,] matrix, double[] target, bool skipchecks=false)
     {
-        _inputRecordCount = matrix.GetLength(0);
+        inputRecordCount = matrix.GetLength(0);
         int targetLength = target.Length;
         if (!skipchecks)
         {
-            if (_inputRecordCount == 0 | targetLength == 0)
+            if (inputRecordCount == 0 | targetLength == 0)
                 throw new ArgumentException("Empty input");
-            if (_inputRecordCount != targetLength) 
+            if (inputRecordCount != targetLength) 
                 throw new ArgumentException("Inputs must be the same length");
         }
         nodes = new List<BinaryNode>();
@@ -113,19 +113,19 @@ public class BinaryTree
     /// </summary>
     public double[] Predict(double[,] matrix, bool skipchecks=false)
     {
-        _inputRecordCount = matrix.GetLength(0);
+        inputRecordCount = matrix.GetLength(0);
         if (!skipchecks)
         {
             if (nodes.Count == 0)
                 throw new ArgumentException("Tree is untrained");
             if (matrix.GetLength(1) != minColumns)
                 throw new ArgumentException("Tree trained on different number of columns");
-            if (_inputRecordCount == 0)
+            if (inputRecordCount == 0)
                 throw new ArgumentException("Empty input");
         }
         Span2D<double> matrixSpan = matrix;
-        double[] result = new double[_inputRecordCount];
-        for (int i = 0; i < _inputRecordCount; i++)
+        double[] result = new double[inputRecordCount];
+        for (int i = 0; i < inputRecordCount; i++)
         {
             double[] row = matrixSpan.GetRow(i).ToArray();
             int iterations = 0;
@@ -142,6 +142,24 @@ public class BinaryTree
                     node = nodes[(int)node.yesIndex!];
                 else node = nodes[(int)node.noIndex!];
             }
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Calculate the mean purity gain across nodes, weighted by the number of
+    /// samples considered at each split as a proportion of total samples.
+    /// </summary>
+    public double[] WeightedPurityGains()
+    {
+        double[] result = new double[minColumns];
+        foreach (BinaryNode node in nodes)
+        {
+            if (node.isLeaf) continue;
+            int idx = (int)node.columnIndex!;
+            double weight = (double)node.recordCount! / (double)inputRecordCount;
+            double weighted = (double)node.purityGain! * weight;
+            result[idx] = result[idx] + weighted;
         }
         return result;
     }
