@@ -1,3 +1,5 @@
+using System;
+using System.ComponentModel.DataAnnotations;
 using Xunit;
 
 namespace Csml.Tests.Tree;
@@ -103,5 +105,107 @@ public class BinaryTree
         {
             tree.Train(new double[,]{{1, 1}}, new double[]{1, 2});
         });
+    }
+
+    private static CsML.Tree.BinaryTree ManualTree()
+    {
+        CsML.Tree.BinaryTree tree = new CsML.Tree.BinaryTree("classify", "gini");
+        tree.minColumns = 3;
+        tree.classes = new double[] { 3, 4, 5, 6 };
+
+        CsML.Tree.BinaryNode node1 = new CsML.Tree.BinaryNode();
+        node1.index = 0;
+        node1.yesIndex = 1;
+        node1.noIndex = 2;
+        node1.isLeaf = false;
+        node1.columnIndex = 0;
+        node1.splitPoint = 10;
+        node1.recordCount = 10;
+        node1.purityGain = 1;
+        tree.nodes.Add(node1);
+
+        CsML.Tree.BinaryNode node2 = new CsML.Tree.BinaryNode();
+        node2.index = 1;
+        node2.yesIndex = 3;
+        node2.noIndex = 4;
+        node2.isLeaf = false;
+        node2.columnIndex = 1;
+        node2.splitPoint = 20;
+        node2.recordCount = 20;
+        node2.purityGain = 2;
+        tree.nodes.Add(node2);
+
+        CsML.Tree.BinaryNode node3 = new CsML.Tree.BinaryNode();
+        node3.index = 2;
+        node3.yesIndex = 5;
+        node3.noIndex = 6;
+        node3.isLeaf = false;
+        node3.columnIndex = 2;
+        node3.splitPoint = 30;
+        node3.recordCount = 30;
+        node3.purityGain = 3;
+        tree.nodes.Add(node3);
+
+        CsML.Tree.BinaryNode node4 = new CsML.Tree.BinaryNode();
+        node4.index = 3;
+        node4.isLeaf = true;
+        node4.recordCount = 10;
+        node4.classCounts = new Dictionary<double, int> { { 3, 6 }, { 4, 2 }, { 5, 1 }, { 6, 1 } };
+        node4.predicted = 3;
+        tree.nodes.Add(node4);
+
+        CsML.Tree.BinaryNode node5 = new CsML.Tree.BinaryNode();
+        node5.index = 4;
+        node5.isLeaf = true;
+        node5.recordCount = 20;
+        node5.classCounts = new Dictionary<double, int> { { 3, 4 }, { 4, 10 }, { 5, 2 }, { 6, 4 } };
+        node5.predicted = 4;
+        tree.nodes.Add(node5);
+
+        CsML.Tree.BinaryNode node6 = new CsML.Tree.BinaryNode();
+        node6.index = 5;
+        node6.isLeaf = true;
+        node6.recordCount = 30;
+        node6.classCounts = new Dictionary<double, int> { { 3, 1 }, { 4, 2 }, { 5, 25 }, { 6, 2 } };
+        node6.predicted = 5;
+        tree.nodes.Add(node6);
+
+        CsML.Tree.BinaryNode node7 = new CsML.Tree.BinaryNode();
+        node7.index = 6;
+        node7.isLeaf = true;
+        node7.recordCount = 40;
+        node7.classCounts = new Dictionary<double, int> { { 3, 1 }, { 4, 2 }, { 5, 2 }, { 6, 35 } };
+        node7.predicted = 6;
+        tree.nodes.Add(node7);
+
+        return tree;
+    }
+
+    [Fact]
+    public void Predict_manually_created_tree()
+    {
+        CsML.Tree.BinaryTree tree = ManualTree();
+        Assert.Equal(7, tree.nodes.Count);
+        double[,] newdata = new double[,] { { 1, 1, 1 }, { 1, 1, 40 }, { 20, 1, 1 }, { 20, 30, 1 } };
+        double[] expected = new double[] { 6, 5, 4, 3 };
+        var result = tree.Predict(newdata);
+        Assert.True(result.SequenceEqual(expected));
+    }
+
+    [Fact]
+    public void Predict_exceptions()
+    {
+        CsML.Tree.BinaryTree tree = ManualTree();
+        Assert.Equal(7, tree.nodes.Count);
+        Assert.Throws<ArgumentException>(() =>
+        {
+            tree.Predict(new double[,] { { 1, 1 }, { 1, 1 } });
+        }
+        );
+        Assert.Throws<ArgumentException>(() =>
+        {
+            tree.Predict(new double[,] { });
+        }
+        );
     }
 }
