@@ -227,11 +227,11 @@ public class Features
             {5, 5, 5}
         };
         double[] target = new double[] { 1, 2, 3, 4, 5 };
-        var result = CsML.Util.Features.Shuffle(matrix, target);
-        double[,] newmatrix = result.Item1;
-        double[] newtarget = result.Item2;
+        (double[,] newmatrix, double[] newtarget) = CsML.Util.Features.Shuffle(matrix, target);
         Assert.Equal(5, newmatrix.GetLength(0));
         Assert.Equal(3, newmatrix.GetLength(1));
-        Assert.True(target[0] != newtarget[0]);
+        Assert.False(CsML.Util.Matrix.Equal(matrix, newmatrix));
+        Assert.False(target.SequenceEqual(newtarget));
+        Assert.True(newtarget.OrderBy(x => x).ToArray().SequenceEqual(target));
     }
 }
