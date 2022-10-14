@@ -20,7 +20,7 @@ public class Array
     /// A tuple containing the best split value and the gain calculated by the gain
     /// function specified through the purityfn parameter.
     /// </returns>
-    public static Tuple<double, double> BestSplit<T>(
+    public static (double, double) BestSplit<T>(
         double[] vector,
         T[] target,
         Func<T[], double> purityfn)
@@ -59,8 +59,8 @@ public class Array
             }
         }
         if (allSame)
-            return Tuple.Create(zipped[0].Item1 - 1.0, 0.0);
-        return Tuple.Create(bestsplit, bestgain);
+            return (zipped[0].Item1 - 1.0, 0.0);
+        return (bestsplit, bestgain);
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ public class Array
     /// To do: test if a List is faster than an an array for append
     /// operations.
     /// </remarks>
-    public static Tuple<T[], T[]> Split<T>(
+    public static (T[], T[]) Split<T>(
         T[] input,
         bool[] filter)
     {
@@ -100,7 +100,7 @@ public class Array
             else
                 rhs = rhs.Append(input[index]).ToArray();
         }
-        return Tuple.Create(lhs, rhs);
+        return (lhs, rhs);
     }
 
     /// <summary>
@@ -168,7 +168,7 @@ public class Matrix
     /// containing the split value and gain calculated by the gain
     /// function specified through the purityfn parameter.
     /// </returns>
-    public static Tuple<int, Tuple<double, double>> BestSplit<T>(
+    public static (int, (double, double)) BestSplit<T>(
         double[,] matrix,
         T[] target,
         Func<T[], double> purityfn,
@@ -199,7 +199,7 @@ public class Matrix
                 bestColumnIndex = columnIndex;
             }
         }
-        return Tuple.Create(bestColumnIndex, Tuple.Create(bestsplit, bestgain));
+        return (bestColumnIndex, (bestsplit, bestgain));
     }
 
     /// <summary>
@@ -282,7 +282,7 @@ public class Matrix
     /// and boolean filter array. The filter array can be applied to
     /// other arrays using Split1D.
     /// </returns>
-    public static Tuple<Tuple<double[,], double[,]>, bool[]>
+    public static ((double[,], double[,]), bool[])
         Split(
             double[,] matrix,
             int columnIndex,
@@ -308,7 +308,7 @@ public class Matrix
         else dlhs = new double[,] { };
         if (rhs.Count != 0) drhs = FromList2D(rhs);
         else drhs = new double[,] { };
-        return Tuple.Create(Tuple.Create(dlhs, drhs), filter);
+        return ((dlhs, drhs), filter);
     }
 }
 
@@ -318,7 +318,7 @@ public class Features
     /// Shuffle a matrix containing features and a target array maintaining the
     /// relationship between matrix rows and array items.
     /// </summary>
-    public static Tuple<double[,], double[]> Shuffle(double[,] matrix, double[] target)
+    public static (double[,], double[]) Shuffle(double[,] matrix, double[] target)
     {
         int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
         if (inputLength != target.Length)
@@ -337,6 +337,6 @@ public class Features
                 newmatrix[fromto.First, colidx] = matrix[fromto.Second, colidx];
             }
         }
-        return Tuple.Create(newmatrix, newtarget);
+        return (newmatrix, newtarget);
     }
 }
