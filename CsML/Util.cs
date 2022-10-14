@@ -64,6 +64,22 @@ public class Array
     }
 
     /// <summary>
+    /// Calculate classification accuracy from a predictions array compared to an
+    /// actuals array.
+    /// </summary>
+    public double ClassificationAccuracy<T>(T[] actuals, T[] predictions) where T : class
+    {
+        double result = 0;
+        int lenActuals = actuals.Length, lenPredictions = predictions.Length;
+        double tptn = 0;
+        for (int idx = 0; idx < lenActuals; idx++)
+        {
+            if (actuals[idx] == predictions[idx]) tptn += 1;
+        }
+        return result;
+    }
+
+    /// <summary>
     /// Split a double array using a boolean filter array.
     /// </summary>
     /// <remarks>
