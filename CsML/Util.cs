@@ -67,16 +67,18 @@ public class Array
     /// Calculate classification accuracy from a predictions array compared to an
     /// actuals array.
     /// </summary>
-    public double ClassificationAccuracy<T>(T[] actuals, T[] predictions) where T : class
+    public static double ClassificationAccuracy<T>(
+        T[] actuals, T[] predictions) where T : IComparable<T>
     {
-        double result = 0;
         int lenActuals = actuals.Length, lenPredictions = predictions.Length;
+        if (lenActuals != lenPredictions)
+            throw new ArgumentException("Inputs must be same length");
         double tptn = 0;
         for (int idx = 0; idx < lenActuals; idx++)
         {
-            if (actuals[idx] == predictions[idx]) tptn += 1;
+            if (actuals[idx].CompareTo(predictions[idx]) == 0) tptn += 1;
         }
-        return result;
+        return tptn / lenActuals;
     }
 
     /// <summary>
@@ -145,30 +147,6 @@ public class Statistics
         }
         return result;
     }
-
-    // /// <summary>
-    // /// A function to randomly sample integers from an array without replacement.
-    // /// </summary>
-    // /// <remarks>
-    // /// See <see href="https://en.wikipedia.org/wiki/Reservoir_sampling">Wikipedia: Resevoir Sampling.</see>
-    // /// </remarks>
-    // public static int[] SampleTake(int[] input, int count)
-    // {
-    //     if (input.Length == count)
-    //         throw new ArgumentException("Input length same as count ... shuffle instead?");
-    //     int index;
-    //     int[] result = new int[count];
-    //     for (index = 0; index < count; index++)
-    //         result[index] = input[index];
-    //     Random r = new Random();
-    //     for (; index < input.Length; index++)
-    //     {
-    //         int j = r.Next(index + 1);
-    //         if (j < count)
-    //             result[j] = input[index];
-    //     }
-    //     return result;
-    // }
 }
 
 public class Matrix
@@ -225,6 +203,22 @@ public class Matrix
     }
 
     /// <summary>
+    /// Compare two matrixes for equality.
+    /// </summary>
+    public static bool Equal(double[,] a, double[,] b)
+    {
+        return
+        // Check the number of dimensions
+        a.Rank == b.Rank &&
+        // Check if dimensions are the same size 
+        Enumerable.Range(0, a.Rank).All(
+            dimension => a.GetLength(dimension) == b.GetLength(dimension)
+        ) &&
+        // Cast to IEnumerable to use SequenceEqual to compare values
+        a.Cast<double>().SequenceEqual(b.Cast<double>());
+    }
+
+    /// <summary>
     /// Create a two dimensional double array from a CSV file.
     /// </summary>
     /// <param name="inputfile">A Path object point to the CSV file.</param>
@@ -274,22 +268,6 @@ public class Matrix
     }
 
     /// <summary>
-    /// Compare two matrixes for equality.
-    /// </summary>
-    public static bool Equal(double[,] a, double[,] b)
-    {
-        return
-        // Check the number of dimensions
-        a.Rank == b.Rank &&
-        // Check if dimensions are the same size 
-        Enumerable.Range(0, a.Rank).All(
-            dimension => a.GetLength(dimension) == b.GetLength(dimension)
-        ) &&
-        // Cast to IEnumerable to use SequenceEqual to compare values
-        a.Cast<double>().SequenceEqual(b.Cast<double>());
-    }
-
-    /// <summary>
     /// Split a matrix (c# two dimensional double array) using a column
     /// index and split point.
     /// </summary>
@@ -336,6 +314,10 @@ public class Matrix
 
 public class Features
 {
+    /// <summary>
+    /// Shuffle a matrix containing features and a target array maintaining the
+    /// relationship between matrix rows and array items.
+    /// </summary>
     public static Tuple<double[,], double[]> Shuffle(double[,] matrix, double[] target)
     {
         int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);

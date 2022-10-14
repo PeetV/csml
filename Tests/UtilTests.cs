@@ -40,6 +40,23 @@ public class Array
     }
 
     [Fact]
+    public void ClassificationAccuracy()
+    {
+        double[] values = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
+        double[] target = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
+        double result = CsML.Util.Array.ClassificationAccuracy(values, target);
+        Assert.Equal(1, result);
+        values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
+        target = new double[] { 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 };
+        result = CsML.Util.Array.ClassificationAccuracy(values, target);
+        Assert.Equal(0.5, result);
+        values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
+        target = new double[] { 5.0, 5.0, 1.0, 5.0, 5.0, 5.0 };
+        result = CsML.Util.Array.ClassificationAccuracy(values, target);
+        Assert.Equal(2.0 / 6.0, result);
+    }
+
+    [Fact]
     public void Split()
     {
         double[] vector = new double[] { 1, 1, 1, 2, 2 };
