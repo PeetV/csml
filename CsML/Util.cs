@@ -317,6 +317,8 @@ public class Features
     public static Tuple<double[,], double[]> Shuffle(double[,] matrix, double[] target)
     {
         int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
+        if (inputLength != target.Length)
+            throw new ArgumentException("Inputs must be same length");
         int[] startingIndex = Enumerable.Range(0, inputLength).ToArray();
         int[] shuffledIndex = Util.Statistics.SampleTake(startingIndex, inputLength);
         var fromtoIndex = startingIndex.Zip(shuffledIndex);
