@@ -89,10 +89,10 @@ public class Array
     /// Convert an array to a dictionary containing the count of ocurrences of each
     /// array element.
     /// </summary>
-    public static Dictionary<T, int> ToElementCounts<T>(T[] input) where T: notnull
+    public static Dictionary<T, int> ToElementCounts<T>(T[] input) where T : notnull
     {
         Dictionary<T, int> counts = new Dictionary<T, int>();
-        foreach(T item in input)
+        foreach (T item in input)
         {
             if (counts.ContainsKey(item)) counts[item] += 1;
             else counts[item] = 1;
@@ -130,27 +130,29 @@ public class Statistics
         return result;
     }
 
-    /// <summary>
-    /// A function to randomly sample integers from an array without replacement.
-    /// </summary>
-    /// <remarks>
-    /// See <see href="https://en.wikipedia.org/wiki/Reservoir_sampling">Wikipedia: Resevoir Sampling.</see>
-    /// </remarks>
-    public static int[] SampleTake(int[] input, int count)
-    {
-        int index;
-        int[] result = new int[count];
-        for (index = 0; index < count; index++)
-            result[index] = input[index];
-        Random r = new Random();
-        for (; index < input.Length; index++)
-        {
-            int j = r.Next(index + 1);
-            if (j < count)
-                result[j] = input[index];
-        }
-        return result;
-    }
+    // /// <summary>
+    // /// A function to randomly sample integers from an array without replacement.
+    // /// </summary>
+    // /// <remarks>
+    // /// See <see href="https://en.wikipedia.org/wiki/Reservoir_sampling">Wikipedia: Resevoir Sampling.</see>
+    // /// </remarks>
+    // public static int[] SampleTake(int[] input, int count)
+    // {
+    //     if (input.Length == count)
+    //         throw new ArgumentException("Input length same as count ... shuffle instead?");
+    //     int index;
+    //     int[] result = new int[count];
+    //     for (index = 0; index < count; index++)
+    //         result[index] = input[index];
+    //     Random r = new Random();
+    //     for (; index < input.Length; index++)
+    //     {
+    //         int j = r.Next(index + 1);
+    //         if (j < count)
+    //             result[j] = input[index];
+    //     }
+    //     return result;
+    // }
 }
 
 public class Matrix
@@ -184,7 +186,11 @@ public class Matrix
         int columnCount = matrix.GetLength(1);
         columnIndeces = Enumerable.Range(0, columnCount).ToArray();
         if (randomFeatures > 0 & randomFeatures < columnCount)
-            columnIndeces = Statistics.SampleTake(columnIndeces, randomFeatures);
+        {
+            Random random = new Random();
+            columnIndeces = columnIndeces.OrderBy(x => random.Next()).ToArray();
+            columnIndeces = columnIndeces[0..randomFeatures];
+        }
         double bestsplit = 0.0, bestgain = 0.0;
         int bestColumnIndex = 0;
         double split, gain;
@@ -305,9 +311,9 @@ public class Matrix
         double[,] dlhs, drhs;
 
         if (lhs.Count != 0) dlhs = FromList2D(lhs);
-        else dlhs = new double[,]{};
+        else dlhs = new double[,] { };
         if (rhs.Count != 0) drhs = FromList2D(rhs);
-        else drhs = new double[,]{};
+        else drhs = new double[,] { };
         return Tuple.Create(Tuple.Create(dlhs, drhs), filter);
     }
 }
@@ -320,7 +326,8 @@ public class Features
         if (inputLength != target.Length)
             throw new ArgumentException("Inputs must be same length");
         int[] startingIndex = Enumerable.Range(0, inputLength).ToArray();
-        int[] shuffledIndex = Util.Statistics.SampleTake(startingIndex, inputLength);
+        Random random = new Random();
+        int[] shuffledIndex = ((int[])startingIndex.Clone()).OrderBy(x => random.Next()).ToArray();
         var fromtoIndex = startingIndex.Zip(shuffledIndex);
         double[,] newmatrix = new double[inputLength, inputWidth];
         double[] newtarget = new double[inputLength];

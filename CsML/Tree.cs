@@ -71,7 +71,7 @@ public class BinaryTree
     /// Perform decision tree induction from the dataset contained in the matrix
     /// parameter and values contained in target parameter.
     /// </summary>
-    public void Train(double[,] matrix, double[] target, bool skipchecks=false)
+    public void Train(double[,] matrix, double[] target, bool skipchecks = false)
     {
         inputRecordCount = matrix.GetLength(0);
         int targetLength = target.Length;
@@ -79,7 +79,7 @@ public class BinaryTree
         {
             if (inputRecordCount == 0 | targetLength == 0)
                 throw new ArgumentException("Empty input");
-            if (inputRecordCount != targetLength) 
+            if (inputRecordCount != targetLength)
                 throw new ArgumentException("Inputs must be the same length");
         }
         nodes = new List<BinaryNode>();
@@ -95,7 +95,7 @@ public class BinaryTree
     /// <summary>
     /// Infer target values from new data.
     /// </summary>
-    public double[] Predict(double[,] matrix, bool skipchecks=false)
+    public double[] Predict(double[,] matrix, bool skipchecks = false)
     {
         inputRecordCount = matrix.GetLength(0);
         if (!skipchecks)

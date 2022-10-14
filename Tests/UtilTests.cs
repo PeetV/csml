@@ -94,15 +94,6 @@ public class Statistics
         Assert.Equal(0.6666666666666665, result);
     }
 
-    [Fact]
-    public void SampleTake()
-    {
-        int[] input = new int[] { 10, 11, 1, 20, 22, 2, 30, 33, 3 };
-        int[] result = CsML.Util.Statistics.SampleTake(input, 3);
-        Assert.Equal(3, result.Length);
-        Assert.True(result.Distinct().Count() == result.Length); // all different
-        Assert.True(result.All(x => input.Contains(x))); // all in input
-    }
 }
 
 public class Matrix
@@ -150,11 +141,11 @@ public class Matrix
     public void FromCSV()
     {
         var mapping = new Dictionary<int, Dictionary<string, double>>();
-        mapping[4] = new Dictionary<string, double> 
-        { 
+        mapping[4] = new Dictionary<string, double>
+        {
             { "versicolor", 0 }, {"virginica", 1 }, {"setosa", 2}
         };
-        string strWorkPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        string strWorkPath = Directory.GetParent(Environment.CurrentDirectory)!.Parent!.Parent!.FullName;
         string inpuPath = Path.Combine(strWorkPath, "Data/iris.csv");
         double[,] matrix = CsML.Util.Matrix.FromCSV(inpuPath, mapping, loadFromRow: 1);
         Assert.Equal(150, matrix.GetLength(0));
