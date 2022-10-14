@@ -27,26 +27,22 @@ public class BinaryNode
 /// </summary>
 public class BinaryTree
 {
-    // Private properties
-    public List<BinaryNode> nodes;
-    public int minColumns;
-    public int inputRecordCount;
     private int _recursions;
     private int _splitCount;
     private int _depth;
-    
-    // Public properties
+
+    public List<BinaryNode> nodes;
+    public int minColumns;
+    public int inputRecordCount;
     public int maxrecursions = 10000;
     public int maxsplits = 10000;
     public int maxdepth = 15;
     public int minrows = 3;
     public int randomfeatures = -1;
     public double[]? classes;
+    public Func<double[], double> purityFn;
 
-    // Backing fields
     private string _mode;
-    private string _purityfn;
-
     public string treemode
     {
         get { return _mode; }
@@ -58,18 +54,7 @@ public class BinaryTree
         }
     }
 
-    public string purityfn
-    {
-        get { return _purityfn; }
-        set
-        {
-            if (value != "gini")
-                throw new ArgumentException("Purity function must be 'gini'");
-            _purityfn = value;
-        }
-    }
-
-    public BinaryTree(string mode, string purityfn)
+    public BinaryTree(string mode, Func<double[], double> purityFn)
     {
         nodes = new List<BinaryNode>();
         _recursions = 0;
@@ -78,9 +63,8 @@ public class BinaryTree
         _depth = 0;
         inputRecordCount = 0;
         _mode = "classify";
-        _purityfn = "gini";
         this.treemode = mode;
-        this.purityfn = purityfn;
+        this.purityFn = purityFn;
     }
 
     /// <summary>
@@ -190,15 +174,6 @@ public class BinaryTree
         return leafIndex;
     }
 
-    private Func<double[], double> LookupPurityfn(string name)
-    {
-        return name switch
-        {
-            "gini" => Util.Statistics.Gini,
-            _ => Util.Statistics.Gini
-        };
-    }
-
     private int Grow(double[,]? matrix, double[]? target, int parentDepth)
     {
         _recursions += 1;
@@ -211,8 +186,7 @@ public class BinaryTree
             target!.All(val => val.Equals(target![0])) ||
             _splitCount > maxsplits)
             return AddLeaf(target!);
-        Func<double[], double> purityfn = LookupPurityfn(_purityfn);
-        var bs = Util.Matrix.BestSplit<double>(matrix, target!, purityfn, randomfeatures);
+        var bs = Util.Matrix.BestSplit<double>(matrix, target!, purityFn, randomfeatures);
         var sm = Util.Matrix.Split(matrix, bs.Item1, bs.Item2.Item1);
         var st = Util.Array.Split(target!, sm.Item2);
         int yesLength = sm.Item1.Item1.GetLength(0);
