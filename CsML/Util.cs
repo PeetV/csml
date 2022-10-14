@@ -84,23 +84,19 @@ public class Array
     /// <summary>
     /// Split a double array using a boolean filter array.
     /// </summary>
-    /// <remarks>
-    /// To do: test if a List is faster than an an array for append
-    /// operations.
-    /// </remarks>
     public static (T[], T[]) Split<T>(
         T[] input,
         bool[] filter)
     {
-        T[] lhs = new T[] { }, rhs = new T[] { };
+        List<T> lhs = new List<T>(), rhs = new List<T>();
         for (int index = 0; index < input.Length; index++)
         {
             if (filter[index])
-                lhs = lhs.Append(input[index]).ToArray();
+                lhs.Add(input[index]);
             else
-                rhs = rhs.Append(input[index]).ToArray();
+                rhs.Add(input[index]);
         }
-        return (lhs, rhs);
+        return (lhs.ToArray(), rhs.ToArray());
     }
 
     /// <summary>
@@ -303,12 +299,35 @@ public class Matrix
                 rhs.Add(row);
         }
         double[,] dlhs, drhs;
-
         if (lhs.Count != 0) dlhs = FromList2D(lhs);
         else dlhs = new double[,] { };
         if (rhs.Count != 0) drhs = FromList2D(rhs);
         else drhs = new double[,] { };
         return ((dlhs, drhs), filter);
+    }
+
+    /// <summary>
+    /// Split a matrix using a boolean filer matrix.
+    /// </summary>
+    public static (double[,], double[,]) Split(double[,] matrix, bool[] filter)
+    {
+        List<double[]> lhs = new List<double[]>(), rhs = new List<double[]>();
+        Span2D<double> matrixSpan = matrix;
+        double[] row;
+        for (int rowIndex = 0; rowIndex < matrix.GetLength(0); rowIndex++)
+        {
+            row = matrixSpan.GetRow(rowIndex).ToArray();
+            if (filter[rowIndex])
+                lhs.Add(row);
+            else
+                rhs.Add(row);
+        }
+        double[,] dlhs, drhs;
+        if (lhs.Count != 0) dlhs = FromList2D(lhs);
+        else dlhs = new double[,] { };
+        if (rhs.Count != 0) drhs = FromList2D(rhs);
+        else drhs = new double[,] { };
+        return (dlhs, drhs);
     }
 }
 
@@ -339,4 +358,21 @@ public class Features
         }
         return (newmatrix, newtarget);
     }
+
+    /// <summary>
+    /// Split a matrix containing features and a target array 
+    /// </summary>
+    // public static ((double[,], double[]), (double[,], double[])) Split(
+    //     double[,] matrix, double[] target, double ratio
+    // )
+    // {
+    //     if (ratio <= 0 | ratio >= 1)
+    //         throw new ArgumentException("Splitting ratio must be between 0 and 1");
+    //     int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
+    //     if (inputLength != target.Length)
+    //         throw new ArgumentException("Inputs must be same length");
+    //     int[] index = Enumerable.Range(0, inputLength).ToArray();
+    //     double cutPoint = inputLength * ratio;
+    //     bool[] filter = index.Select(x => x > cutPoint).ToArray();
+    // }
 }

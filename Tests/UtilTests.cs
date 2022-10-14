@@ -179,7 +179,7 @@ public class Matrix
     }
 
     [Fact]
-    public void Split()
+    public void Split_splitpoint()
     {
         double[,] matrix = new double[,]{
             {0, 1.0, 0},
@@ -227,6 +227,22 @@ public class Matrix
         Assert.True(CsML.Util.Matrix.Equal(expectedRhs, rhs));
         Assert.False(CsML.Util.Matrix.Equal(lhs, rhs));
         Assert.True(expectedFilter.SequenceEqual(filter));
+    }
+
+    [Fact]
+    public void Split_filter()
+    {
+        double[,] matrix = new double[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
+        bool[] filter = new bool[] { true, false, false };
+        double[,] lhs, rhs;
+        (lhs, rhs) = CsML.Util.Matrix.Split(matrix, filter);
+        Assert.Equal(1, lhs.GetLength(0));
+        Assert.Equal(2, lhs.GetLength(1));
+        Assert.Equal(2, rhs.GetLength(0));
+        Assert.Equal(2, rhs.GetLength(1));
+        Assert.Equal(1, lhs[0, 0]);
+        Assert.Equal(3, rhs[0, 0]);
+        Assert.Equal(6, rhs[1, 1]);
     }
 }
 
