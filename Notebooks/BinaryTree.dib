@@ -1,0 +1,126 @@
+#!markdown
+
+# Binary Decision Tree
+
+#!csharp
+
+#i "nuget:/Users/peet/Sources/csmlgithub/CsML/bin/Debug"
+#r "nuget:CsML,*-*"
+
+#!csharp
+
+using CsML;
+
+#!markdown
+
+### Iris test data example
+
+#!markdown
+
+Load data.
+
+#!csharp
+
+var mapping = new Dictionary<int, Dictionary<string, double>>();
+mapping[4] = new Dictionary<string, double>
+{
+    { "versicolor", 0 }, {"virginica", 1 }, {"setosa", 2}
+};
+string inpuPath = "/Users/peet/Sources/csmlgithub/Tests/Data/iris.csv";
+double[,] data = CsML.Util.Matrix.FromCSV(inpuPath, mapping, loadFromRow: 1);
+
+#!markdown
+
+Extract features into a matrix and the target column into an array.
+
+#!csharp
+
+int dataLength = data.GetLength(0);
+double[,] features = new double[dataLength, 4];
+double[] target = new double[dataLength];
+for (int r=0; r < data.GetLength(0); r++)
+{
+    for (int c=0; c < 4; c++)
+    {
+        features[r, c] = data[r, c];
+    }
+    target[r] = data[r, 4];
+}
+
+#!markdown
+
+Shuffle the features matrix and target array and split into test and train sets.
+
+#!csharp
+
+(features, target) = CsML.Util.Features.Shuffle(features, target);
+double[,] ftrain, ftest;
+double[] ttrain, ttest;
+((ftrain, ttrain), (ftest, ttest)) = CsML.Util.Features.Split(features, target, 0.8);
+
+#!markdown
+
+Train the model, get predictions from test data and calculate accuracy of predictions.
+
+#!csharp
+
+CsML.Tree.BinaryTree tree;
+tree = new CsML.Tree.BinaryTree("classify", CsML.Util.Statistics.Gini);
+tree.Train(ftrain, ttrain);
+double[] predictions = tree.Predict(ftest);
+CsML.Util.Array.ClassificationAccuracy(ttest, predictions)
+
+#!markdown
+
+Visualise predictions.
+
+#!csharp
+
+var revmapping = mapping[4].ToDictionary(x => x.Value, x => x.Key);
+var strtest = ttest.Select(x => revmapping[x]).ToArray();
+var strpred = predictions.Select(x => revmapping[x]).ToArray();
+strpred[0..5]
+
+#!csharp
+
+#r "nuget:SandDance.InteractiveExtension,*-*"
+#r "nuget:DataView.InteractiveExtension,*-*"
+#r "nuget:Microsoft.ML.DataView"
+#r "nuget:Microsoft.Data.Analysis"
+
+#!csharp
+
+using Microsoft.Data.Analysis;
+using Microsoft.ML;
+
+#!csharp
+
+var col1 = new StringDataFrameColumn("Actuals", strtest);
+var col2 = new StringDataFrameColumn("Predictions", strpred);
+int len = ttest.GetLength(0);
+double[] sepalLength = new double[len];
+double[] sepalWidth = new double[len];
+double[] petalLength = new double[len];
+double[] petalWidth = new double[len];
+for (int r=0; r < len; r++)
+{
+    sepalLength[r] = ftest[r, 0];
+    sepalWidth[r] = ftest[r, 1];
+    petalLength[r] = ftest[r, 2];
+    petalWidth[r] = ftest[r, 3];
+}
+var col3 = new DoubleDataFrameColumn("SepalLength", sepalLength);
+var col4 = new DoubleDataFrameColumn("SepalWidth", sepalWidth);
+var col5 = new DoubleDataFrameColumn("PetalLength", petalLength);
+var col6 = new DoubleDataFrameColumn("PetalWidth", petalWidth);
+DataFrameColumn[] columns = new DataFrameColumn[]{col1, col2, col3, col4, col5, col6};
+var results = new DataFrame(columns);
+results.Head(2)
+
+#!csharp
+
+results.ToTabularDataResource().ExploreWithSandDance().Display();
+
+#!csharp
+
+irisData.ToTabularDataResource().ExploreWithSandDance().Display();
