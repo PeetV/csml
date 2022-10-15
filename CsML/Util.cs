@@ -78,6 +78,16 @@ public class Array
     }
 
     /// <summary>
+    /// Calculate classification error from a predictions array compared to an
+    /// actuals array.
+    /// </summary>
+    public static double ClassificationError<T>(
+        T[] actuals, T[] predictions) where T : IComparable<T>
+    {
+        return 1.0 - ClassificationAccuracy(actuals, predictions);
+    }
+
+    /// <summary>
     /// Split a double array using a boolean filter array, with equivalent true values 
     /// going to the left and false going to the right.
     /// </summary>

@@ -57,6 +57,23 @@ public class Array
     }
 
     [Fact]
+    public void ClassificationError()
+    {
+        double[] values = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
+        double[] target = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
+        double result = CsML.Util.Array.ClassificationError(values, target);
+        Assert.Equal(0, result);
+        values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
+        target = new double[] { 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 };
+        result = CsML.Util.Array.ClassificationError(values, target);
+        Assert.Equal(0.5, result);
+        values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
+        target = new double[] { 5.0, 5.0, 1.0, 5.0, 5.0, 5.0 };
+        result = CsML.Util.Array.ClassificationError(values, target);
+        Assert.True(4.0 / 6.0 - result < 0.00000001);
+    }
+
+    [Fact]
     public void Split()
     {
         double[] vector = new double[] { 1, 1, 1, 2, 2 };
