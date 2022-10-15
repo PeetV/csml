@@ -74,6 +74,20 @@ public class Array
     }
 
     [Fact]
+    public void ClassificationMetrics()
+    {
+        string[] actuals = new string[] { "A", "A", "B", "A", "A", "C", "C", "C", "B" };
+        string[] predicted = new string[] { "A", "B", "B", "A", "C", "C", "C", "A", "B" };
+        var result = CsML.Util.Array.ClassificationMetrics(actuals, predicted);
+        Assert.Equal(99, result["A"].Item1);
+        // Assert.Equal(99, result["B"].Item1);
+        // Assert.Equal(99, result["C"].Item1);
+        // Assert.Equal(99, result["A"].Item2);
+        // Assert.Equal(99, result["B"].Item2);
+        // Assert.Equal(99, result["C"].Item2);
+    }
+
+    [Fact]
     public void Split()
     {
         double[] vector = new double[] { 1, 1, 1, 2, 2 };

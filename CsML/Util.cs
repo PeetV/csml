@@ -88,6 +88,81 @@ public class Array
     }
 
     /// <summary>
+    /// Calculate Precision (proportion of positives predictived correctly)
+    /// and Recall (proportion of true positives found).
+    /// </summary>
+    public static Dictionary<T, (double, double)> ClassificationMetrics<T>(
+        T[] actuals, T[] predictions) where T : IComparable<T>
+    {
+        int lenActuals = actuals.Length, lenPredictions = predictions.Length;
+        if (lenActuals != lenPredictions)
+            throw new ArgumentException("Inputs must be same length");
+        // T[] classes = actuals.Distinct().ToArray();
+        (T, T)[] zipped = actuals.Zip(predictions).ToArray();
+        Dictionary<T, double[]> counts = new Dictionary<T, double[]> { };
+        foreach ((T, T) pair in zipped)
+        {
+            // True positive
+            if (pair.Item1.CompareTo(pair.Item2) == 0)
+            {
+                if (counts.ContainsKey(pair.Item1))
+                {
+                    double[] vals = counts[pair.Item1];
+                    vals[0] += 1;
+                    counts[pair.Item1] = vals;
+                }
+                else
+                {
+                    counts[pair.Item1] = new double[] { 1.0, 0.0, 0.0 };
+                }
+            }
+            // foreach (T cls in classes)
+            // {
+            //     // False negative
+            //     if ((cls.CompareTo(pair.Item1) == 0) & !(cls.CompareTo(pair.Item2) == 0))
+            //     {
+            //         if (counts.ContainsKey(pair.Item1))
+            //         {
+            //             double[] vals = counts[pair.Item1];
+            //             vals[2] += 1;
+            //             counts[pair.Item1] = vals;
+            //         }
+            //         else
+            //         {
+            //             counts[pair.Item1] = new double[] { 0.0, 0.0, 1.0 };
+            //         }
+
+            //     }
+            //     // False positive
+            //     if (!(cls.CompareTo(pair.Item1) == 0) & (cls.CompareTo(pair.Item2) == 0))
+            //     {
+            //         if (counts.ContainsKey(pair.Item1))
+            //         {
+            //             double[] vals = counts[pair.Item1];
+            //             vals[1] += 1;
+            //             counts[pair.Item1] = vals;
+            //         }
+            //         else
+            //         {
+            //             counts[pair.Item1] = new double[] { 0.0, 1.0, 0.0 };
+            //         }
+            //     }
+            // }
+        }
+        Dictionary<T, (double, double)> result = new Dictionary<T, (double, double)> { };
+        double[] tpfpfn;
+        double prec, rec;
+        foreach (T k in counts.Keys)
+        {
+            tpfpfn = counts[k];
+            prec = tpfpfn[0] / (tpfpfn[0] + tpfpfn[1]);
+            rec = tpfpfn[0] / (tpfpfn[0] + tpfpfn[2]);
+            result[k] = (prec, rec);
+        }
+        return result;
+    }
+
+    /// <summary>
     /// Split a double array using a boolean filter array, with equivalent true values 
     /// going to the left and false going to the right.
     /// </summary>
