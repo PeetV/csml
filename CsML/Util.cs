@@ -8,10 +8,6 @@ public class Array
     /// Determine which value to split an array on to maximise the weighted gain 
     /// in purity when the split is applied to a corresponding target array.
     /// </summary>
-    /// <remarks>
-    /// To do: test if a List is faster than an an array for append
-    /// operations.
-    /// </remarks>
     /// <param name="vector">Numeric array to test split points on.</param>
     /// <param name="target">Target array to find best gain in purity on split.
     /// </param>
@@ -29,27 +25,27 @@ public class Array
         double bestsplit = 0.0, bestgain = 0.0;
         int lenVals = vector.Length;
         (double, T)[] zipped = vector.Zip(target).OrderBy(x => x.First).ToArray();
-        T[] lhs = { }, rhs = new T[target.Length];
-        target.CopyTo(rhs, 0);
+        List<T> lhs = new List<T>(), rhs = new List<T>(target);
+        // target.CopyTo(rhs, 0);
         double purityPreSplit = purityfn(target);
         bool allSame = true;
         // Iterate through the sorted arrays
         for (int idx = 0; idx < lenVals - 1; idx++)
         {
             T targetval = zipped[idx].Item2;
-            int targetvalIdx = System.Array.IndexOf(rhs, targetval);
+            int targetvalIdx = rhs.IndexOf(targetval);
             // Add to the left
-            lhs = lhs.Append(targetval).ToArray();
+            lhs.Add(targetval);
             // Remove from the right
-            rhs = rhs.Where((val, i) => i != targetvalIdx).ToArray();
+            rhs.Remove(targetval);
             // Ignore this split potential if not unique
             if (zipped[idx].Item1 == zipped[idx + 1].Item1) continue;
             allSame = false;
             // Ignore this split, if not enough data for averages
-            if (lhs.Length == 0 || rhs.Length == 0) continue;
+            if (lhs.Count == 0 || rhs.Count == 0) continue;
             // Calculate Gini index
-            double slice1Purity = purityfn(lhs) * lhs.Length / lenVals;
-            double slice2Purity = purityfn(rhs) * rhs.Length / lenVals;
+            double slice1Purity = purityfn(lhs.ToArray()) * lhs.Count / lenVals;
+            double slice2Purity = purityfn(rhs.ToArray()) * rhs.Count / lenVals;
             double gain = purityPreSplit - slice1Purity - slice2Purity;
             if (gain > bestgain)
             {
@@ -82,7 +78,8 @@ public class Array
     }
 
     /// <summary>
-    /// Split a double array using a boolean filter array.
+    /// Split a double array using a boolean filter array, with equivalent true values 
+    /// going to the left and false going to the right.
     /// </summary>
     public static (T[], T[]) Split<T>(
         T[] input,
