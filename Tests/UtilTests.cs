@@ -77,40 +77,50 @@ public class Array
     }
 }
 
-public class Statistics
+public class Features
 {
     [Fact]
-    public void Gini_Strings()
+    public void Shuffle()
     {
-        string[] stringvals = { "a", "a", "a", "b", "b", "b" };
-        double result = CsML.Util.Statistics.Gini(stringvals);
-        Assert.Equal(0.5, result);
+        double[,] matrix = new double[,]
+        {
+            {1, 1, 1},
+            {2, 2, 2},
+            {3, 3, 3},
+            {4, 4, 4},
+            {5, 5, 5}
+        };
+        double[] target = new double[] { 1, 2, 3, 4, 5 };
+        (double[,] newmatrix, double[] newtarget) = CsML.Util.Features.Shuffle(matrix, target);
+        Assert.Equal(5, newmatrix.GetLength(0));
+        Assert.Equal(3, newmatrix.GetLength(1));
+        Assert.False(CsML.Util.Matrix.Equal(matrix, newmatrix));
+        Assert.False(target.SequenceEqual(newtarget));
+        Assert.True(newtarget.OrderBy(x => x).ToArray().SequenceEqual(target));
     }
 
     [Fact]
-    public void Gini_Ints()
+    public void Split()
     {
-        int[] intvals = { 1, 1, 1, 2, 2, 1 };
-        double result = CsML.Util.Statistics.Gini(intvals);
-        Assert.Equal(0.4444444444444445, result);
+        double[,] matrix = new double[,]
+                {
+            {1, 1, 1},
+            {2, 2, 2},
+            {3, 3, 3},
+            {4, 4, 4},
+            {5, 5, 5}
+                };
+        double[] target = new double[] { 1, 2, 3, 4, 5 };
+        double[,] mlhs, mrhs;
+        double[] tlhs, trhs;
+        ((mlhs, tlhs), (mrhs, trhs)) = CsML.Util.Features.Split(matrix, target, 3.0 / 5.0);
+        Assert.Equal(3, mlhs.GetLength(0));
+        Assert.Equal(3, mlhs.GetLength(1));
+        Assert.Equal(2, mrhs.GetLength(0));
+        Assert.Equal(3, mrhs.GetLength(1));
+        Assert.Equal(3, mlhs[2, 2]);
+        Assert.Equal(5, mrhs[1, 2]);
     }
-
-    [Fact]
-    public void Gini_Empty()
-    {
-        int[] emptyvals = new int[] { };
-        double result = CsML.Util.Statistics.Gini(emptyvals);
-        Assert.Equal(0.0, result);
-    }
-
-    [Fact]
-    public void Gini_Different()
-    {
-        int[] emptyvals = new int[] { 1, 2, 3 };
-        double result = CsML.Util.Statistics.Gini(emptyvals);
-        Assert.Equal(0.6666666666666665, result);
-    }
-
 }
 
 public class Matrix
@@ -246,25 +256,38 @@ public class Matrix
     }
 }
 
-public class Features
+public class Statistics
 {
     [Fact]
-    public void Shuffle()
+    public void Gini_Strings()
     {
-        double[,] matrix = new double[,]
-        {
-            {1, 1, 1},
-            {2, 2, 2},
-            {3, 3, 3},
-            {4, 4, 4},
-            {5, 5, 5}
-        };
-        double[] target = new double[] { 1, 2, 3, 4, 5 };
-        (double[,] newmatrix, double[] newtarget) = CsML.Util.Features.Shuffle(matrix, target);
-        Assert.Equal(5, newmatrix.GetLength(0));
-        Assert.Equal(3, newmatrix.GetLength(1));
-        Assert.False(CsML.Util.Matrix.Equal(matrix, newmatrix));
-        Assert.False(target.SequenceEqual(newtarget));
-        Assert.True(newtarget.OrderBy(x => x).ToArray().SequenceEqual(target));
+        string[] stringvals = { "a", "a", "a", "b", "b", "b" };
+        double result = CsML.Util.Statistics.Gini(stringvals);
+        Assert.Equal(0.5, result);
     }
+
+    [Fact]
+    public void Gini_Ints()
+    {
+        int[] intvals = { 1, 1, 1, 2, 2, 1 };
+        double result = CsML.Util.Statistics.Gini(intvals);
+        Assert.Equal(0.4444444444444445, result);
+    }
+
+    [Fact]
+    public void Gini_Empty()
+    {
+        int[] emptyvals = new int[] { };
+        double result = CsML.Util.Statistics.Gini(emptyvals);
+        Assert.Equal(0.0, result);
+    }
+
+    [Fact]
+    public void Gini_Different()
+    {
+        int[] emptyvals = new int[] { 1, 2, 3 };
+        double result = CsML.Util.Statistics.Gini(emptyvals);
+        Assert.Equal(0.6666666666666665, result);
+    }
+
 }

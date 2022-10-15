@@ -115,33 +115,54 @@ public class Array
     }
 }
 
-public class Statistics
+public class Features
 {
     /// <summary>
-    /// Calculate the Gini index of a set of discrete values.
+    /// Shuffle a matrix containing features and a target array maintaining the
+    /// relationship between matrix rows and array items.
     /// </summary>
-    public static double Gini<T>(IEnumerable<T> vector) where T : notnull
+    public static (double[,], double[]) Shuffle(double[,] matrix, double[] target)
     {
-        int length = 0;
-        // Get bin counts
-        Dictionary<T, int> counts = new Dictionary<T, int>();
-        foreach (T val in vector)
+        int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
+        if (inputLength != target.Length)
+            throw new ArgumentException("Inputs must be same length");
+        int[] startingIndex = Enumerable.Range(0, inputLength).ToArray();
+        Random random = new Random();
+        int[] shuffledIndex = ((int[])startingIndex.Clone()).OrderBy(x => random.Next()).ToArray();
+        var fromtoIndex = startingIndex.Zip(shuffledIndex);
+        double[,] newmatrix = new double[inputLength, inputWidth];
+        double[] newtarget = new double[inputLength];
+        foreach (var fromto in fromtoIndex)
         {
-            if (counts.ContainsKey(val)) counts[val] += 1;
-            else counts[val] = 1;
-            length += 1;
+            newtarget[fromto.First] = target[fromto.Second];
+            for (int colidx = 0; colidx < inputWidth; colidx++)
+            {
+                newmatrix[fromto.First, colidx] = matrix[fromto.Second, colidx];
+            }
         }
-        // Return if empty input
-        if (length == 0) return 0.0;
-        // Calculate the Gini index
-        double result = 1.0;
-        double calc;
-        foreach (KeyValuePair<T, int> entry in counts)
-        {
-            calc = entry.Value / (double)length;
-            result -= calc * calc;
-        }
-        return result;
+        return (newmatrix, newtarget);
+    }
+
+    /// <summary>
+    /// Split a matrix containing features and a target array 
+    /// </summary>
+    public static ((double[,], double[]), (double[,], double[])) Split(
+        double[,] matrix, double[] target, double ratio
+    )
+    {
+        if (ratio <= 0 | ratio >= 1)
+            throw new ArgumentException("Splitting ratio must be between 0 and 1");
+        int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
+        if (inputLength != target.Length)
+            throw new ArgumentException("Inputs must be same length");
+        int[] index = Enumerable.Range(0, inputLength).ToArray();
+        double cutPoint = (inputLength - 1) * ratio;
+        bool[] filter = index.Select(x => x <= cutPoint).ToArray();
+        double[,] mlhs, mrhs;
+        double[] tlhs, trhs;
+        (mlhs, mrhs) = CsML.Util.Matrix.Split(matrix, filter);
+        (tlhs, trhs) = CsML.Util.Array.Split(target, filter);
+        return ((mlhs, tlhs), (mrhs, trhs));
     }
 }
 
@@ -331,48 +352,32 @@ public class Matrix
     }
 }
 
-public class Features
+public class Statistics
 {
     /// <summary>
-    /// Shuffle a matrix containing features and a target array maintaining the
-    /// relationship between matrix rows and array items.
+    /// Calculate the Gini index of a set of discrete values.
     /// </summary>
-    public static (double[,], double[]) Shuffle(double[,] matrix, double[] target)
+    public static double Gini<T>(IEnumerable<T> vector) where T : notnull
     {
-        int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
-        if (inputLength != target.Length)
-            throw new ArgumentException("Inputs must be same length");
-        int[] startingIndex = Enumerable.Range(0, inputLength).ToArray();
-        Random random = new Random();
-        int[] shuffledIndex = ((int[])startingIndex.Clone()).OrderBy(x => random.Next()).ToArray();
-        var fromtoIndex = startingIndex.Zip(shuffledIndex);
-        double[,] newmatrix = new double[inputLength, inputWidth];
-        double[] newtarget = new double[inputLength];
-        foreach (var fromto in fromtoIndex)
+        int length = 0;
+        // Get bin counts
+        Dictionary<T, int> counts = new Dictionary<T, int>();
+        foreach (T val in vector)
         {
-            newtarget[fromto.First] = target[fromto.Second];
-            for (int colidx = 0; colidx < inputWidth; colidx++)
-            {
-                newmatrix[fromto.First, colidx] = matrix[fromto.Second, colidx];
-            }
+            if (counts.ContainsKey(val)) counts[val] += 1;
+            else counts[val] = 1;
+            length += 1;
         }
-        return (newmatrix, newtarget);
+        // Return if empty input
+        if (length == 0) return 0.0;
+        // Calculate the Gini index
+        double result = 1.0;
+        double calc;
+        foreach (KeyValuePair<T, int> entry in counts)
+        {
+            calc = entry.Value / (double)length;
+            result -= calc * calc;
+        }
+        return result;
     }
-
-    /// <summary>
-    /// Split a matrix containing features and a target array 
-    /// </summary>
-    // public static ((double[,], double[]), (double[,], double[])) Split(
-    //     double[,] matrix, double[] target, double ratio
-    // )
-    // {
-    //     if (ratio <= 0 | ratio >= 1)
-    //         throw new ArgumentException("Splitting ratio must be between 0 and 1");
-    //     int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
-    //     if (inputLength != target.Length)
-    //         throw new ArgumentException("Inputs must be same length");
-    //     int[] index = Enumerable.Range(0, inputLength).ToArray();
-    //     double cutPoint = inputLength * ratio;
-    //     bool[] filter = index.Select(x => x > cutPoint).ToArray();
-    // }
 }
