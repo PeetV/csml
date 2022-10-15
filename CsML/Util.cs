@@ -97,7 +97,6 @@ public class Array
         int lenActuals = actuals.Length, lenPredictions = predictions.Length;
         if (lenActuals != lenPredictions)
             throw new ArgumentException("Inputs must be same length");
-        // T[] classes = actuals.Distinct().ToArray();
         (T, T)[] zipped = actuals.Zip(predictions).ToArray();
         Dictionary<T, double[]> counts = new Dictionary<T, double[]> { };
         foreach ((T, T) pair in zipped)
@@ -111,43 +110,25 @@ public class Array
                     vals[0] += 1;
                     counts[pair.Item1] = vals;
                 }
-                else
-                {
-                    counts[pair.Item1] = new double[] { 1.0, 0.0, 0.0 };
-                }
+                else counts[pair.Item1] = new double[] { 1.0, 0.0, 0.0 };
+                continue;
             }
-            // foreach (T cls in classes)
-            // {
-            //     // False negative
-            //     if ((cls.CompareTo(pair.Item1) == 0) & !(cls.CompareTo(pair.Item2) == 0))
-            //     {
-            //         if (counts.ContainsKey(pair.Item1))
-            //         {
-            //             double[] vals = counts[pair.Item1];
-            //             vals[2] += 1;
-            //             counts[pair.Item1] = vals;
-            //         }
-            //         else
-            //         {
-            //             counts[pair.Item1] = new double[] { 0.0, 0.0, 1.0 };
-            //         }
-
-            //     }
-            //     // False positive
-            //     if (!(cls.CompareTo(pair.Item1) == 0) & (cls.CompareTo(pair.Item2) == 0))
-            //     {
-            //         if (counts.ContainsKey(pair.Item1))
-            //         {
-            //             double[] vals = counts[pair.Item1];
-            //             vals[1] += 1;
-            //             counts[pair.Item1] = vals;
-            //         }
-            //         else
-            //         {
-            //             counts[pair.Item1] = new double[] { 0.0, 1.0, 0.0 };
-            //         }
-            //     }
-            // }
+            // False positive
+            if (counts.ContainsKey(pair.Item2))
+            {
+                double[] vals = counts[pair.Item2];
+                vals[1] += 1;
+                counts[pair.Item2] = vals;
+            }
+            else counts[pair.Item2] = new double[] { 0.0, 1.0, 0.0 };
+            // False negative
+            if (counts.ContainsKey(pair.Item1))
+            {
+                double[] vals = counts[pair.Item1];
+                vals[2] += 1;
+                counts[pair.Item1] = vals;
+            }
+            else counts[pair.Item1] = new double[] { 0.0, 0.0, 1.0 };
         }
         Dictionary<T, (double, double)> result = new Dictionary<T, (double, double)> { };
         double[] tpfpfn;

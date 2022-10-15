@@ -79,12 +79,12 @@ public class Array
         string[] actuals = new string[] { "A", "A", "B", "A", "A", "C", "C", "C", "B" };
         string[] predicted = new string[] { "A", "B", "B", "A", "C", "C", "C", "A", "B" };
         var result = CsML.Util.Array.ClassificationMetrics(actuals, predicted);
-        Assert.Equal(99, result["A"].Item1);
-        // Assert.Equal(99, result["B"].Item1);
-        // Assert.Equal(99, result["C"].Item1);
-        // Assert.Equal(99, result["A"].Item2);
-        // Assert.Equal(99, result["B"].Item2);
-        // Assert.Equal(99, result["C"].Item2);
+        Assert.Equal(0.6666666666666666, result["A"].Item1);
+        Assert.Equal(0.6666666666666666, result["B"].Item1);
+        Assert.Equal(0.6666666666666666, result["C"].Item1);
+        Assert.Equal(0.5, result["A"].Item2);
+        Assert.Equal(1, result["B"].Item2);
+        Assert.Equal(0.6666666666666666, result["C"].Item2);
     }
 
     [Fact]
