@@ -83,9 +83,9 @@ public class BinaryTree
                 throw new ArgumentException("Inputs must be the same length");
         }
         nodes = new List<BinaryNode>();
+        minColumns = matrix.GetLength(1);
         _recursions = 0;
         _splitCount = 0;
-        minColumns = matrix.GetLength(1);
         _depth = 0;
         if (_mode == "classification")
             classes = target.Distinct().ToArray();
