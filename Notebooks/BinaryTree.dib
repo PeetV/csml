@@ -83,6 +83,10 @@ strpred[0..5]
 
 #!csharp
 
+CsML.Util.Array.ClassificationMetrics(strtest, strpred)
+
+#!csharp
+
 #r "nuget:SandDance.InteractiveExtension,*-*"
 #r "nuget:DataView.InteractiveExtension,*-*"
 #r "nuget:Microsoft.ML.DataView"
