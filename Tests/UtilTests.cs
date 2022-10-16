@@ -322,3 +322,32 @@ public class Statistics
     }
 
 }
+
+public class KFoldIterator
+{
+    [Fact]
+    public void iterator_test()
+    {
+        CsML.Util.KFoldIterator iter = new CsML.Util.KFoldIterator(100, 10);
+        bool[] actual = iter.Take(1).First();
+        bool[] expected = Enumerable.Repeat(false, 10).ToArray()
+                            .Concat(Enumerable.Repeat(true, 90)).ToArray();
+        Assert.True(actual.SequenceEqual(expected));
+        actual = iter.Take(1).First();
+        actual = iter.Take(1).First();
+        expected = Enumerable.Repeat(true, 20).ToArray()
+                        .Concat(Enumerable.Repeat(false, 10)).ToArray()
+                        .Concat(Enumerable.Repeat(true, 70)).ToArray();
+        Assert.True(actual.SequenceEqual(expected));
+        actual = iter.Take(1).First();
+        actual = iter.Take(1).First();
+        actual = iter.Take(1).First();
+        actual = iter.Take(1).First();
+        actual = iter.Take(1).First();
+        actual = iter.Take(1).First();
+        actual = iter.Take(1).First();
+        expected = Enumerable.Repeat(true, 90).ToArray()
+                        .Concat(Enumerable.Repeat(false, 10)).ToArray();
+        Assert.True(actual.SequenceEqual(expected));
+    }
+}

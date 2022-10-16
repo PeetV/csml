@@ -457,7 +457,7 @@ public class KFoldIterator : IEnumerable<bool[]>
     private int _currentFold;
     private List<(int, int)> _foldIndeces = new List<(int, int)>();
 
-    KFoldIterator(int size, int kfolds)
+    public KFoldIterator(int size, int kfolds)
     {
         this.size = size;
         this.kfolds = kfolds;
