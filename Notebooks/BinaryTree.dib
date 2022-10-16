@@ -104,9 +104,14 @@ foreach(bool[] f in iter)
     (ftrain, ftest) = CsML.Util.Matrix.Split(features, f);
     (ttrain, ttest) = CsML.Util.Array.Split(target, f);
     var tree = new CsML.Tree.BinaryTree("classify", CsML.Util.Statistics.Gini);
+    tree.maxdepth = 15;
+    tree.minrows = 3;
     tree.Train(ftrain, ttrain);
     double[] predictions = tree.Predict(ftest);
     results.Add(CsML.Util.Array.ClassificationAccuracy(ttest, predictions));
 }
+var mean = results.Average();
+results = results.Select(x => Math.Round(x, 4)).ToList();
 Console.WriteLine("");
-Console.WriteLine(string.Join(",", results.ToArray()));
+Console.WriteLine(string.Join(", ", results.ToArray()));
+Console.WriteLine($"Average {mean}");

@@ -30,12 +30,12 @@ public class BinaryTree
     private int _recursions;
     private int _splitCount;
     private int _depth;
+    private int _maxrecursions = 10000;
+    private int _maxsplits = 10000;
 
     public List<BinaryNode> nodes;
     public int minColumns;
     public int inputRecordCount;
-    public int maxrecursions = 10000;
-    public int maxsplits = 10000;
     public int maxdepth = 15;
     public int minrows = 3;
     public int randomfeatures = -1;
@@ -114,7 +114,7 @@ public class BinaryTree
             double[] row = matrixSpan.GetRow(i).ToArray();
             int iterations = 0;
             BinaryNode node = nodes[0];
-            while (iterations < maxrecursions)
+            while (iterations < _maxrecursions)
             {
                 iterations += 1;
                 if (node.isLeaf)
@@ -180,11 +180,11 @@ public class BinaryTree
         int depth = parentDepth + 1;
         int recordCount = matrix!.GetLength(0);
         if (depth > _depth) _depth = depth;
-        if (_recursions > maxrecursions ||
+        if (_recursions > _maxrecursions ||
             _depth > maxdepth ||
             recordCount < minrows ||
             target!.All(val => val.Equals(target![0])) ||
-            _splitCount > maxsplits)
+            _splitCount > _maxsplits)
             return AddLeaf(target!);
         var bs = Util.Matrix.BestSplit<double>(matrix, target!, purityFn, randomfeatures);
         var sm = Util.Matrix.Split(matrix, bs.Item1, bs.Item2.Item1);
