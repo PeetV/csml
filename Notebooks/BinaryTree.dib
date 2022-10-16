@@ -87,3 +87,26 @@ strpred[0..5]
 #!csharp
 
 CsML.Util.Array.ClassificationMetrics(strtest, strpred)
+
+#!markdown
+
+10 fold cross-validation.
+
+#!csharp
+
+List<double> results = new List<double>(){};
+double[,] ftrain, test;
+double[] ttrain, ttest;
+var iter = new CsML.Util.KFoldIterator(150, 10);
+foreach(bool[] f in iter)
+{
+    Console.Write(".");
+    (ftrain, ftest) = CsML.Util.Matrix.Split(features, f);
+    (ttrain, ttest) = CsML.Util.Array.Split(target, f);
+    var tree = new CsML.Tree.BinaryTree("classify", CsML.Util.Statistics.Gini);
+    tree.Train(ftrain, ttrain);
+    double[] predictions = tree.Predict(ftest);
+    results.Add(CsML.Util.Array.ClassificationAccuracy(ttest, predictions));
+}
+Console.WriteLine("");
+Console.WriteLine(string.Join(",", results.ToArray()));
