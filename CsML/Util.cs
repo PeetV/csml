@@ -454,42 +454,37 @@ public class KFoldIterator : IEnumerable<bool[]>
 {
     public int size;
     public int kfolds;
-    private int _currentFold;
-    private List<(int, int)> _foldIndeces = new List<(int, int)>();
+    public List<(int, int)> foldIndeces;
 
     public KFoldIterator(int size, int kfolds)
     {
         this.size = size;
         this.kfolds = kfolds;
-        Reset();
-    }
-
-    public void Reset()
-    {
-        _currentFold = 0;
         int foldSize = (int)((double)size / (double)kfolds);
-        _foldIndeces = new List<(int, int)>();
+        foldIndeces = new List<(int, int)>();
         int foldStart, foldEnd;
         for (int cntr = 0; cntr < kfolds; cntr++)
         {
             foldStart = cntr * foldSize;
             foldEnd = foldStart + foldSize;
-            _foldIndeces.Add((foldStart, foldEnd));
+            foldIndeces.Add((foldStart, foldEnd));
         }
     }
 
     public IEnumerator<bool[]> GetEnumerator()
     {
-        (int, int) currentIndex = _foldIndeces[_currentFold];
-        bool[] result = new bool[size];
-        for (int idx = 0; idx < size; idx++)
+        for (int currentFold = 0; currentFold < kfolds; currentFold++)
         {
-            if (idx >= currentIndex.Item1 & idx < currentIndex.Item2)
-                result[idx] = false;
-            else result[idx] = true;
+            (int, int) currentIndex = foldIndeces[currentFold];
+            bool[] result = new bool[size];
+            for (int idx = 0; idx < size; idx++)
+            {
+                if (idx >= currentIndex.Item1 & idx < currentIndex.Item2)
+                    result[idx] = false;
+                else result[idx] = true;
+            }
+            yield return result;
         }
-        _currentFold += 1;
-        yield return result;
     }
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

@@ -326,28 +326,47 @@ public class Statistics
 public class KFoldIterator
 {
     [Fact]
-    public void iterator_test()
+    public void iterator_test_correctfilter()
     {
         CsML.Util.KFoldIterator iter = new CsML.Util.KFoldIterator(100, 10);
-        bool[] actual = iter.Take(1).First();
-        bool[] expected = Enumerable.Repeat(false, 10).ToArray()
-                            .Concat(Enumerable.Repeat(true, 90)).ToArray();
-        Assert.True(actual.SequenceEqual(expected));
-        actual = iter.Take(1).First();
-        actual = iter.Take(1).First();
-        expected = Enumerable.Repeat(true, 20).ToArray()
-                        .Concat(Enumerable.Repeat(false, 10)).ToArray()
-                        .Concat(Enumerable.Repeat(true, 70)).ToArray();
-        Assert.True(actual.SequenceEqual(expected));
-        actual = iter.Take(1).First();
-        actual = iter.Take(1).First();
-        actual = iter.Take(1).First();
-        actual = iter.Take(1).First();
-        actual = iter.Take(1).First();
-        actual = iter.Take(1).First();
-        actual = iter.Take(1).First();
-        expected = Enumerable.Repeat(true, 90).ToArray()
-                        .Concat(Enumerable.Repeat(false, 10)).ToArray();
-        Assert.True(actual.SequenceEqual(expected));
+        Assert.Equal((0, 10), iter.foldIndeces[0]);
+        Assert.Equal((30, 40), iter.foldIndeces[3]);
+        Assert.Equal((90, 100), iter.foldIndeces[9]);
+        int cntr = 1;
+        foreach (bool[] actual in iter)
+        {
+            if (cntr == 1)
+            {
+                bool[] expected = Enumerable.Repeat(false, 10).ToArray()
+                                    .Concat(Enumerable.Repeat(true, 90)).ToArray();
+                Assert.True(actual.SequenceEqual(expected));
+            }
+            if (cntr == 3)
+            {
+                bool[] expected = Enumerable.Repeat(true, 20).ToArray()
+                                .Concat(Enumerable.Repeat(false, 10)).ToArray()
+                                .Concat(Enumerable.Repeat(true, 70)).ToArray();
+                Assert.True(actual.SequenceEqual(expected));
+            }
+            if (cntr == 10)
+            {
+                bool[] expected = Enumerable.Repeat(true, 90).ToArray()
+                                .Concat(Enumerable.Repeat(false, 10)).ToArray();
+                Assert.True(actual.SequenceEqual(expected));
+            }
+            cntr++;
+        }
+    }
+
+    [Fact]
+    public void iterator_test_numiters()
+    {
+        CsML.Util.KFoldIterator iter = new CsML.Util.KFoldIterator(100, 10);
+        int cntr = 0;
+        foreach (bool[] f in iter)
+        {
+            cntr++;
+        }
+        Assert.Equal(10, cntr);
     }
 }
