@@ -68,11 +68,14 @@ CsML.Tree.BinaryTree tree;
 tree = new CsML.Tree.BinaryTree("classify", CsML.Util.Statistics.Gini);
 tree.Train(ftrain, ttrain);
 double[] predictions = tree.Predict(ftest);
-CsML.Util.Array.ClassificationAccuracy(ttest, predictions)
 
 #!markdown
 
-Visualise predictions.
+Examine model metrics.
+
+#!csharp
+
+CsML.Util.Array.ClassificationAccuracy(ttest, predictions)
 
 #!csharp
 
@@ -84,43 +87,3 @@ strpred[0..5]
 #!csharp
 
 CsML.Util.Array.ClassificationMetrics(strtest, strpred)
-
-#!csharp
-
-#r "nuget:SandDance.InteractiveExtension,*-*"
-#r "nuget:DataView.InteractiveExtension,*-*"
-#r "nuget:Microsoft.ML.DataView"
-#r "nuget:Microsoft.Data.Analysis"
-
-#!csharp
-
-using Microsoft.Data.Analysis;
-using Microsoft.ML;
-
-#!csharp
-
-var col1 = new StringDataFrameColumn("Actuals", strtest);
-var col2 = new StringDataFrameColumn("Predictions", strpred);
-int len = ttest.GetLength(0);
-double[] sepalLength = new double[len];
-double[] sepalWidth = new double[len];
-double[] petalLength = new double[len];
-double[] petalWidth = new double[len];
-for (int r=0; r < len; r++)
-{
-    sepalLength[r] = ftest[r, 0];
-    sepalWidth[r] = ftest[r, 1];
-    petalLength[r] = ftest[r, 2];
-    petalWidth[r] = ftest[r, 3];
-}
-var col3 = new DoubleDataFrameColumn("SepalLength", sepalLength);
-var col4 = new DoubleDataFrameColumn("SepalWidth", sepalWidth);
-var col5 = new DoubleDataFrameColumn("PetalLength", petalLength);
-var col6 = new DoubleDataFrameColumn("PetalWidth", petalWidth);
-DataFrameColumn[] columns = new DataFrameColumn[]{col1, col2, col3, col4, col5, col6};
-var results = new DataFrame(columns);
-results.Head(2)
-
-#!csharp
-
-results.ToTabularDataResource().ExploreWithSandDance().Display();
