@@ -444,3 +444,56 @@ public class Statistics
         return result;
     }
 }
+
+/// <summary>
+/// A class that yields a boolean filter containing train vs test splits for k-fold
+/// cross validation. E.g. a 10 fold iterator will iteratively yield 10 train / 90
+/// test, 10 test / 10 train / 80 test etc in folds.
+/// </summary>
+public class KFoldIterator : IEnumerable<bool[]>
+{
+    public int size;
+    public int kfolds;
+    private int _currentFold;
+    private List<(int, int)> _foldIndeces = new List<(int, int)>();
+
+    KFoldIterator(int size, int kfolds)
+    {
+        this.size = size;
+        this.kfolds = kfolds;
+        Reset();
+    }
+
+    public void Reset()
+    {
+        _currentFold = 0;
+        int foldSize = (int)((double)size / (double)kfolds);
+        _foldIndeces = new List<(int, int)>();
+        int foldStart, foldEnd;
+        for (int cntr = 0; cntr < kfolds; cntr++)
+        {
+            foldStart = cntr * foldSize;
+            foldEnd = foldStart + foldSize;
+            _foldIndeces.Add((foldStart, foldEnd));
+        }
+    }
+
+    public IEnumerator<bool[]> GetEnumerator()
+    {
+        (int, int) currentIndex = _foldIndeces[_currentFold];
+        bool[] result = new bool[size];
+        for (int idx = 0; idx < size; idx++)
+        {
+            if (idx >= currentIndex.Item1 & idx < currentIndex.Item2)
+                result[idx] = false;
+            else result[idx] = true;
+        }
+        _currentFold += 1;
+        yield return result;
+    }
+
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+}
