@@ -178,6 +178,10 @@ public class Array
     }
 }
 
+/// <summary>
+/// A collection of functions that do work on model training inputs, comprising a matrix of
+/// features and an a target variable array.
+/// </summary>
 public class Features
 {
     /// <summary>
@@ -207,7 +211,9 @@ public class Features
     }
 
     /// <summary>
-    /// Split a matrix containing features and a target array 
+    /// Split a matrix containing features and a target variable array
+    /// into train and test sets using a ratio between 0 and 1, e.g. 0.7
+    /// places 70% into train and keeps 30% for test.
     /// </summary>
     public static ((double[,], double[]), (double[,], double[])) Split(
         double[,] matrix, double[] target, double ratio
