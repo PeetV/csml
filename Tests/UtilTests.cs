@@ -321,6 +321,14 @@ public class Statistics
         Assert.Equal(0.6666666666666665, result);
     }
 
+    [Fact]
+    public void SSE()
+    {
+        var actuals = new double[] { 1, 2, 3, 4, 5 };
+        var predicted = new double[] { 1, 3, 5, 4, 5 };
+        var result = CsML.Util.Statistics.SSE(actuals, predicted);
+        Assert.Equal(5, result);
+    }
 }
 
 public class KFoldIterator

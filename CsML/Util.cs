@@ -449,6 +449,15 @@ public class Statistics
         }
         return result;
     }
+
+    /// <summary>
+    /// Calculate the sum of the squared difference between two arrays.
+    /// </summary>
+    public static double SSE(double[] actuals, double[] predictions)
+    {
+        IEnumerable<(double, double)> zipped = actuals.Zip(predictions);
+        return zipped.Select(x => Math.Pow((x.Item1 - x.Item2), 2)).ToArray().Sum();
+    }
 }
 
 /// <summary>
