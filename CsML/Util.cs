@@ -452,15 +452,17 @@ public class Statistics
     }
 
     /// <summary>
-    /// Calculate the r-squared and adjusted r-squared of an actuals array vs
-    /// predictions.
+    /// Calculate the r-squared and adjusted r-squared of an actuals array vs predictions.
     /// <see> See
     /// <seealso href=" https://en.wikipedia.org/wiki/Coefficient_of_determination">Wikipedia</seealso>
-    /// Cofficient of Determination.
+    /// Coefficient Of Determination.
     /// </see>
     /// </summary>
-    /// <param name="p">p is the number of explanatory terms used in the regression
-    /// model(returns 0 for adjusted r-squared if p is null).</param>
+    /// <param name="p">
+    /// p is the number of explanatory terms used in the regression to calculated adjusted r-squared
+    /// (returns 0 for adjusted r-squared if p is null).
+    /// </param>
+    /// <returns>A tuple containing r-squared and adjusted r-squared.</returns>
     public static (double, double) RSquared(double[] actuals, double[] predictions, int? p)
     {
         double mn = actuals.Average();
