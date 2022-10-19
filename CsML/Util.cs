@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.HighPerformance;
+using System.Security.Cryptography;
 
 namespace CsML.Util;
 
@@ -448,6 +449,30 @@ public class Statistics
             result -= calc * calc;
         }
         return result;
+    }
+
+    /// <summary>
+    /// Calculate the r-squared and adjusted r-squared of an actuals array vs
+    /// predictions.
+    /// <see> See
+    /// <seealso href=" https://en.wikipedia.org/wiki/Coefficient_of_determination">Wikipedia</seealso>
+    /// Cofficient of Determination.
+    /// </see>
+    /// </summary>
+    /// <param name="p">p is the number of explanatory terms used in the regression
+    /// model(returns 0 for adjusted r-squared if p is null).</param>
+    public static (double, double) RSquared(double[] actuals, double[] predictions, int? p)
+    {
+        double mn = actuals.Average();
+        double sseVal = SSE(actuals, predictions);
+        double sstVal = actuals.Select(x => Math.Pow(x - mn, 2)).Sum();
+        double rsq = 1.0 - sseVal / sstVal;
+        if (p == null)
+        {
+            return (rsq, 0.0);
+        }
+        double n = (double)actuals.Length;
+        return (rsq, 1.0 - (1.0 - rsq) * ((n - 1) / (n - (double)p! - 1)));
     }
 
     /// <summary>
