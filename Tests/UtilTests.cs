@@ -342,6 +342,13 @@ public class Statistics
         var result = CsML.Util.Statistics.SSE(actuals, predicted);
         Assert.Equal(5, result);
     }
+
+    [Fact]
+    public void Std()
+    {
+        var input = new double[] { 1, 2, 3, 4};
+        Assert.Equal(1.118033988749895, CsML.Util.Statistics.StdevP(input));
+    }
 }
 
 public class KFoldIterator

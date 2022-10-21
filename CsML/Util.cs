@@ -485,6 +485,16 @@ public class Statistics
         IEnumerable<(double, double)> zipped = actuals.Zip(predictions);
         return zipped.Select(x => Math.Pow((x.Item1 - x.Item2), 2)).ToArray().Sum();
     }
+
+    /// <summary>
+    /// Calculate the population standard deviation from an input array.
+    /// </summary>
+    public static double StdevP(double[] input)
+    {
+        double mn = input.Average();
+        double dev = input.Select(x => Math.Pow(x - mn, 2)).Sum();
+        return Math.Sqrt(dev / input.Length);
+    }
 }
 
 /// <summary>
