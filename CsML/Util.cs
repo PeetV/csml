@@ -145,6 +145,23 @@ public class Array
     }
 
     /// <summary>
+    /// Count of ocurrences of each array element.
+    /// </summary>
+    /// <returns>
+    /// A dictionary containing array elements as keys and  element counts as values.
+    /// </returns>
+    public static Dictionary<T, int> ElementCounts<T>(T[] input) where T : notnull
+    {
+        Dictionary<T, int> counts = new Dictionary<T, int>();
+        foreach (T item in input)
+        {
+            if (counts.ContainsKey(item)) counts[item] += 1;
+            else counts[item] = 1;
+        }
+        return counts;
+    }
+
+    /// <summary>
     /// Split a double array using a boolean filter array, with equivalent true values 
     /// going to the left and false going to the right.
     /// </summary>
@@ -163,22 +180,6 @@ public class Array
         return (lhs.ToArray(), rhs.ToArray());
     }
 
-    /// <summary>
-    /// Count of ocurrences of each array element.
-    /// </summary>
-    /// <returns>
-    /// A dictionary containing array elements as keys and  element counts as values.
-    /// </returns>
-    public static Dictionary<T, int> ElementCounts<T>(T[] input) where T : notnull
-    {
-        Dictionary<T, int> counts = new Dictionary<T, int>();
-        foreach (T item in input)
-        {
-            if (counts.ContainsKey(item)) counts[item] += 1;
-            else counts[item] = 1;
-        }
-        return counts;
-    }
 }
 
 /// <summary>
