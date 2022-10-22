@@ -161,7 +161,7 @@ public class BinaryTree
         }
         else
         {
-            classCounts = CsML.Util.Array.ToElementCounts(target);
+            classCounts = CsML.Util.Array.ElementCounts(target);
             predicted = classCounts.MaxBy(kvp => kvp.Value).Key;
         }
         BinaryNode node = new BinaryNode();

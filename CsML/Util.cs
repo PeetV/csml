@@ -164,10 +164,12 @@ public class Array
     }
 
     /// <summary>
-    /// Convert an array to a dictionary containing the count of ocurrences of each
-    /// array element.
+    /// Count of ocurrences of each array element.
     /// </summary>
-    public static Dictionary<T, int> ToElementCounts<T>(T[] input) where T : notnull
+    /// <returns>
+    /// A dictionary containing array elements as keys and  element counts as values.
+    /// </returns>
+    public static Dictionary<T, int> ElementCounts<T>(T[] input) where T : notnull
     {
         Dictionary<T, int> counts = new Dictionary<T, int>();
         foreach (T item in input)

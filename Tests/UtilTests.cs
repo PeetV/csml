@@ -102,7 +102,7 @@ public class Array
     public void ToElementCounts()
     {
         double[] vector = new double[] { 1, 1, 1, 2, 2 };
-        var result = CsML.Util.Array.ToElementCounts(vector);
+        var result = CsML.Util.Array.ElementCounts(vector);
         Assert.Equal(3, result[1]);
         Assert.Equal(2, result[2]);
     }
@@ -346,7 +346,7 @@ public class Statistics
     [Fact]
     public void Std()
     {
-        var input = new double[] { 1, 2, 3, 4};
+        var input = new double[] { 1, 2, 3, 4 };
         Assert.Equal(1.118033988749895, CsML.Util.Statistics.StdevP(input));
     }
 }
