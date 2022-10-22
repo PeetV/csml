@@ -133,8 +133,10 @@ public class BinaryTree
         Assert.Equal(0.5, tree.nodes[2].splitPoint);
         Assert.Equal(2.6666666666666665, tree.nodes[3].predicted);
         Assert.Equal(3, tree.nodes[3].recordCount);
+        Assert.True(tree.nodes[3].isLeaf);
         Assert.Equal(1.5166666666666666, tree.nodes[4].predicted);
         Assert.Equal(6, tree.nodes[4].recordCount);
+        Assert.True(tree.nodes[4].isLeaf);
     }
 
     private static CsML.Tree.BinaryTree ManualTree()

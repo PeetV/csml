@@ -154,7 +154,7 @@ public class BinaryTree
         int recordCount = target.Length;
         Dictionary<double, int>? classCounts;
         double predicted;
-        if (_mode == "regresion")
+        if (_mode == "regress")
         {
             classCounts = null;
             predicted = target.Average();
