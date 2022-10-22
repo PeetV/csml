@@ -321,6 +321,34 @@ public class Statistics
         Assert.Equal(0.6666666666666665, result);
     }
 
+    [Fact]
+    public void RSquared()
+    {
+        double[] acts = new double[] { 2.0, 2.0, 4.0 };
+        double[] preds = new double[] { 1.0, 2.0, 3.0 };
+        var result = CsML.Util.Statistics.RSquared(acts, preds, null);
+        Assert.Equal((0.25, 00), result);
+        result = CsML.Util.Statistics.RSquared(acts, preds, 1);
+        var n = acts.Length;
+        var adjusted = 1.0 - (1.0 - 0.25) * ((n - 1.0) / (n - 1 - 1));
+        Assert.Equal((0.25, adjusted), result);
+    }
+
+    [Fact]
+    public void SSE()
+    {
+        var actuals = new double[] { 1, 2, 3, 4, 5 };
+        var predicted = new double[] { 1, 3, 5, 4, 5 };
+        var result = CsML.Util.Statistics.SSE(actuals, predicted);
+        Assert.Equal(5, result);
+    }
+
+    [Fact]
+    public void Std()
+    {
+        var input = new double[] { 1, 2, 3, 4};
+        Assert.Equal(1.118033988749895, CsML.Util.Statistics.StdevP(input));
+    }
 }
 
 public class KFoldIterator

@@ -35,7 +35,7 @@ public class BinaryTree
     }
 
     [Fact]
-    public void Train_regress_gini()
+    public void Train_regression_gini()
     {
         double[,] features = {
                 {0, 1.0},
@@ -99,6 +99,42 @@ public class BinaryTree
         {
             tree.Train(new double[,] { { 1, 1 } }, new double[] { 1, 2 });
         });
+    }
+
+
+    [Fact]
+    public void Train_Regression()
+    {
+        var matrix = new double[,]{
+            { 0, 1.0 },
+            { 0, 1.0 },
+            { 0, 1.0 },
+            { 0, 2.0 },
+            { 0, 12.0 },
+            { 0, 1.0 },
+            { 1, 1.0 },
+            { 1, 2.0 },
+            { 1, 1.0 },
+            { 2, 2.0 },
+            { 2, 3.0 },
+            { 2, 1.0 }
+        };
+        var target = new double[] { 1, 2, 1, 1, 2, 2.1, 1, 2, 5, 5, 5, 5 };
+        CsML.Tree.BinaryTree tree = new CsML.Tree.BinaryTree("regress", CsML.Util.Statistics.StdevP);
+        Assert.Equal("regress", tree.treemode);
+        tree.Train(matrix, target);
+        Assert.Equal(0, tree.nodes[0].columnIndex);
+        Assert.Equal(1.5, tree.nodes[0].splitPoint);
+        Assert.False(tree.nodes[0].isLeaf);
+        Assert.Equal(5, tree.nodes[1].predicted);
+        Assert.Equal(3, tree.nodes[1].recordCount);
+        Assert.True(tree.nodes[1].isLeaf);
+        Assert.Equal(0, tree.nodes[2].columnIndex);
+        Assert.Equal(0.5, tree.nodes[2].splitPoint);
+        Assert.Equal(2.6666666666666665, tree.nodes[3].predicted);
+        Assert.Equal(3, tree.nodes[3].recordCount);
+        Assert.Equal(1.5166666666666666, tree.nodes[4].predicted);
+        Assert.Equal(6, tree.nodes[4].recordCount);
     }
 
     private static CsML.Tree.BinaryTree ManualTree()

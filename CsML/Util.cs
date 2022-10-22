@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.HighPerformance;
+using System.Security.Cryptography;
 
 namespace CsML.Util;
 
@@ -178,6 +179,10 @@ public class Array
     }
 }
 
+/// <summary>
+/// A collection of functions that do work on model training inputs, comprising a matrix of
+/// features and an a target variable array.
+/// </summary>
 public class Features
 {
     /// <summary>
@@ -207,7 +212,9 @@ public class Features
     }
 
     /// <summary>
-    /// Split a matrix containing features and a target array 
+    /// Split a matrix containing features and a target variable array
+    /// into train and test sets using a ratio between 0 and 1, e.g. 0.7
+    /// places 70% into train and keeps 30% for test.
     /// </summary>
     public static ((double[,], double[]), (double[,], double[])) Split(
         double[,] matrix, double[] target, double ratio
@@ -442,6 +449,51 @@ public class Statistics
             result -= calc * calc;
         }
         return result;
+    }
+
+    /// <summary>
+    /// Calculate the r-squared and adjusted r-squared of an actuals array vs predictions.
+    /// <see> See
+    /// <seealso href=" https://en.wikipedia.org/wiki/Coefficient_of_determination">Wikipedia</seealso>
+    /// Coefficient Of Determination.
+    /// </see>
+    /// </summary>
+    /// <param name="p">
+    /// p is the number of explanatory terms used in the regression to calculated adjusted r-squared
+    /// (returns 0 for adjusted r-squared if p is null).
+    /// </param>
+    /// <returns>A tuple containing r-squared and adjusted r-squared.</returns>
+    public static (double, double) RSquared(double[] actuals, double[] predictions, int? p)
+    {
+        double mn = actuals.Average();
+        double sseVal = SSE(actuals, predictions);
+        double sstVal = actuals.Select(x => Math.Pow(x - mn, 2)).Sum();
+        double rsq = 1.0 - sseVal / sstVal;
+        if (p == null)
+        {
+            return (rsq, 0.0);
+        }
+        double n = (double)actuals.Length;
+        return (rsq, 1.0 - (1.0 - rsq) * ((n - 1) / (n - (double)p! - 1)));
+    }
+
+    /// <summary>
+    /// Calculate the sum of the squared difference between two arrays.
+    /// </summary>
+    public static double SSE(double[] actuals, double[] predictions)
+    {
+        IEnumerable<(double, double)> zipped = actuals.Zip(predictions);
+        return zipped.Select(x => Math.Pow((x.Item1 - x.Item2), 2)).ToArray().Sum();
+    }
+
+    /// <summary>
+    /// Calculate the population standard deviation from an input array.
+    /// </summary>
+    public static double StdevP(double[] input)
+    {
+        double mn = input.Average();
+        double dev = input.Select(x => Math.Pow(x - mn, 2)).Sum();
+        return Math.Sqrt(dev / input.Length);
     }
 }
 
