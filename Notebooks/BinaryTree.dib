@@ -17,7 +17,7 @@ using CsML;
 
 #!markdown
 
-Load data.
+Load data:
 
 #!csharp
 
@@ -31,7 +31,7 @@ double[,] data = CsML.Util.Matrix.FromCSV(inpuPath, mapping, loadFromRow: 1);
 
 #!markdown
 
-Extract features into a matrix and the target column into an array.
+Extract features into a matrix and the target column into an array:
 
 #!csharp
 
@@ -49,7 +49,7 @@ for (int r=0; r < data.GetLength(0); r++)
 
 #!markdown
 
-Shuffle the features matrix and target array and split into test and train sets.
+Shuffle the features matrix and target array and split into test and train sets:
 
 #!csharp
 
@@ -60,7 +60,7 @@ double[] ttrain, ttest;
 
 #!markdown
 
-Train the model, get predictions from test data and calculate accuracy of predictions.
+Train the model, get predictions from test data and calculate accuracy of predictions:
 
 #!csharp
 
@@ -71,7 +71,7 @@ double[] predictions = tree.Predict(ftest);
 
 #!markdown
 
-Examine model metrics.
+Examine model metrics:
 
 #!csharp
 
@@ -90,7 +90,7 @@ CsML.Util.Array.ClassificationMetrics(strtest, strpred)
 
 #!markdown
 
-10 fold cross-validation.
+10 fold cross-validation:
 
 #!csharp
 
@@ -98,6 +98,51 @@ List<double> results = new List<double>(){};
 double[,] ftrain, test;
 double[] ttrain, ttest;
 var iter = new CsML.Util.KFoldIterator(150, 10);
+foreach(bool[] f in iter)
+{
+    Console.Write(".");
+    (ftrain, ftest) = CsML.Util.Matrix.Split(features, f);
+    (ttrain, ttest) = CsML.Util.Array.Split(target, f);
+    var tree = new CsML.Tree.BinaryTree("classify", CsML.Util.Statistics.Gini);
+    tree.maxdepth = 15;
+    tree.minrows = 3;
+    tree.Train(ftrain, ttrain);
+    double[] predictions = tree.Predict(ftest);
+    results.Add(CsML.Util.Array.ClassificationAccuracy(ttest, predictions));
+}
+var mean = results.Average();
+results = results.Select(x => Math.Round(x, 4)).ToList();
+Console.WriteLine("");
+Console.WriteLine(string.Join(", ", results.ToArray()));
+Console.WriteLine($"Average {mean}");
+
+#!markdown
+
+### LED data example
+
+#!csharp
+
+inpuPath = "/Users/peet/Sources/csml/Tests/Data/led7.csv";
+data = CsML.Util.Matrix.FromCSV(inpuPath, null, loadFromRow: 1);
+
+#!csharp
+
+dataLength = data.GetLength(0);
+features = new double[dataLength, 7];
+target = new double[dataLength];
+for (int r=0; r < data.GetLength(0); r++)
+{
+    for (int c=0; c < 7; c++)
+    {
+        features[r, c] = data[r, c];
+    }
+    target[r] = data[r, 7];
+}
+
+#!csharp
+
+results = new List<double>(){};
+iter = new CsML.Util.KFoldIterator(dataLength, 10);
 foreach(bool[] f in iter)
 {
     Console.Write(".");
