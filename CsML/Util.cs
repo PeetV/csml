@@ -318,7 +318,7 @@ public class Matrix
     /// </param>
     public static double[,] FromCSV(
         string inputfile,
-        Dictionary<int, Dictionary<string, double>> mapping,
+        Dictionary<int, Dictionary<string, double>>? mapping,
         string separator = ",",
         int loadFromRow = 0)
     {
@@ -332,9 +332,16 @@ public class Matrix
             for (int colidx = 0; colidx < columncount; colidx++)
             {
                 rawval = rawdata[rowidx][colidx];
-                if (mapping.ContainsKey(colidx))
-                    cell = mapping[colidx][rawval];
-                else if (!Double.TryParse(rawval, out cell))
+                if (mapping != null)
+                {
+                    if (mapping.ContainsKey(colidx))
+                    {
+                        cell = mapping[colidx][rawval];
+                        result[rowidx - loadFromRow, colidx] = cell;
+                        continue;
+                    }
+                }
+                if (!Double.TryParse(rawval, out cell))
                     cell = 0.0;
                 result[rowidx - loadFromRow, colidx] = cell;
             }
