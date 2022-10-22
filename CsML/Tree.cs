@@ -131,6 +131,49 @@ public class BinaryTree
     }
 
     /// <summary>
+    /// Predict labels for new data and return corresponding class counts to use for
+    /// probability estimates.
+    /// </summary>
+    public (double, Dictionary<double, int>)[] PredictWithClassCounts(
+        double[,] matrix,
+        bool skipchecks = false)
+    {
+        inputRecordCount = matrix.GetLength(0);
+        if (!skipchecks)
+        {
+            if (nodes.Count == 0)
+                throw new ArgumentException("Tree is untrained");
+            if (matrix.GetLength(1) != minColumns)
+                throw new ArgumentException("Tree trained on different number of columns");
+            if (inputRecordCount == 0)
+                throw new ArgumentException("Empty input");
+            if (treemode == "regress")
+                throw new ArgumentException("Probabilities require treemode to be 'classify'");
+        }
+        Span2D<double> matrixSpan = matrix;
+        var result = new (double, Dictionary<double, int>)[inputRecordCount];
+        for (int i = 0; i < inputRecordCount; i++)
+        {
+            double[] row = matrixSpan.GetRow(i).ToArray();
+            int iterations = 0;
+            BinaryNode node = nodes[0];
+            while (iterations < _maxrecursions)
+            {
+                iterations += 1;
+                if (node.isLeaf)
+                {
+                    result[i] = ((double)node.predicted!, node.classCounts!);
+                    break;
+                }
+                if (row[(int)node.columnIndex!] > node.splitPoint)
+                    node = nodes[(int)node.yesIndex!];
+                else node = nodes[(int)node.noIndex!];
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
     /// Calculate the mean purity gain across nodes, weighted by the number of
     /// samples considered at each split as a proportion of total samples.
     /// </summary>
