@@ -121,7 +121,7 @@ public class BinaryTree
         };
         var target = new double[] { 1, 2, 1, 1, 2, 2.1, 1, 2, 5, 5, 5, 5 };
         CsML.Tree.BinaryTree tree = new CsML.Tree.BinaryTree("regress", CsML.Util.Statistics.StdevP);
-        Assert.Equal("regress", tree.treemode);
+        Assert.Equal("regress", tree.mode);
         tree.Train(matrix, target);
         Assert.Equal(0, tree.nodes[0].columnIndex);
         Assert.Equal(1.5, tree.nodes[0].splitPoint);

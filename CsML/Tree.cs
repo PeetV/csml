@@ -38,12 +38,12 @@ public class BinaryTree
     public int inputRecordCount;
     public int maxdepth = 15;
     public int minrows = 3;
-    public int randomfeatures = -1;
+    public int randomFeatures = -1;
     public double[]? classes;
     public Func<double[], double> purityFn;
 
     private string _mode;
-    public string treemode
+    public string mode
     {
         get { return _mode; }
         set
@@ -63,7 +63,7 @@ public class BinaryTree
         _depth = 0;
         inputRecordCount = 0;
         _mode = "classify";
-        this.treemode = mode;
+        this.mode = mode;
         this.purityFn = purityFn;
     }
 
@@ -147,7 +147,7 @@ public class BinaryTree
                 throw new ArgumentException("Tree trained on different number of columns");
             if (inputRecordCount == 0)
                 throw new ArgumentException("Empty input");
-            if (treemode == "regress")
+            if (mode == "regress")
                 throw new ArgumentException("Probabilities require treemode to be 'classify'");
         }
         Span2D<double> matrixSpan = matrix;
@@ -229,7 +229,7 @@ public class BinaryTree
             target!.All(val => val.Equals(target![0])) ||
             _splitCount > _maxsplits)
             return AddLeaf(target!);
-        var bs = Util.Matrix.BestSplit<double>(matrix, target!, purityFn, randomfeatures);
+        var bs = Util.Matrix.BestSplit<double>(matrix, target!, purityFn, randomFeatures);
         var sm = Util.Matrix.Split(matrix, bs.Item1, bs.Item2.Item1);
         var st = Util.Array.Split(target!, sm.Item2);
         int yesLength = sm.Item1.Item1.GetLength(0);
