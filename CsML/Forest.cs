@@ -96,7 +96,7 @@ public class RandomForest
         Parallel.For(0, inputRecordCount, i =>
         {
             List<double[]> input = new List<double[]>();
-            input.Append(CsML.Util.Matrix.GetRow(matrix, i, false));
+            input = input.Append(CsML.Util.Matrix.GetRow(matrix, i, false)).ToList();
             if (mode == "regress")
             {
                 List<double> predictions = new List<double>(trees.Count);
