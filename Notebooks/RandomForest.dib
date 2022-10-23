@@ -1,0 +1,161 @@
+#!markdown
+
+# Random Forest
+
+#!csharp
+
+#i "nuget:/Users/peet/Sources/csml/CsML/bin/Release"
+#r "nuget:CsML,*-*"
+
+#!csharp
+
+using CsML;
+
+#!markdown
+
+### Iris test data example
+
+#!markdown
+
+Load data:
+
+#!csharp
+
+var mapping = new Dictionary<int, Dictionary<string, double>>();
+mapping[4] = new Dictionary<string, double>
+{
+    { "versicolor", 0 }, {"virginica", 1 }, {"setosa", 2}
+};
+string inpuPath = "/Users/peet/Sources/csml/Tests/Data/iris.csv";
+double[,] data = CsML.Util.Matrix.FromCSV(inpuPath, mapping, loadFromRow: 1);
+
+#!markdown
+
+Extract features into a matrix and the target column into an array:
+
+#!csharp
+
+int dataLength = data.GetLength(0);
+double[,] features = new double[dataLength, 4];
+double[] target = new double[dataLength];
+for (int r=0; r < data.GetLength(0); r++)
+{
+    for (int c=0; c < 4; c++)
+    {
+        features[r, c] = data[r, c];
+    }
+    target[r] = data[r, 4];
+}
+
+#!markdown
+
+Shuffle the features matrix and target array and split into test and train sets:
+
+#!csharp
+
+(features, target) = CsML.Util.Features.Shuffle(features, target);
+double[,] ftrain, ftest;
+double[] ttrain, ttest;
+((ftrain, ttrain), (ftest, ttest)) = CsML.Util.Features.Split(features, target, 0.8);
+
+#!markdown
+
+Train the model, get predictions from test data and calculate accuracy of predictions:
+
+#!csharp
+
+CsML.Forest.RandomForest forest;
+forest = new CsML.Forest.RandomForest("classify", CsML.Util.Statistics.Gini);
+forest.Train(ftrain, ttrain);
+double[] predictions = forest.Predict(ftest);
+
+#!markdown
+
+Examine model metrics:
+
+#!csharp
+
+CsML.Util.Array.ClassificationAccuracy(ttest, predictions)
+
+#!csharp
+
+var revmapping = mapping[4].ToDictionary(x => x.Value, x => x.Key);
+var strtest = ttest.Select(x => revmapping[x]).ToArray();
+var strpred = predictions.Select(x => revmapping[x]).ToArray();
+strpred[0..5]
+
+#!csharp
+
+CsML.Util.Array.ClassificationMetrics(strtest, strpred)
+
+#!markdown
+
+10 fold cross-validation:
+
+#!csharp
+
+List<double> results = new List<double>(){};
+double[,] ftrain, test;
+double[] ttrain, ttest;
+var iter = new CsML.Util.KFoldIterator(150, 10);
+foreach(bool[] f in iter)
+{
+    Console.Write(".");
+    (ftrain, ftest) = CsML.Util.Matrix.Split(features, f);
+    (ttrain, ttest) = CsML.Util.Array.Split(target, f);
+    var tree = new CsML.Tree.BinaryTree("classify", CsML.Util.Statistics.Gini);
+    tree.maxdepth = 15;
+    tree.minrows = 3;
+    tree.Train(ftrain, ttrain);
+    double[] predictions = tree.Predict(ftest);
+    results.Add(CsML.Util.Array.ClassificationAccuracy(ttest, predictions));
+}
+var mean = results.Average();
+results = results.Select(x => Math.Round(x, 4)).ToList();
+Console.WriteLine("");
+Console.WriteLine(string.Join(", ", results.ToArray()));
+Console.WriteLine($"Average {mean}");
+
+#!markdown
+
+### LED data example
+
+#!csharp
+
+inpuPath = "/Users/peet/Sources/csml/Tests/Data/led7.csv";
+data = CsML.Util.Matrix.FromCSV(inpuPath, null, loadFromRow: 1);
+
+#!csharp
+
+dataLength = data.GetLength(0);
+features = new double[dataLength, 7];
+target = new double[dataLength];
+for (int r=0; r < data.GetLength(0); r++)
+{
+    for (int c=0; c < 7; c++)
+    {
+        features[r, c] = data[r, c];
+    }
+    target[r] = data[r, 7];
+}
+
+#!csharp
+
+results = new List<double>(){};
+iter = new CsML.Util.KFoldIterator(dataLength, 10);
+foreach(bool[] f in iter)
+{
+    Console.Write(".");
+    (ftrain, ftest) = CsML.Util.Matrix.Split(features, f);
+    (ttrain, ttest) = CsML.Util.Array.Split(target, f);
+    var forest = new CsML.Forest.RandomForest("classify", CsML.Util.Statistics.Gini);
+    forest.treeCount = 500;
+    forest.Train(ftrain, ttrain);
+    double[] predictions = forest.Predict(ftest);
+    results.Add(CsML.Util.Array.ClassificationAccuracy(ttest, predictions));
+}
+var mean = results.Average();
+results = results.Select(x => Math.Round(x, 4)).ToList();
+Console.WriteLine("");
+Console.WriteLine(string.Join(", ", results.ToArray()));
+Console.WriteLine($"Average {mean}");
