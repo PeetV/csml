@@ -1,6 +1,7 @@
-namespace CsML.Forest;
-
+using Microsoft.Toolkit.HighPerformance;
 using CsML.Tree;
+
+namespace CsML.Forest;
 
 /// <summary>
 /// A forest of binary decision trees for classification and regression.
@@ -77,6 +78,46 @@ public class RandomForest
             trees.Add(tree);
         }
         Parallel.ForEach(trees, tree => tree.Train(matrix, target, true));
+    }
+
+    /// <summary>
+    /// Infer target values from new data.
+    /// </summary>
+    public double[] Predict(double[,] matrix)
+    {
+        inputRecordCount = matrix.GetLength(0);
+        if (trees.Count == 0)
+            throw new ArgumentException("Forest is untrained");
+        if (matrix.GetLength(1) != minColumns)
+            throw new ArgumentException("Forest trained on different number of columns");
+        if (inputRecordCount == 0)
+            throw new ArgumentException("Empty input");
+        double[] result = new double[inputRecordCount];
+        Parallel.For(0, inputRecordCount, i =>
+        {
+            List<double[]> input = new List<double[]>();
+            input.Append(CsML.Util.Matrix.GetRow(matrix, i, false));
+            if (mode == "regress")
+            {
+                List<double> predictions = new List<double>(trees.Count);
+                foreach (var tree in trees)
+                    predictions.Add(tree.Predict(CsML.Util.Matrix.FromList2D(input))[0]);
+                result[i] = predictions.Average();
+            }
+            else
+            {
+                Dictionary<double, int> counts = new Dictionary<double, int>();
+                double vote;
+                foreach (var tree in trees)
+                {
+                    vote = tree.Predict(CsML.Util.Matrix.FromList2D(input))[0];
+                    if (counts.ContainsKey(vote)) counts[vote] += 1;
+                    else counts[vote] = 1;
+                }
+                result[i] = counts.MaxBy(kvp => kvp.Value).Key;
+            }
+        });
+        return result;
     }
 
 }

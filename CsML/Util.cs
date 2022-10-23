@@ -363,6 +363,22 @@ public class Matrix
         return result;
     }
 
+    public static double[] GetRow(double[,] matrix, int index, bool useSpan = true)
+    {
+        if (useSpan)
+        {
+            Span2D<double> matrixSpan = matrix;
+            return matrixSpan.GetRow(index).ToArray();
+        }
+        int width = matrix.GetLength(1);
+        double[] result = new double[width];
+        for (int cidx = 0; cidx < width; cidx++)
+        {
+            result[cidx] = matrix[index, cidx];
+        }
+        return result;
+    }
+
     /// <summary>
     /// Split a matrix (c# two dimensional double array) using a column
     /// index and split point.
