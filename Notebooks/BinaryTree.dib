@@ -4,7 +4,7 @@
 
 #!csharp
 
-#i "nuget:/Users/peet/Sources/csml/CsML/bin/Release"
+#i "nuget:/home/peet/Sources/csml/CsML/bin/Release"
 #r "nuget:CsML,*-*"
 
 #!csharp
@@ -26,7 +26,7 @@ mapping[4] = new Dictionary<string, double>
 {
     { "versicolor", 0 }, {"virginica", 1 }, {"setosa", 2}
 };
-string inpuPath = "/Users/peet/Sources/csml/Tests/Data/iris.csv";
+string inpuPath = "/home/peet/Sources/csml/Tests/Data/iris.csv";
 double[,] data = CsML.Util.Matrix.FromCSV(inpuPath, mapping, loadFromRow: 1);
 
 #!markdown
@@ -87,6 +87,46 @@ strpred[0..5]
 #!csharp
 
 CsML.Util.Array.ClassificationMetrics(strtest, strpred)
+
+#!markdown
+
+Predictions with class counts:
+
+#!csharp
+
+(double, Dictionary<double, int>)[] pwcc = tree.PredictWithClassCounts(ftest);
+predictions = pwcc.Select(x => x.Item1).ToArray();
+CsML.Util.Array.ClassificationAccuracy(ttest, predictions)
+
+#!csharp
+
+int[] verscounts = pwcc.Select(x => {
+    if (x.Item2.ContainsKey(0)) return x.Item2[0];
+    else return 0;
+}).ToArray();
+int[] virgcounts = pwcc.Select(x => {
+    if (x.Item2.ContainsKey(1)) return x.Item2[1];
+    else return 0;
+}).ToArray();
+int[] setcounts = pwcc.Select(x => {
+    if (x.Item2.ContainsKey(2)) return x.Item2[2];
+    else return 0;
+}).ToArray();
+
+#!csharp
+
+#r "nuget:Microsoft.Data.Analysis,*-*"
+using Microsoft.Data.Analysis;
+
+#!csharp
+
+StringDataFrameColumn colactual = new StringDataFrameColumn("actuals", strtest);
+StringDataFrameColumn colpreds = new StringDataFrameColumn("preds", strpred);
+PrimitiveDataFrameColumn<int> colvers = new PrimitiveDataFrameColumn<int>("vers", verscounts);
+PrimitiveDataFrameColumn<int> colvirg = new PrimitiveDataFrameColumn<int>("virg", virgcounts);
+PrimitiveDataFrameColumn<int> colset = new PrimitiveDataFrameColumn<int>("set", setcounts);
+DataFrame df = new DataFrame(colactual, colpreds, colvers, colvirg, colset);
+DataFrame.WriteCsv(df, "/home/peet/tmp.csv");
 
 #!markdown
 
