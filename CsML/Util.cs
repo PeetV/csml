@@ -197,8 +197,7 @@ public class Features
     /// </returns>
     public static (double[,], double[]) Bootstrap(double[,] matrix, double[] target)
     {
-        int numRows = matrix.GetLength(0);
-        int numCols = matrix.GetLength(1);
+        int numRows = matrix.GetLength(0), numCols = matrix.GetLength(1);
         if (numRows != target.Length)
             throw new ArgumentException("Inputs must be same length");
         Random random = new Random();
