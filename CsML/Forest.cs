@@ -64,7 +64,7 @@ public class RandomForest
             throw new ArgumentException("Inputs must be the same length");
         trees = new List<BinaryTree>();
         minColumns = matrix.GetLength(1);
-        if (_mode == "classification")
+        if (_mode == "classify")
             classes = target.Distinct().ToArray();
         randomFeatures = randomFeatures == 0 ?
                          DefaultRandomFeatures(minColumns) :

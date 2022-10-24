@@ -89,7 +89,8 @@ public class Array
 
     /// <summary>
     /// Calculate Precision (proportion of positives predictived correctly)
-    /// and Recall (proportion of true positives found).
+    /// and Recall (proportion of true positives found) from a predictions
+    /// array compared to an actuals array.
     /// </summary>
     public static Dictionary<T, (double, double)> ClassificationMetrics<T>(
         T[] actuals, T[] predictions) where T : IComparable<T>
@@ -147,7 +148,7 @@ public class Array
     /// Count of ocurrences of each array element.
     /// </summary>
     /// <returns>
-    /// A dictionary containing array elements as keys and  element counts as values.
+    /// A dictionary containing array elements as keys and element counts as values.
     /// </returns>
     public static Dictionary<T, int> ElementCounts<T>(T[] input) where T : notnull
     {
@@ -161,8 +162,8 @@ public class Array
     }
 
     /// <summary>
-    /// Split a double array using a boolean filter array, with equivalent true values 
-    /// going to the left and false going to the right.
+    /// Split an array using a boolean filter array, with equivalent true values 
+    /// going to the left and false values going to the right.
     /// </summary>
     public static (T[], T[]) Split<T>(
         T[] input,
@@ -183,7 +184,7 @@ public class Array
 
 /// <summary>
 /// A collection of functions that do work on model training inputs, comprising a matrix of
-/// features and an a target variable array.
+/// features and a target variable array.
 /// </summary>
 public class Features
 {
@@ -241,7 +242,7 @@ public class Features
 public class Matrix
 {
     /// <summary>
-    /// Determine which value to split a matrix (two dimensional c# array) on to
+    /// Determine which value to split a matrix (two dimensional array) on to
     /// maximise the weighted gain in purity when the split is applied to a
     /// corresponding target array.
     /// </summary>
@@ -310,7 +311,7 @@ public class Matrix
     /// <summary>
     /// Create a two dimensional double array from a CSV file.
     /// </summary>
-    /// <param name="inputfile">A Path object point to the CSV file.</param>
+    /// <param name="inputfile">Path of the CSV input file.</param>
     /// <param name="mapping">
     /// A dictionary used to convert string columns to numeric values of the format
     /// { {column id , { {string val, numeric val}, {string val, numeric val} ...}.
@@ -380,7 +381,7 @@ public class Matrix
     }
 
     /// <summary>
-    /// Split a matrix (c# two dimensional double array) using a column
+    /// Split a matrix (two dimensional double array) using a column
     /// index and split point.
     /// </summary>
     /// <param name="matrix">Numeric two dimensional array to split.</param>

@@ -87,7 +87,7 @@ public class BinaryTree
         _recursions = 0;
         _splitCount = 0;
         _depth = 0;
-        if (_mode == "classification")
+        if (_mode == "classify")
             classes = target.Distinct().ToArray();
         Grow((double[,])matrix.Clone(), (double[])target.Clone(), 0);
     }
