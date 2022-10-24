@@ -189,6 +189,34 @@ public class Array
 public class Features
 {
     /// <summary>
+    /// Bootstrap sample from feature matrix and correspondnig target array, with
+    /// replacement, e.g. to add ramdomisation to a Random Forest.
+    /// <summary>
+    /// <returns>
+    /// A new matrix and target array containing bootstrap samples.
+    /// </returns>
+    public static (double[,], double[]) Bootstrap(double[,] matrix, double[] target)
+    {
+        int numRows = matrix.GetLength(0);
+        int numCols = matrix.GetLength(1);
+        if (numRows != target.Length)
+            throw new ArgumentException("Inputs must be same length");
+        Random random = new Random();
+        double[,] resultmatrix = new double[numRows, numCols];
+        double[] resulttarget = new double[numRows];
+        int[] resultIndex = Enumerable.Range(0, numRows).Select(_ => random.Next(0, numRows)).ToArray();
+        int idx;
+        for (int i = 0; i < numRows; i++)
+        {
+            idx = resultIndex[i];
+            for (int c = 0; c < numCols; c++)
+                resultmatrix[i, c] = matrix[idx, c];
+            resulttarget[i] = target[idx];
+        }
+        return (resultmatrix, resulttarget);
+    }
+
+    /// <summary>
     /// Shuffle a matrix containing features and a target array maintaining the
     /// relationship between matrix rows and array items.
     /// </summary>

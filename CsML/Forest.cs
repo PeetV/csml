@@ -8,7 +8,6 @@ namespace CsML.Forest;
 /// </summary>
 public class RandomForest
 {
-
     public List<BinaryTree> trees;
     public int treeCount;
     public int minColumns;
