@@ -64,7 +64,7 @@ public class Array
     /// actuals array.
     /// </summary>
     /// <exception cref="ArgumentException">
-    /// Throws an exception of inputs aren't the same length.
+    /// Throws an exception if inputs aren't the same length.
     /// </exception>
     public static double ClassificationAccuracy<T>(
         T[] actuals, T[] predictions) where T : IComparable<T>
@@ -100,7 +100,7 @@ public class Array
     /// array compared to an actuals array.
     /// </summary>
     /// <exception cref="ArgumentException">
-    /// Throws an exception of inputs aren't the same length.
+    /// Throws an exception if inputs aren't the same length.
     /// </exception>
     public static Dictionary<T, (double, double)> ClassificationMetrics<T>(
         T[] actuals, T[] predictions) where T : IComparable<T>
@@ -229,6 +229,9 @@ public class Features
     /// Shuffle a matrix containing features and a target array maintaining the
     /// relationship between matrix rows and array items.
     /// </summary>
+    /// <exception cref="ArgumentException">
+    /// Throws an exception if inputs aren't the same length.
+    /// </exception>
     public static (double[,], double[]) Shuffle(double[,] matrix, double[] target)
     {
         int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
@@ -256,6 +259,10 @@ public class Features
     /// into train and test sets using a ratio between 0 and 1, e.g. 0.7
     /// places 70% into train and keeps 30% for test.
     /// </summary>
+    /// <exception cref="ArgumentException">
+    /// Throws an exception if inputs aren't the same length or if `ratio` is
+    /// not between 0 and 1.
+    /// </exception>
     public static ((double[,], double[]), (double[,], double[])) Split(
         double[,] matrix, double[] target, double ratio
     )
@@ -401,6 +408,15 @@ public class Matrix
         return result;
     }
 
+    /// <summary>
+    /// Extract a row from a 2D array.
+    /// </summary>
+    /// <param name="matrix">The matrix to extract a row from.</param>
+    /// <param name="index">The row number to extract.</param>
+    /// <param name="useSpan">
+    /// Use Span2D to extract the row if true e.g. set to false in 
+    /// parallel code if it doesn't accept Span2D.
+    /// </param> 
     public static double[] GetRow(double[,] matrix, int index, bool useSpan = true)
     {
         if (useSpan)

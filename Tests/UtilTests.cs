@@ -89,6 +89,8 @@ public class Array
         Assert.Equal(0.5, result["A"].Item2);
         Assert.Equal(1, result["B"].Item2);
         Assert.Equal(0.6666666666666666, result["C"].Item2);
+        result = CsML.Util.Array.ClassificationMetrics(new string[] { }, new string[] { });
+        Assert.True(result.Keys.Count == 0);
     }
 
     [Fact]
