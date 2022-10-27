@@ -54,6 +54,8 @@ public class Array
         target = new double[] { 5.0, 5.0, 1.0, 5.0, 5.0, 5.0 };
         result = CsML.Util.Array.ClassificationAccuracy(values, target);
         Assert.Equal(2.0 / 6.0, result);
+        result = CsML.Util.Array.ClassificationAccuracy(new double[] { }, new double[] { });
+        Assert.Equal(0.0, result);
     }
 
     [Fact]
@@ -71,6 +73,8 @@ public class Array
         target = new double[] { 5.0, 5.0, 1.0, 5.0, 5.0, 5.0 };
         result = CsML.Util.Array.ClassificationError(values, target);
         Assert.True(4.0 / 6.0 - result < 0.00000001);
+        result = CsML.Util.Array.ClassificationAccuracy(new double[] { }, new double[] { });
+        Assert.Equal(0.0, result);
     }
 
     [Fact]

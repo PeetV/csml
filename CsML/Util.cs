@@ -63,12 +63,16 @@ public class Array
     /// Calculate classification accuracy from a predictions array compared to an
     /// actuals array.
     /// </summary>
+    /// <exception cref="ArgumentException">
+    /// Throws an exception of inputs aren't the same length.
+    /// </exception>
     public static double ClassificationAccuracy<T>(
         T[] actuals, T[] predictions) where T : IComparable<T>
     {
         int lenActuals = actuals.Length, lenPredictions = predictions.Length;
         if (lenActuals != lenPredictions)
             throw new ArgumentException("Inputs must be same length");
+        if (lenActuals == 0) return 0.0;
         double tptn = 0;
         for (int idx = 0; idx < lenActuals; idx++)
         {
@@ -81,6 +85,9 @@ public class Array
     /// Calculate classification error from a predictions array compared to an
     /// actuals array.
     /// </summary>
+    /// <exception cref="ArgumentException">
+    /// Throws an exception of inputs aren't the same length.
+    /// </exception>
     public static double ClassificationError<T>(
         T[] actuals, T[] predictions) where T : IComparable<T>
     {
@@ -92,6 +99,9 @@ public class Array
     /// and Recall (proportion of true positives found) from a predictions
     /// array compared to an actuals array.
     /// </summary>
+    /// <exception cref="ArgumentException">
+    /// Throws an exception of inputs aren't the same length.
+    /// </exception>
     public static Dictionary<T, (double, double)> ClassificationMetrics<T>(
         T[] actuals, T[] predictions) where T : IComparable<T>
     {
