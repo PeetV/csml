@@ -31,7 +31,10 @@ public class RandomForest
         }
     }
 
-    public RandomForest(string mode, Func<double[], double> purityFn, int treeCount = 103, int randomFeatures = 0)
+    public RandomForest(string mode,
+        Func<double[], double> purityFn,
+        int treeCount = 103,
+        int randomFeatures = 0)
     {
         trees = new List<BinaryTree>();
         minColumns = 0;
