@@ -205,6 +205,9 @@ public class Features
     /// <returns>
     /// A new matrix and target array containing bootstrap samples.
     /// </returns>
+    /// <exception cref="ArgumentException">
+    /// Throws an exception if inputs aren't the same length.
+    /// </exception>
     public static (double[,], double[]) Bootstrap(double[,] matrix, double[] target)
     {
         int numRows = matrix.GetLength(0), numCols = matrix.GetLength(1);
@@ -213,7 +216,9 @@ public class Features
         Random random = new Random();
         double[,] resultmatrix = new double[numRows, numCols];
         double[] resulttarget = new double[numRows];
-        int[] resultIndex = Enumerable.Range(0, numRows).Select(_ => random.Next(0, numRows)).ToArray();
+        int[] resultIndex = Enumerable.Range(0, numRows)
+                                    .Select(_ => random.Next(0, numRows))
+                                    .ToArray();
         int idx;
         for (int i = 0; i < numRows; i++)
         {

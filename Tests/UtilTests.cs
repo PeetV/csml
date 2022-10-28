@@ -117,6 +117,24 @@ public class Array
 public class Features
 {
     [Fact]
+    public void Bootstrap()
+    {
+        double[,] matrix = new double[,]
+        {
+            {1, 1, 1},
+            {2, 2, 2},
+            {3, 3, 3},
+            {4, 4, 4},
+            {5, 5, 5}
+        };
+        double[] target = new double[] { 1, 2, 3, 4, 5 };
+        (double[,] newm, double[] newt) = CsML.Util.Features.Bootstrap(matrix, target);
+        Assert.Equal(5, newm.GetLength(0));
+        Assert.Equal(3, newm.GetLength(1));
+        Assert.Equal(5, newt.Length);
+    }
+
+    [Fact]
     public void Shuffle()
     {
         double[,] matrix = new double[,]
