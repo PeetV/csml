@@ -17,6 +17,7 @@ public class RandomForest
     public int randomFeatures;
     public double[]? classes;
     public Func<double[], double> purityFn;
+    public bool bootstrapSampleData = true;
 
     private string _mode;
     public string mode
@@ -74,6 +75,7 @@ public class RandomForest
             tree.maxdepth = maxdepth;
             tree.minrows = minrows;
             tree.randomFeatures = randomFeatures;
+            tree.bootstrapSampleData = bootstrapSampleData;
             trees.Add(tree);
         }
         Parallel.ForEach(trees, tree => tree.Train(matrix, target, true));

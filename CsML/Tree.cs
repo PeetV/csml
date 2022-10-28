@@ -41,6 +41,7 @@ public class BinaryTree
     public int randomFeatures = -1;
     public double[]? classes;
     public Func<double[], double> purityFn;
+    public bool bootstrapSampleData = false;
 
     private string _mode;
     public string mode
@@ -89,7 +90,16 @@ public class BinaryTree
         _depth = 0;
         if (_mode == "classify")
             classes = target.Distinct().ToArray();
-        Grow((double[,])matrix.Clone(), (double[])target.Clone(), 0);
+        double[,] inputm;
+        double[] inputt;
+        if (bootstrapSampleData)
+            (inputm, inputt) = CsML.Util.Features.Bootstrap(matrix, target);
+        else
+        {
+            inputm = (double[,])matrix.Clone();
+            inputt = (double[])target.Clone();
+        }
+        Grow(inputm, inputt, 0);
     }
 
     /// <summary>

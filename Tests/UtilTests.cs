@@ -132,6 +132,11 @@ public class Features
         Assert.Equal(5, newm.GetLength(0));
         Assert.Equal(3, newm.GetLength(1));
         Assert.Equal(5, newt.Length);
+        var row0 = CsML.Util.Matrix.GetRow(matrix, 0);
+        double[] allowedVals = Enumerable.Range(1, 6).Select(x => (double)x).ToArray();
+        Assert.True(row0.All(x => allowedVals.Contains(x)));
+        Assert.Equal(3, row0.Length);
+        Assert.True(row0.All(x => x == row0[0]));
     }
 
     [Fact]
