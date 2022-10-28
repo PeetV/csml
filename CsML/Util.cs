@@ -201,7 +201,7 @@ public class Features
     /// <summary>
     /// Bootstrap sample from feature matrix and correspondnig target array, with
     /// replacement, e.g. to add ramdomisation to a Random Forest.
-    /// <summary>
+    /// </summary>
     /// <returns>
     /// A new matrix and target array containing bootstrap samples.
     /// </returns>
