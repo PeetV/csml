@@ -1,4 +1,3 @@
-using Microsoft.Toolkit.HighPerformance;
 using CsML.Tree;
 
 namespace CsML.Forest;

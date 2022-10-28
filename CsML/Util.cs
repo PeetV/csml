@@ -201,7 +201,7 @@ public class Features
     /// <summary>
     /// Bootstrap sample from feature matrix and correspondnig target array, with
     /// replacement, e.g. to add ramdomisation to a Random Forest.
-    /// </summary>
+    /// <summary>
     /// <returns>
     /// A new matrix and target array containing bootstrap samples.
     /// </returns>
@@ -213,12 +213,9 @@ public class Features
         int numRows = matrix.GetLength(0), numCols = matrix.GetLength(1);
         if (numRows != target.Length)
             throw new ArgumentException("Inputs must be same length");
-        Random random = new Random();
         double[,] resultmatrix = new double[numRows, numCols];
         double[] resulttarget = new double[numRows];
-        int[] resultIndex = Enumerable.Range(0, numRows)
-                                    .Select(_ => random.Next(0, numRows))
-                                    .ToArray();
+        int[] resultIndex = CsML.Probability.Sample.WithReplacement(0, numRows, numRows);
         int idx;
         for (int i = 0; i < numRows; i++)
         {
@@ -243,8 +240,7 @@ public class Features
         if (inputLength != target.Length)
             throw new ArgumentException("Inputs must be same length");
         int[] startingIndex = Enumerable.Range(0, inputLength).ToArray();
-        Random random = new Random();
-        int[] shuffledIndex = ((int[])startingIndex.Clone()).OrderBy(x => random.Next()).ToArray();
+        int[] shuffledIndex = CsML.Probability.Shuffle.Ints(startingIndex, inPlace: false);
         var fromtoIndex = startingIndex.Zip(shuffledIndex);
         double[,] newmatrix = new double[inputLength, inputWidth];
         double[] newtarget = new double[inputLength];
@@ -319,11 +315,8 @@ public class Matrix
         int columnCount = matrix.GetLength(1);
         columnIndeces = Enumerable.Range(0, columnCount).ToArray();
         if (randomFeatures > 0 & randomFeatures < columnCount)
-        {
-            Random random = new Random();
-            columnIndeces = columnIndeces.OrderBy(x => random.Next()).ToArray();
-            columnIndeces = columnIndeces[0..randomFeatures];
-        }
+            columnIndeces = CsML.Probability.Sample.WithoutReplacement(
+                columnIndeces, randomFeatures);
         double bestsplit = 0.0, bestgain = 0.0;
         int bestColumnIndex = 0;
         double split, gain;
