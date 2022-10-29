@@ -215,7 +215,7 @@ public class Features
             throw new ArgumentException("Inputs must be same length");
         double[,] resultmatrix = new double[numRows, numCols];
         double[] resulttarget = new double[numRows];
-        int[] resultIndex = CsML.Probability.Sample.WithReplacement(0, numRows, numRows);
+        int[] resultIndex = CsML.Probability.Sample.RangeWithReplacement(0, numRows, numRows);
         int idx;
         for (int i = 0; i < numRows; i++)
         {
@@ -240,7 +240,7 @@ public class Features
         if (inputLength != target.Length)
             throw new ArgumentException("Inputs must be same length");
         int[] startingIndex = Enumerable.Range(0, inputLength).ToArray();
-        int[] shuffledIndex = CsML.Probability.Shuffle.Ints(startingIndex, inPlace: false);
+        int[] shuffledIndex = CsML.Probability.Shuffle.Array(startingIndex, inPlace: false);
         var fromtoIndex = startingIndex.Zip(shuffledIndex);
         double[,] newmatrix = new double[inputLength, inputWidth];
         double[] newtarget = new double[inputLength];
@@ -248,9 +248,7 @@ public class Features
         {
             newtarget[fromto.First] = target[fromto.Second];
             for (int colidx = 0; colidx < inputWidth; colidx++)
-            {
                 newmatrix[fromto.First, colidx] = matrix[fromto.Second, colidx];
-            }
         }
         return (newmatrix, newtarget);
     }
@@ -315,7 +313,7 @@ public class Matrix
         int columnCount = matrix.GetLength(1);
         columnIndeces = Enumerable.Range(0, columnCount).ToArray();
         if (randomFeatures > 0 & randomFeatures < columnCount)
-            columnIndeces = CsML.Probability.Sample.WithoutReplacement(
+            columnIndeces = CsML.Probability.Sample.ArrayWithoutReplacement(
                 columnIndeces, randomFeatures);
         double bestsplit = 0.0, bestgain = 0.0;
         int bestColumnIndex = 0;
@@ -323,7 +321,7 @@ public class Matrix
         foreach (int columnIndex in columnIndeces)
         {
             double[] columnToCheck = matrixSpan.GetColumn(columnIndex).ToArray();
-            (split, gain) = Array.BestSplit(columnToCheck, target, purityfn);
+            (split, gain) = CsML.Util.Array.BestSplit(columnToCheck, target, purityfn);
             if (gain > bestgain)
             {
                 bestgain = gain;
@@ -425,9 +423,7 @@ public class Matrix
         int width = matrix.GetLength(1);
         double[] result = new double[width];
         for (int cidx = 0; cidx < width; cidx++)
-        {
             result[cidx] = matrix[index, cidx];
-        }
         return result;
     }
 
