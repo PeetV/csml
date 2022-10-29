@@ -5,11 +5,31 @@ namespace Csml.Tests.Probability;
 public class Functions
 {
     [Fact]
+    public void And()
+    {
+        bool[] a = new bool[] { true, false, false, true, false };
+        bool[] b = new bool[] { true, true, true, false, false };
+        bool[] expected = new bool[] { true, false, false, false, false };
+        bool[] result = CsML.Probability.Functions.And(a, b);
+        Assert.True(expected.SequenceEqual(result));
+    }
+
+    [Fact]
     public void Conditional()
     {
         bool[] a = new bool[] { true, false, false, true, false };
         bool[] b = new bool[] { true, true, true, false, false };
         Assert.Equal(1.0 / 3.0, CsML.Probability.Functions.Conditional(a, b));
+    }
+
+    [Fact]
+    public void Or()
+    {
+        bool[] a = new bool[] { true, false, false, true, false };
+        bool[] b = new bool[] { true, true, true, false, false };
+        bool[] expected = new bool[] { true, true, true, true, false };
+        bool[] result = CsML.Probability.Functions.Or(a, b);
+        Assert.True(expected.SequenceEqual(result));
     }
 
     [Fact]

@@ -3,12 +3,28 @@ namespace CsML.Probability;
 public class Functions
 {
     /// <summary>
+    /// Merge two boolean arrays using an & operator on elements.
+    /// </summary>
+    public static bool[] And(bool[] a, bool[] b)
+    {
+        return a.Zip(b).Select(x => x.First & x.Second).ToArray();
+    }
+
+    /// <summary>
     /// Compute probability of a, conditioned on b.
     /// </summary>
     public static double Conditional(bool[] a, bool[] b)
     {
         bool[] cond = a.Zip(b).Where(x => x.Second).Select(x => x.First).ToArray();
         return CsML.Probability.Functions.Probability(cond);
+    }
+
+    /// <summary>
+    /// Merge two boolean arrays using an | operator on elements.
+    /// </summary>
+    public static bool[] Or(bool[] a, bool[] b)
+    {
+        return a.Zip(b).Select(x => x.First | x.Second).ToArray();
     }
 
     /// <summary>
