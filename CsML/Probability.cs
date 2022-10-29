@@ -1,5 +1,25 @@
 namespace CsML.Probability;
 
+public class Functions
+{
+    /// <summary>
+    /// Compute probability of a, conditioned on b.
+    /// </summary>
+    public static double Conditional(bool[] a, bool[] b)
+    {
+        bool[] cond = a.Zip(b).Where(x => x.Second).Select(x => x.First).ToArray();
+        return CsML.Probability.Functions.Probability(cond);
+    }
+
+    /// <summary>
+    /// Compute a probability from a boolean array.
+    /// </summary>
+    public static double Probability(bool[] a)
+    {
+        return a.Select(x => x ? 1 : 0).Sum() / (double)a.Length;
+    }
+}
+
 public class Sample
 {
     /// <summary>

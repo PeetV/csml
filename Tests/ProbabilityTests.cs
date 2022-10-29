@@ -2,6 +2,24 @@ using Xunit;
 
 namespace Csml.Tests.Probability;
 
+public class Functions
+{
+    [Fact]
+    public void Conditional()
+    {
+        bool[] a = new bool[] { true, false, false, true, false };
+        bool[] b = new bool[] { true, true, true, false, false };
+        Assert.Equal(1.0 / 3.0, CsML.Probability.Functions.Conditional(a, b));
+    }
+
+    [Fact]
+    public void Probability()
+    {
+        bool[] a = new bool[] { true, false, false };
+        Assert.Equal(1.0 / 3.0, CsML.Probability.Functions.Probability(a));
+    }
+}
+
 public class Sample
 {
     [Fact]
