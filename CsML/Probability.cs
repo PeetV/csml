@@ -9,9 +9,7 @@ public class Sample
     /// <param name="count">The number of sample items.</param>
     public static T[] ArrayWithoutReplacement<T>(T[] input, int count)
     {
-        T[] working = (T[])input.Clone();
-        Random random = new Random();
-        working = working.OrderBy(x => random.Next()).ToArray();
+        T[] working = CsML.Probability.Shuffle.Array(input, inPlace: false);
         return working[0..count];
     }
 
