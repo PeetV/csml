@@ -273,7 +273,7 @@ public class BinaryTree
     {
         CsML.Tree.BinaryTree tree = ManualTree();
         Assert.Equal(7, tree.nodes.Count);
-        double[] gains = tree.WeightedPurityGains();
+        double[] gains = tree.PurityGains();
         Assert.Equal(1.0 * 10.0 / 60.0, gains[0]);
         Assert.Equal(2.0 * 20.0 / 60.0, gains[1]);
         Assert.Equal(3.0 * 30.0 / 60.0, gains[2]);

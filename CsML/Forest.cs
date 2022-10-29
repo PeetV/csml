@@ -123,4 +123,23 @@ public class RandomForest
         return result;
     }
 
+    /// <summary>
+    /// Calculate the mean weighted purity gains across trees.
+    /// </summary>
+    /// <returns>
+    /// An array containing purity gains in the order of feature columns.
+    /// </returns>
+    public double[] PurityGains()
+    {
+        double[] result = new double[minColumns];
+        foreach (var tree in trees)
+        {
+            double[] treeGains = tree.PurityGains();
+            for (int idx = 0; idx < minColumns; idx++)
+                result[idx] = result[idx] + treeGains[idx];
+        }
+        for (int idx = 0; idx < minColumns; idx++)
+            result[idx] = result[idx] / (double)trees.Count;
+        return result;
+    }
 }

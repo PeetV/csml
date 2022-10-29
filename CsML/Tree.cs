@@ -187,7 +187,10 @@ public class BinaryTree
     /// Calculate the mean purity gain across nodes, weighted by the number of
     /// samples considered at each split as a proportion of total samples.
     /// </summary>
-    public double[] WeightedPurityGains()
+    /// <returns>
+    /// An array containing purity gains in the order of feature columns.
+    /// </returns>
+    public double[] PurityGains()
     {
         double[] result = new double[minColumns];
         foreach (BinaryNode node in nodes)
