@@ -79,6 +79,10 @@ CsML.Util.Array.ClassificationAccuracy(ttest, predictions)
 
 #!csharp
 
+forest.PurityGains()
+
+#!csharp
+
 var revmapping = mapping[4].ToDictionary(x => x.Value, x => x.Key);
 var strtest = ttest.Select(x => revmapping[x]).ToArray();
 var strpred = predictions.Select(x => revmapping[x]).ToArray();
