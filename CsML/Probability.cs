@@ -103,8 +103,8 @@ public class Shuffle
 public class NaiveBayesClassifier<T>
     where T : IComparable<T>
 {
-    private Dictionary<T, double> classProbabilities;
-    private Dictionary<int, Dictionary<T, (double, double)>> columnMeans;
+    public Dictionary<T, double> classProbabilities;
+    public Dictionary<int, Dictionary<T, (double, double)>> columnMeans;
     public int minColumns;
 
     public NaiveBayesClassifier()

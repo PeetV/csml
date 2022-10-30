@@ -1,3 +1,5 @@
+using Microsoft.Toolkit.HighPerformance;
+
 using Xunit;
 
 namespace Csml.Tests.Probability;
@@ -78,6 +80,88 @@ public class Shuffle
         var result = CsML.Probability.Shuffle.Array(input, inPlace: false);
         Assert.Equal(3, result.Length);
         Assert.True(result.All(x => input.Contains(x)));
+    }
+}
+
+public class NaiveBayesClassifier
+{
+    [Fact]
+    public void Train_columnMeans()
+    {
+        double[,] matrix = new double[,]
+        {
+            {1, 3}, {2, 4}, {3, 5}, {4, 6}, {5, 7}
+        };
+        double[] target = new double[] { 0, 0, 0, 1, 1 };
+        var nbc = new CsML.Probability.NaiveBayesClassifier<double>();
+        nbc.Train(matrix, target);
+        var col0 = nbc.columnMeans[0];
+        var col1 = nbc.columnMeans[1];
+        Assert.Equal(
+            col0[0],
+            (2.0, CsML.Util.Statistics.Variance(new double[] { 1, 2, 3 }))
+        );
+        Assert.Equal(
+            col0[1],
+            (new double[] { 4, 5 }.Average(),
+             CsML.Util.Statistics.Variance(new double[] { 4, 5 }))
+        );
+        Assert.Equal(
+            col1[0],
+            (new double[] { 3, 4, 5 }.Average(),
+            CsML.Util.Statistics.Variance(new double[] { 3, 4, 5 }))
+        );
+        Assert.Equal(
+            col1[1],
+            (new double[] { 6, 7 }.Average(),
+            CsML.Util.Statistics.Variance(new double[] { 6, 7 }))
+        );
+    }
+
+    [Fact]
+    public void Train_classProbabilities()
+    {
+        double[,] matrix = new double[,]
+        {
+            {1, 3}, {2, 4}, {3, 5}, {4, 6}, {5, 7}
+        };
+        double[] target = new double[] { 0, 0, 0, 1, 1 };
+        var nbc = new CsML.Probability.NaiveBayesClassifier<double>();
+        nbc.Train(matrix, target);
+        Assert.Equal(3.0 / 5.0, nbc.classProbabilities[0]);
+        Assert.Equal(2.0 / 5.0, nbc.classProbabilities[1]);
+    }
+
+    [Fact]
+    public void Train_Predict_Iris()
+    {
+        var mapping = new Dictionary<int, Dictionary<string, double>>();
+        mapping[4] = new Dictionary<string, double>
+           {
+               { "versicolor", 0 }, {"virginica", 1 }, {"setosa", 2}
+           };
+        string strWorkPath = Directory.GetParent(Environment.CurrentDirectory)!.Parent!.Parent!.FullName;
+        string inpuPath = Path.Combine(strWorkPath, "Data/iris.csv");
+        double[,] matrix = CsML.Util.Matrix.FromCSV(inpuPath, mapping, loadFromRow: 1);
+        Span2D<double> matrixSpan = matrix;
+        double[,] features = matrixSpan.Slice(0, 0, 150, 4).ToArray();
+        Assert.Equal(5.1, features[0, 0]);
+        Assert.Equal(3.5, features[0, 1]);
+        Assert.Equal(1.4, features[0, 2]);
+        Assert.Equal(0.2, features[0, 3]);
+        Assert.Equal(150, features.GetLength(0));
+        double[] target = matrixSpan.GetColumn(4).ToArray();
+        Assert.Equal(2, target[0]);
+        Assert.Equal(150, target.Length);
+
+        (features, target) = CsML.Util.Features.Shuffle(features, target);
+        double[,] ftrain, ftest;
+        double[] ttrain, ttest;
+        ((ftrain, ttrain), (ftest, ttest)) = CsML.Util.Features.Split(features, target, 0.8);
+        var nbc = new CsML.Probability.NaiveBayesClassifier<double>();
+        nbc.Train(ftrain, ttrain);
+        double[] predictions = nbc.Predict(ftest);
+        Assert.True(CsML.Util.Array.ClassificationAccuracy(ttest, predictions) > 0.8);
     }
 }
 
