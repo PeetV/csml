@@ -84,6 +84,49 @@ public class Shuffle
 }
 
 /// <summary>
+/// A classifier making a weighted random guess from potential class labels
+/// for benchmarking purposes.
+/// </summary>
+public class RandomClassifier<T>
+    where T : notnull
+{
+    public T[] classes;
+    public double[] weights;
+
+    public RandomClassifier()
+    {
+        classes = new T[] { };
+        weights = new double[] { };
+    }
+
+    /// <summary>
+    /// Train the classifier by calculating class label weightings from the
+    /// target parameter array.
+    /// </summary>
+    public void Train(double[,] matrix, T[] target)
+    {
+        var counts = CsML.Util.Array.ElementCounts(target);
+        classes = counts.Keys.OrderBy(x => x).ToArray();
+        weights = new double[classes.Length];
+        T key;
+        for (int i = 0; i < classes.Length; i++)
+        {
+            key = classes[i];
+            weights[i] = counts[key];
+        }
+    }
+    /// <summary>
+    /// Randomly choose from class labels applying weightings to emulate
+    /// the distribution of the labels identified in train method.
+    /// </summary>
+    public T[] Predict(double[,] matrix)
+    {
+        var sampler = new WeightedIndexSampler<T>(classes, weights);
+        return sampler.SampleTarget(matrix.GetLength(0));
+    }
+}
+
+/// <summary>
 /// Draw a weighted sample of class labels or array index.
 /// </summary>
 public class WeightedIndexSampler<T>

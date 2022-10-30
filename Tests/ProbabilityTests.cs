@@ -74,6 +74,31 @@ public class Shuffle
     }
 }
 
+public class RandomClassifier
+{
+    [Fact]
+    public void TrainPredict()
+    {
+        var cfier = new CsML.Probability.RandomClassifier<string>();
+        string[] target = Enumerable.Repeat("a", 50)
+                            .Concat(Enumerable.Repeat("b", 30))
+                            .Concat(Enumerable.Repeat("c", 10))
+                            .Concat(Enumerable.Repeat("d", 5))
+                            .Concat(Enumerable.Repeat("e", 5))
+                            .ToArray();
+        Assert.Equal(100, target.Length);
+        cfier.Train(new double[,] { }, target);
+        string[] result = cfier.Predict(new double[1000, 1]);
+        var counts = CsML.Util.Array.ElementCounts(result);
+        Assert.Equal(1000, result.Length);
+        Assert.InRange((double)counts["a"] / 1000.0, 0.45, 0.55);
+        Assert.InRange((double)counts["b"] / 1000.0, 0.25, 0.35);
+        Assert.InRange((double)counts["c"] / 1000.0, 0.05, 0.15);
+        Assert.InRange((double)counts["d"] / 1000.0, 0.01, 0.1);
+        Assert.InRange((double)counts["e"] / 1000.0, 0.01, 0.1);
+    }
+}
+
 public class WeightedIndexSampler
 {
     [Fact]
