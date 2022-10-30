@@ -128,6 +128,47 @@ public class NaiveBayesClassifier<T>
             CalculateColumnMeans(matrix, target, colidx);
     }
 
+    public T[] Predict(double[,] matrix)
+    {
+        int inputRecordCount = matrix.GetLength(0);
+        if (classProbabilities.Count == 0)
+            throw new ArgumentException("Classifier not trained");
+        if (matrix.GetLength(1) != minColumns)
+            throw new ArgumentException("Tree trained on different number of columns");
+        if (inputRecordCount == 0)
+            throw new ArgumentException("Empty input");
+        T[] result = new T[inputRecordCount];
+        Span2D<double> matrixSpan = matrix;
+        Dictionary<T, double> probs;
+        Dictionary<T, (double, double)> colvals;
+        double prob, mn, var;
+        for (int i = 0; i < inputRecordCount; i++)
+        {
+            double[] row = matrixSpan.GetRow(i).ToArray();
+            probs = classProbabilities.ToDictionary(e => e.Key, e => e.Value);
+            for (int c = 0; c < minColumns; c++)
+            {
+                foreach (var classLabel in probs.Keys)
+                {
+                    if (columnMeans.ContainsKey(c))
+                    {
+                        colvals = columnMeans[c];
+                        (mn, var) = colvals[classLabel];
+                        prob = CsML.Probability.Functions.ProbabilityNormal(row[c], mn, var);
+                    }
+                    else prob = 0.0001;
+                    // Some underflow protection given values can get really small
+                    if (probs[classLabel] < 2.2250738585072014e-50)
+                        probs[classLabel] = 2.2250738585072014e-50;
+                    else
+                        probs[classLabel] = probs[classLabel] * prob;
+                }
+            }
+            result[i] = probs.MaxBy(kvp => kvp.Value).Key;
+        }
+        return result;
+    }
+
     private void CalculateClassProbabilities(T[] target)
     {
         int lenTarget = target.Length;
