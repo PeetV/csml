@@ -63,6 +63,7 @@ public class Sample
                          .ToArray();
     }
 }
+
 public class Shuffle
 {
     /// <summary>
@@ -77,5 +78,28 @@ public class Shuffle
         Random random = new Random();
         T[] result = inPlace ? input : (T[])input.Clone();
         return result.OrderBy(x => random.Next()).ToArray();
+    }
+}
+
+/// <summary>
+/// Draw a weighted sample of class labels or array indeces.
+/// </summary>
+public class WeightedIndexSampler<T>
+{
+    private T[] target;
+    private double[] weights;
+    private Random random;
+
+    public WeightedIndexSampler(T[] target, double[] weights)
+    {
+        if (target.Length != weights.Length)
+            throw new ArgumentException("Inputs must be same length");
+        this.target = target;
+        this.weights = (double[])weights.Clone();
+        double weightsSum = weights.Sum();
+        weights = weights.Select(x => x / weightsSum)
+                    // .Cumulative()
+                    .ToArray();
+        random = new Random();
     }
 }
