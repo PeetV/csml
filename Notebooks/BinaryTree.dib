@@ -4,7 +4,7 @@
 
 #!csharp
 
-#i "nuget:/home/peet/Sources/csml/CsML/bin/Release"
+#i "nuget:/Users/peet/Sources/csml/CsML/bin/Release"
 #r "nuget:CsML,*-*"
 
 #!csharp
@@ -26,7 +26,7 @@ mapping[4] = new Dictionary<string, double>
 {
     { "versicolor", 0 }, {"virginica", 1 }, {"setosa", 2}
 };
-string inpuPath = "/home/peet/Sources/csml/Tests/Data/iris.csv";
+string inpuPath = "/Users/peet/Sources/csml/Tests/Data/iris.csv";
 double[,] data = CsML.Util.Matrix.FromCSV(inpuPath, mapping, loadFromRow: 1);
 
 #!markdown
@@ -60,6 +60,18 @@ double[] ttrain, ttest;
 
 #!markdown
 
+Train a random choice classifier for benchmarking:
+
+#!csharp
+
+CsML.Probability.RandomClassifier<double> rcfier;
+rcfier = new CsML.Probability.RandomClassifier<double>();
+rcfier.Train(ftrain, ttrain);
+double[] predictions = rcfier.Predict(ftest);
+CsML.Util.Array.ClassificationAccuracy(ttest, predictions)
+
+#!markdown
+
 Train the model, get predictions from test data and calculate accuracy of predictions:
 
 #!csharp
@@ -67,7 +79,7 @@ Train the model, get predictions from test data and calculate accuracy of predic
 CsML.Tree.BinaryTree tree;
 tree = new CsML.Tree.BinaryTree("classify", CsML.Util.Statistics.Gini);
 tree.Train(ftrain, ttrain);
-double[] predictions = tree.Predict(ftest);
+predictions = tree.Predict(ftest);
 
 #!markdown
 
@@ -126,7 +138,7 @@ PrimitiveDataFrameColumn<int> colvers = new PrimitiveDataFrameColumn<int>("vers"
 PrimitiveDataFrameColumn<int> colvirg = new PrimitiveDataFrameColumn<int>("virg", virgcounts);
 PrimitiveDataFrameColumn<int> colset = new PrimitiveDataFrameColumn<int>("set", setcounts);
 DataFrame df = new DataFrame(colactual, colpreds, colvers, colvirg, colset);
-DataFrame.WriteCsv(df, "/home/peet/tmp.csv");
+DataFrame.WriteCsv(df, "/Users/peet/tmp.csv");
 
 #!markdown
 
@@ -178,6 +190,27 @@ for (int r=0; r < data.GetLength(0); r++)
     }
     target[r] = data[r, 7];
 }
+
+#!csharp
+
+results = new List<double>(){};
+iter = new CsML.Util.KFoldIterator(dataLength, 10);
+foreach(bool[] f in iter)
+{    
+
+    Console.Write(".");
+    (ftrain, ftest) = CsML.Util.Matrix.Split(features, f);
+    (ttrain, ttest) = CsML.Util.Array.Split(target, f);
+    rcfier = new CsML.Probability.RandomClassifier<double>();
+    rcfier.Train(ftrain, ttrain);
+    double[] predictions = rcfier.Predict(ftest);
+    results.Add(CsML.Util.Array.ClassificationAccuracy(ttest, predictions));
+}
+var mean = results.Average();
+results = results.Select(x => Math.Round(x, 4)).ToList();
+Console.WriteLine("");
+Console.WriteLine(string.Join(", ", results.ToArray()));
+Console.WriteLine($"Average {mean}");
 
 #!csharp
 

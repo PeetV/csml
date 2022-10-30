@@ -147,6 +147,28 @@ for (int r=0; r < data.GetLength(0); r++)
 
 results = new List<double>(){};
 iter = new CsML.Util.KFoldIterator(dataLength, 10);
+CsML.Probability.RandomClassifier<double> rcfier;
+foreach(bool[] f in iter)
+{    
+
+    Console.Write(".");
+    (ftrain, ftest) = CsML.Util.Matrix.Split(features, f);
+    (ttrain, ttest) = CsML.Util.Array.Split(target, f);
+    rcfier = new CsML.Probability.RandomClassifier<double>();
+    rcfier.Train(ftrain, ttrain);
+    double[] predictions = rcfier.Predict(ftest);
+    results.Add(CsML.Util.Array.ClassificationAccuracy(ttest, predictions));
+}
+var mean = results.Average();
+results = results.Select(x => Math.Round(x, 4)).ToList();
+Console.WriteLine("");
+Console.WriteLine(string.Join(", ", results.ToArray()));
+Console.WriteLine($"Average {mean}");
+
+#!csharp
+
+results = new List<double>(){};
+iter = new CsML.Util.KFoldIterator(dataLength, 10);
 foreach(bool[] f in iter)
 {
     Console.Write(".");
