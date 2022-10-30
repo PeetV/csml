@@ -568,6 +568,16 @@ public class Statistics
         double dev = input.Select(x => Math.Pow(x - mn, 2)).Sum();
         return Math.Sqrt(dev / input.Length);
     }
+
+    /// <summary>
+    /// Calculate the variance of a double array (average of the squared
+    /// deviations from the mean).
+    /// </summary>
+    public static double Variance(double[] input)
+    {
+        double mn = input.Average();
+        return input.Select(x => Math.Pow(x - mn, 2)).Average();
+    }
 }
 
 /// <summary>

@@ -378,6 +378,15 @@ public class Statistics
         var input = new double[] { 1, 2, 3, 4 };
         Assert.Equal(1.118033988749895, CsML.Util.Statistics.StdevP(input));
     }
+
+    [Fact]
+    public void Variance()
+    {
+        var input = new double[] { 1, 2, 3, 4 };
+        Assert.Equal(1.25, CsML.Util.Statistics.Variance(input));
+        input = new double[] { 1, 2 };
+        Assert.Equal(0.25, CsML.Util.Statistics.Variance(input));
+    }
 }
 
 public class KFoldIterator
