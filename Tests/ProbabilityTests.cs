@@ -85,6 +85,25 @@ public class WeightedIndexSampler
         int[] result = wis.SampleIndex(1000);
         var counts = CsML.Util.Array.ElementCounts(result);
         Assert.Equal(new int[] { 0, 1, 2, 3, 4 }, counts.Keys.OrderBy(x => x).ToArray());
-        Assert.InRange(counts[0] / 1000, 0, 1);
+        Assert.InRange((double)counts[0] / 1000.0, 0.45, 0.55);
+        Assert.InRange((double)counts[1] / 1000.0, 0.25, 0.35);
+        Assert.InRange((double)counts[2] / 1000.0, 0.05, 0.15);
+        Assert.InRange((double)counts[3] / 1000.0, 0.01, 0.1);
+        Assert.InRange((double)counts[4] / 1000.0, 0.01, 0.1);
+    }
+
+    [Fact]
+    public void SampleTarget()
+    {
+        string[] target = new string[] { "a", "b", "c", "d", "e" };
+        double[] weights = new double[] { 50, 30, 10, 5, 5 };
+        var wis = new CsML.Probability.WeightedIndexSampler<string>(target, weights);
+        string[] result = wis.SampleTarget(1000);
+        var counts = CsML.Util.Array.ElementCounts(result);
+        Assert.InRange((double)counts["a"] / 1000.0, 0.45, 0.55);
+        Assert.InRange((double)counts["b"] / 1000.0, 0.25, 0.35);
+        Assert.InRange((double)counts["c"] / 1000.0, 0.05, 0.15);
+        Assert.InRange((double)counts["d"] / 1000.0, 0.01, 0.1);
+        Assert.InRange((double)counts["e"] / 1000.0, 0.01, 0.1);
     }
 }

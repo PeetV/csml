@@ -131,6 +131,7 @@ public class WeightedIndexSampler<T>
         return result;
     }
 
+    // TODO: change to binary search instead of sequential search
     private int IndexAtCumVal(double randNum)
     {
         for (int i = 0; i < weights.Length; i++)
