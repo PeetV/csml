@@ -1,3 +1,5 @@
+using Microsoft.Toolkit.HighPerformance;
+
 using CsML.Extensions;
 
 namespace CsML.Probability;
@@ -80,6 +82,67 @@ public class Shuffle
         Random random = new Random();
         T[] result = inPlace ? input : (T[])input.Clone();
         return result.OrderBy(x => random.Next()).ToArray();
+    }
+}
+
+/// <summary>
+/// A naive Bayesian classifier (naive given assumption of column
+/// independence and normal distribution of features).
+/// </summary>
+public class NaiveBayesClassifier<T>
+    where T : IComparable<T>
+{
+    private Dictionary<T, double> classProbabilities;
+    private Dictionary<int, Dictionary<T, (double, double)>> columnMeans;
+    public int minColumns;
+
+    public NaiveBayesClassifier()
+    {
+        classProbabilities = new Dictionary<T, double> { };
+        columnMeans = new Dictionary<int, Dictionary<T, (double, double)>> { };
+    }
+    public void Train(double[,] matrix, T[] target)
+    {
+        int inputRecordCount = matrix.GetLength(0);
+        int targetLength = target.Length;
+        if (inputRecordCount == 0 | targetLength == 0)
+            throw new ArgumentException("Empty input");
+        if (inputRecordCount != targetLength)
+            throw new ArgumentException("Inputs must be the same length");
+        classProbabilities = new Dictionary<T, double> { };
+        columnMeans = new Dictionary<int, Dictionary<T, (double, double)>> { };
+        minColumns = matrix.GetLength(1);
+        CalculateClassProbabilities(target);
+        foreach (var colidx in Enumerable.Range(0, minColumns))
+            CalculateColumnMeans(matrix, target, colidx);
+    }
+
+    private void CalculateClassProbabilities(T[] target)
+    {
+        int lenTarget = target.Length;
+        var counts = CsML.Util.Array.ElementCounts(target);
+        foreach (var key in counts.Keys)
+            classProbabilities[key] = (double)counts[key] / (double)lenTarget;
+    }
+
+    private void CalculateColumnMeans(double[,] matrix, T[] target, int columnIndex)
+    {
+        Span2D<double> matrixSpan = matrix;
+        double[] workingColumn = matrixSpan.GetColumn(columnIndex).ToArray();
+        double[] values;
+        double mean, variance;
+        var valuesDict = new Dictionary<T, (double, double)> { };
+        foreach (var classLabel in classProbabilities.Keys)
+        {
+            values = workingColumn.Zip(target)
+                        .Where(x => x.Second.CompareTo(classLabel) == 0)
+                        .Select(x => x.First)
+                        .ToArray();
+            mean = values.Average();
+            variance = 0; // TODO: variance calc
+            valuesDict[classLabel] = (mean, variance);
+        }
+        columnMeans[columnIndex] = valuesDict;
     }
 }
 
