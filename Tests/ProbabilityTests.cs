@@ -73,3 +73,18 @@ public class Shuffle
         Assert.True(result.All(x => input.Contains(x)));
     }
 }
+
+public class WeightedIndexSampler
+{
+    [Fact]
+    public void SampleIndex()
+    {
+        string[] target = new string[] { "a", "b", "c", "d", "e" };
+        double[] weights = new double[] { 50, 30, 10, 5, 5 };
+        var wis = new CsML.Probability.WeightedIndexSampler<string>(target, weights);
+        int[] result = wis.SampleIndex(1000);
+        var counts = CsML.Util.Array.ElementCounts(result);
+        Assert.Equal(counts.Keys.ToArray(), new int[] { 0, 1, 2, 3, 4 });
+        Assert.InRange(counts[0] / 1000, 0, 1);
+    }
+}

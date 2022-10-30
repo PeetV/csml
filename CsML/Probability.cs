@@ -84,7 +84,7 @@ public class Shuffle
 }
 
 /// <summary>
-/// Draw a weighted sample of class labels or array indeces.
+/// Draw a weighted sample of class labels or array index.
 /// </summary>
 public class WeightedIndexSampler<T>
 {
@@ -107,9 +107,8 @@ public class WeightedIndexSampler<T>
         random = new Random();
     }
 
-    public int[] SampleIndeces(int count)
+    public int[] SampleIndex(int count)
     {
-        Random random = new Random();
         double randNum;
         int[] result = new int[count];
         for (int i = 0; i < count; i++)
@@ -120,7 +119,18 @@ public class WeightedIndexSampler<T>
         return result;
     }
 
-    // TODO: change sequential search to binary search for speed
+    public T[] SampleTarget(int count)
+    {
+        double randNum;
+        T[] result = new T[count];
+        for (int i = 0; i < count; i++)
+        {
+            randNum = random.NextDouble();
+            result[i] = target[IndexAtCumVal(randNum)];
+        }
+        return result;
+    }
+
     private int IndexAtCumVal(double randNum)
     {
         for (int i = 0; i < weights.Length; i++)
