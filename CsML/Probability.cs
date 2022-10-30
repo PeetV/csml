@@ -1,3 +1,5 @@
+using CsML.Extensions;
+
 namespace CsML.Probability;
 
 public class Functions
@@ -94,12 +96,39 @@ public class WeightedIndexSampler<T>
     {
         if (target.Length != weights.Length)
             throw new ArgumentException("Inputs must be same length");
+        if (target.Length == 0)
+            throw new ArgumentException("Empty input");
         this.target = target;
         this.weights = (double[])weights.Clone();
         double weightsSum = weights.Sum();
         weights = weights.Select(x => x / weightsSum)
-                    // .Cumulative()
+                    .CumulativeSum()
                     .ToArray();
         random = new Random();
+    }
+
+    public int[] SampleIndeces(int count)
+    {
+        Random random = new Random();
+        double randNum;
+        int[] result = new int[count];
+        for (int i = 0; i < count; i++)
+        {
+            randNum = random.NextDouble();
+            result[i] = IndexAtCumVal(randNum);
+        }
+        return result;
+    }
+
+    // TODO: change sequential search to binary search for speed
+    private int IndexAtCumVal(double randNum)
+    {
+        for (int i = 0; i < weights.Length; i++)
+        {
+            if (randNum >= weights[i])
+                return i;
+
+        }
+        return weights.Length - 1;
     }
 }
