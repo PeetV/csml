@@ -101,7 +101,7 @@ public class WeightedIndexSampler<T>
         this.target = target;
         this.weights = (double[])weights.Clone();
         double weightsSum = weights.Sum();
-        weights = weights.Select(x => x / weightsSum)
+        this.weights = this.weights.Select(x => x / weightsSum)
                     .CumulativeSum()
                     .ToArray();
         random = new Random();
@@ -135,7 +135,7 @@ public class WeightedIndexSampler<T>
     {
         for (int i = 0; i < weights.Length; i++)
         {
-            if (randNum >= weights[i])
+            if (randNum <= weights[i])
                 return i;
 
         }

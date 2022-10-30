@@ -84,7 +84,7 @@ public class WeightedIndexSampler
         var wis = new CsML.Probability.WeightedIndexSampler<string>(target, weights);
         int[] result = wis.SampleIndex(1000);
         var counts = CsML.Util.Array.ElementCounts(result);
-        Assert.Equal(counts.Keys.ToArray(), new int[] { 0, 1, 2, 3, 4 });
+        Assert.Equal(new int[] { 0, 1, 2, 3, 4 }, counts.Keys.OrderBy(x => x).ToArray());
         Assert.InRange(counts[0] / 1000, 0, 1);
     }
 }
