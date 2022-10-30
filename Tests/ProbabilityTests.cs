@@ -38,6 +38,13 @@ public class Functions
         bool[] a = new bool[] { true, false, false };
         Assert.Equal(1.0 / 3.0, CsML.Probability.Functions.Probability(a));
     }
+
+    [Fact]
+    public void ProbabilityNormal()
+    {
+        Assert.Equal(0.007192295359419549,
+                    CsML.Probability.Functions.ProbabilityNormal(120, 110, 2975));
+    }
 }
 
 public class Sample

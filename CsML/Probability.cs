@@ -38,6 +38,17 @@ public class Functions
     {
         return a.Select(x => x ? 1 : 0).Sum() / (double)a.Length;
     }
+
+    /// <summary>
+    /// Calculate the probability of a value assuming a normal distribution
+    /// defined by the mean and variance parameters.
+    /// </summary>
+    public static double ProbabilityNormal(double value, double mean, double variance)
+    {
+        return 1.0 /
+               (Math.Sqrt(2.0 * Math.PI) * Math.Sqrt(variance)) *
+               Math.Pow(Math.Exp(1.0), -(Math.Pow(value - mean, 2.0) / (2.0 * variance)));
+    }
 }
 
 public class Sample
@@ -139,7 +150,7 @@ public class NaiveBayesClassifier<T>
                         .Select(x => x.First)
                         .ToArray();
             mean = values.Average();
-            variance = 0; // TODO: variance calc
+            variance = CsML.Util.Statistics.Variance(values);
             valuesDict[classLabel] = (mean, variance);
         }
         columnMeans[columnIndex] = valuesDict;
