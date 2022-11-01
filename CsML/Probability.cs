@@ -199,6 +199,16 @@ public class NaiveBayesClassifier<T>
 }
 
 /// <summary>
+/// A Probability Mass Function for modelling descrete outcomes. Adapted from
+/// Think Bayes by Allen B. Downey.
+/// </summary>
+public class PMF
+{
+
+
+}
+
+/// <summary>
 /// A classifier making a weighted random guess from potential class labels
 /// for benchmarking purposes.
 /// </summary>
