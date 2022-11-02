@@ -215,6 +215,7 @@ public class PMF<T>
     }
 
     public T[] hypotheses { get { return table.Keys.OrderBy(x => x).ToArray(); } }
+
     public double[] probabilities
     {
         get
@@ -269,6 +270,18 @@ public class PMF<T>
             throw new ArgumentException("Input needs same keys as outcome table");
         foreach(T hypothesis in table.Keys)
             table[hypothesis] *= likelihoods[hypothesis];
+    }
+
+    /// <summary>
+    /// Update the probability table (priors, P(H)) with likelihoods (P(D|H).
+    /// </summary>
+    /// <param name="likelihoods">An array of likelihood values in order of hypotheses sorted</param>
+    public void Update(double[] likelihoods)
+    {
+        if (likelihoods.Length != table.Count)
+            throw new ArgumentException("Input does not have same number of values as PMF hypotheses");
+        foreach ((T, double) pair in this.hypotheses.Zip(likelihoods))
+            table[pair.Item1] *= pair.Item2;
     }
 }
 
