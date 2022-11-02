@@ -202,10 +202,32 @@ public class NaiveBayesClassifier<T>
 /// A Probability Mass Function for modelling descrete outcomes. Adapted from
 /// Think Bayes by Allen B. Downey.
 /// </summary>
-public class PMF
+public class PMF<T>
+    where T: notnull
 {
+    public Dictionary<T, double> table;
 
+    public PMF()
+    {
+        table = new Dictionary<T, double>();
+    }
 
+    public PMF(T[] outcomes)
+    {
+        table = new Dictionary<T, double>();
+        foreach(T outcome in outcomes)
+            table[outcome] = 1;
+        Normalise();
+    }
+
+    public void Normalise()
+    {
+        double total = table.Values.Sum();
+        foreach (T outcome in table.Keys)
+        {
+            table[outcome] /= total;
+        }
+    }
 }
 
 /// <summary>

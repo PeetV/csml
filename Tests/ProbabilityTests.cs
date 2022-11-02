@@ -165,6 +165,19 @@ public class NaiveBayesClassifier
     }
 }
 
+public class PMF
+{
+    [Fact]
+    public void Normalise()
+    {
+        string[] outcomes = new string[] { "heads", "tails" };
+        CsML.Probability.PMF<string> coin = new CsML.Probability.PMF<string>(outcomes);
+        Assert.Equal(0.5, coin.table["heads"]);
+        Assert.Equal(0.5, coin.table["tails"]);
+    }
+
+}
+
 public class RandomClassifier
 {
     [Fact]
