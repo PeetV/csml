@@ -222,11 +222,14 @@ public class PMF<T>
     public PMF(T[] outcomes)
     {
         table = new Dictionary<T, double>();
-        foreach(T outcome in outcomes)
+        foreach (T outcome in outcomes)
             table[outcome] = 1;
         Normalise();
     }
 
+    /// <summary>
+    /// Normalise the outcome table, making the probabilities add up to 1.
+    /// </summary>
     public void Normalise()
     {
         double total = table.Values.Sum();
@@ -234,6 +237,18 @@ public class PMF<T>
         {
             table[outcome] /= total;
         }
+    }
+
+    /// <summary>
+    /// Update the probability table (priors, P(H)) with likelihoods (P(D|H).
+    /// </summary>
+    /// <param name="likelihoods">A dictionary containing the likelihood for each outcome</param>
+    public void Update(Dictionary<T, double> likelihoods)
+    {
+        if (!table.Keys.SequenceEqual(likelihoods.Keys))
+            throw new ArgumentException("Input needs same keys as outcome table");
+        foreach(T outcome in table.Keys)
+            table[outcome] *= likelihoods[outcome];
     }
 }
 

@@ -185,6 +185,19 @@ public class PMF
         Assert.Equal(0.5, coin.table["tails"]);
     }
 
+    [Fact]
+    public void Update_dictionary()
+    {
+        string[] outcomes = new string[] { "heads", "tails" };
+        CsML.Probability.PMF<string> coin = new CsML.Probability.PMF<string>(outcomes);
+        coin.Update(new Dictionary<string, double> { { "heads", 0.75 }, { "tails", 0.5 } });
+        Assert.Equal(0.375, coin.table["heads"]);
+        Assert.Equal(0.25, coin.table["tails"]);
+        coin.Normalise();
+        Assert.Equal(0.6, coin.table["heads"]);
+        Assert.Equal(0.4, coin.table["tails"]);
+    }
+
 }
 
 public class RandomClassifier
