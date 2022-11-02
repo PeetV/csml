@@ -179,7 +179,7 @@ public class PMF
     [Fact]
     public void Get_hypotheses()
     {
-        string[] outcomes = new string[] { "a", "b", "c" };
+        string[] outcomes = new string[] { "b", "a", "c" };
         CsML.Probability.PMF<string> pmf = new CsML.Probability.PMF<string>(outcomes);
         Assert.True(pmf.hypotheses.SequenceEqual(new string[] {"a", "b", "c"}));
     }
@@ -187,7 +187,7 @@ public class PMF
     [Fact]
     public void Get_probabilities()
     {
-        string[] outcomes = new string[] { "a", "b", "c" };
+        string[] outcomes = new string[] { "b", "a", "c" };
         CsML.Probability.PMF<string> pmf = new CsML.Probability.PMF<string>(outcomes);
         pmf["a"] = 0.1;
         pmf["b"] = 0.2;

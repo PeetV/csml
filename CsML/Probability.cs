@@ -249,7 +249,7 @@ public class PMF<T>
     }
 
     /// <summary>
-    /// Normalise the outcome table, making the probabilities add up to 1.
+    /// Normalise the hypotheses table, making the probabilities add up to 1.
     /// </summary>
     public void Normalise()
     {
@@ -261,7 +261,7 @@ public class PMF<T>
     }
 
     /// <summary>
-    /// Update the probability table (priors, P(H)) with likelihoods (P(D|H).
+    /// Update the hypotheses table (priors, P(H)) with likelihoods (P(D|H).
     /// </summary>
     /// <param name="likelihoods">A dictionary containing the likelihood for each outcome</param>
     public void Update(Dictionary<T, double> likelihoods)
@@ -273,7 +273,7 @@ public class PMF<T>
     }
 
     /// <summary>
-    /// Update the probability table (priors, P(H)) with likelihoods (P(D|H).
+    /// Update the hypotheses table (priors, P(H)) with likelihoods (P(D|H).
     /// </summary>
     /// <param name="likelihoods">An array of likelihood values in order of hypotheses sorted</param>
     public void Update(double[] likelihoods)
