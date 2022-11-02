@@ -207,6 +207,13 @@ public class PMF<T>
 {
     public Dictionary<T, double> table;
 
+    // Overload the square-bracket operator to work on the table field
+    public object this[T outcome]
+    {
+        get { return table[outcome]; }
+        set { table[outcome] = (double)value; }
+    }
+
     public PMF()
     {
         table = new Dictionary<T, double>();

@@ -168,6 +168,15 @@ public class NaiveBayesClassifier
 public class PMF
 {
     [Fact]
+    public void BracketOperator()
+    {
+        string[] outcomes = new string[] { "heads", "tails" };
+        CsML.Probability.PMF<string> coin = new CsML.Probability.PMF<string>(outcomes);
+        Assert.Equal(0.5, coin["heads"]);
+        Assert.Equal(0.5, coin["tails"]);
+    }
+
+    [Fact]
     public void Normalise()
     {
         string[] outcomes = new string[] { "heads", "tails" };
