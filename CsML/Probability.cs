@@ -203,27 +203,47 @@ public class NaiveBayesClassifier<T>
 /// Think Bayes by Allen B. Downey.
 /// </summary>
 public class PMF<T>
-    where T: notnull
+    where T : notnull
 {
     public Dictionary<T, double> table;
 
     // Overload the square-bracket operator to work on the table field
-    public object this[T outcome]
+    public object this[T hypothesis]
     {
-        get { return table[outcome]; }
-        set { table[outcome] = (double)value; }
+        get { return table[hypothesis]; }
+        set { table[hypothesis] = (double)value; }
     }
 
+    public T[] hypotheses { get { return table.Keys.OrderBy(x => x).ToArray(); } }
+    public double[] probabilities
+    {
+        get
+        {
+            return table.Keys.Zip(table.Values)
+                .OrderBy(x => x.First)
+                .Select(x => x.Second)
+                .ToArray();
+        }
+    }
+
+    /// <summary>
+    /// Create an empty PMF.
+    /// </summary>
     public PMF()
     {
         table = new Dictionary<T, double>();
     }
 
-    public PMF(T[] outcomes)
+    /// <summary>
+    /// Create a PMF from an array of hypotheses (each hypothesis is set to equal
+    /// probability).
+    /// </summary>
+    /// <param name="hypotheses"></param>
+    public PMF(T[] hypotheses)
     {
         table = new Dictionary<T, double>();
-        foreach (T outcome in outcomes)
-            table[outcome] = 1;
+        foreach (T hypothesis in hypotheses)
+            table[hypothesis] = 1;
         Normalise();
     }
 
@@ -233,9 +253,9 @@ public class PMF<T>
     public void Normalise()
     {
         double total = table.Values.Sum();
-        foreach (T outcome in table.Keys)
+        foreach (T hypothesis in table.Keys)
         {
-            table[outcome] /= total;
+            table[hypothesis] /= total;
         }
     }
 
@@ -247,8 +267,8 @@ public class PMF<T>
     {
         if (!table.Keys.SequenceEqual(likelihoods.Keys))
             throw new ArgumentException("Input needs same keys as outcome table");
-        foreach(T outcome in table.Keys)
-            table[outcome] *= likelihoods[outcome];
+        foreach(T hypothesis in table.Keys)
+            table[hypothesis] *= likelihoods[hypothesis];
     }
 }
 
