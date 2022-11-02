@@ -54,7 +54,7 @@ public class Functions
 public class Sample
 {
     /// <summary>
-    /// Sample an array withuot replacement.
+    /// Sample an array without replacement.
     /// </summary>
     /// <param name="input">The array to sample from.</param>
     /// <param name="count">The number of sample items.</param>

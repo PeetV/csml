@@ -9,9 +9,8 @@ public class Array
     /// in purity when the split is applied to a corresponding target array.
     /// </summary>
     /// <param name="vector">Numeric array to test split points on.</param>
-    /// <param name="target">Target array to find best gain in purity on split.
-    /// </param>
-    /// <param name="purityfn">Function that calculates purity of an array.</param>
+    /// <param name="target">Target array to find best gain in purity on split.</param>
+    /// <param name="purityfn">Function that calculates purity of an array, for example Gini.</param>
     /// <returns>
     /// A tuple containing the best split value and the gain calculated by the gain
     /// function specified through the purityfn parameter.
@@ -26,7 +25,6 @@ public class Array
         int lenVals = vector.Length;
         (double, T)[] zipped = vector.Zip(target).OrderBy(x => x.First).ToArray();
         List<T> lhs = new List<T>(), rhs = new List<T>(target);
-        // target.CopyTo(rhs, 0);
         double purityPreSplit = purityfn(target);
         bool allSame = true;
         // Iterate through the sorted arrays
@@ -86,7 +84,7 @@ public class Array
     /// actuals array.
     /// </summary>
     /// <exception cref="ArgumentException">
-    /// Throws an exception of inputs aren't the same length.
+    /// Throws an exception if inputs aren't the same length.
     /// </exception>
     public static double ClassificationError<T>(
         T[] actuals, T[] predictions) where T : IComparable<T>
@@ -172,7 +170,7 @@ public class Array
     }
 
     /// <summary>
-    /// Split an array using a boolean filter array, with equivalent true values 
+    /// Split an array using a boolean filter array, with related true values 
     /// going to the left and false values going to the right.
     /// </summary>
     public static (T[], T[]) Split<T>(
