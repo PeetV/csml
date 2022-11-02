@@ -283,6 +283,15 @@ public class PMF<T>
         foreach ((T, double) pair in this.hypotheses.Zip(likelihoods))
             table[pair.Item1] *= pair.Item2;
     }
+
+    /// <summary>
+    /// Convert the PMF into a weighted random sampler, sampling the hypotheses
+    /// using the probabilities as weights.
+    /// </summary>
+    public WeightedIndexSampler<T> ToSampler()
+    {
+        return new WeightedIndexSampler<T>(hypotheses, probabilities);
+    }
 }
 
 /// <summary>
