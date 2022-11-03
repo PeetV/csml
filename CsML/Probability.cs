@@ -376,7 +376,6 @@ public class WeightedIndexSampler<T>
         random = new Random();
     }
 
-
     /// <summary>
     /// Sample a specified number of times, returning index numbers in
     /// the target array set at construction. Use SampleTarget to sample
