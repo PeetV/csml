@@ -355,7 +355,8 @@ public class WeightedIndexSampler<T>
         this.target = target;
         this.weights = (double[])weights.Clone();
         double weightsSum = weights.Sum();
-        this.weights = this.weights.Select(x => x / weightsSum)
+        this.weights = this.weights
+                    .Select(x => x / weightsSum)
                     .CumulativeSum()
                     .ToArray();
         random = new Random();
@@ -385,7 +386,6 @@ public class WeightedIndexSampler<T>
         return result;
     }
 
-    // TODO: change to binary search instead of sequential search
     private int IndexAtCumVal(double randNum)
     {
         for (int i = 0; i < weights.Length; i++)
