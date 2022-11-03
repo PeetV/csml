@@ -362,6 +362,14 @@ public class WeightedIndexSampler<T>
         random = new Random();
     }
 
+
+    /// <summary>
+    /// Sample a specified number of times, returning index numbers in
+    /// the target array set at construction. Use SampleTarget to sample
+    /// the target array directly.
+    /// </summary>
+    /// <param name="count">The number of samples to draw.</param>
+    /// <returns>An array of index values.</returns>
     public int[] SampleIndex(int count)
     {
         double randNum;
@@ -374,6 +382,11 @@ public class WeightedIndexSampler<T>
         return result;
     }
 
+    /// <summary>
+    /// Sample the target array a specified number of times.
+    /// </summary>
+    /// <param name="count">The number of samples to draw.</param>
+    /// <returns>An array of sample values.</returns>
     public T[] SampleTarget(int count)
     {
         double randNum;
