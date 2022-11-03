@@ -249,6 +249,19 @@ public class PMF<T>
     }
 
     /// <summary>
+    /// Get the hypothesis with the highest probability, together with the
+    /// probability value.
+    /// </summary>
+    /// <returns>
+    /// A tuple containing the hypothesis and corresponding probability.
+    /// </returns>
+    public (T, double) HighestProbability()
+    {
+        T mostProbablyHypothesis = table.MaxBy(kvp => kvp.Value).Key;
+        return (mostProbablyHypothesis, table[mostProbablyHypothesis]);
+    }
+
+    /// <summary>
     /// Normalise the hypotheses table, making the probabilities add up to 1.
     /// </summary>
     public void Normalise()
@@ -258,6 +271,15 @@ public class PMF<T>
         {
             table[hypothesis] /= total;
         }
+    }
+
+    /// <summary>
+    /// Convert the PMF into a weighted random sampler, sampling the hypotheses
+    /// using the probabilities as weights.
+    /// </summary>
+    public WeightedIndexSampler<T> ToSampler()
+    {
+        return new WeightedIndexSampler<T>(hypotheses, probabilities);
     }
 
     /// <summary>
@@ -284,14 +306,6 @@ public class PMF<T>
             table[pair.Item1] *= pair.Item2;
     }
 
-    /// <summary>
-    /// Convert the PMF into a weighted random sampler, sampling the hypotheses
-    /// using the probabilities as weights.
-    /// </summary>
-    public WeightedIndexSampler<T> ToSampler()
-    {
-        return new WeightedIndexSampler<T>(hypotheses, probabilities);
-    }
 }
 
 /// <summary>

@@ -196,12 +196,41 @@ public class PMF
     }
 
     [Fact]
+    public void HighestProbability()
+    {
+        string[] outcomes = new string[] { "b", "a", "c" };
+        CsML.Probability.PMF<string> pmf = new CsML.Probability.PMF<string>(outcomes);
+        pmf["a"] = 0.1;
+        pmf["b"] = 0.2;
+        pmf["c"] = 0.3;
+        Assert.Equal(("c", 0.3), pmf.HighestProbability());
+    }
+
+    [Fact]
     public void Normalise()
     {
         string[] outcomes = new string[] { "heads", "tails" };
         CsML.Probability.PMF<string> coin = new CsML.Probability.PMF<string>(outcomes);
         Assert.Equal(0.5, coin.table["heads"]);
         Assert.Equal(0.5, coin.table["tails"]);
+    }
+
+    [Fact]
+    public void ToSampler()
+    {
+        string[] target = new string[] { "a", "b", "c", "d", "e" };
+        double[] weights = new double[] { 50, 30, 10, 5, 5 };
+        CsML.Probability.PMF<string> pmf = new CsML.Probability.PMF<string>();
+        foreach ((string, double) pair in target.Zip(weights))
+            pmf[pair.Item1] = pair.Item2;
+        var sampler = pmf.ToSampler();
+        string[] result = sampler.SampleTarget(1000);
+        var counts = CsML.Util.Array.ElementCounts(result);
+        Assert.InRange((double)counts["a"] / 1000.0, 0.45, 0.55);
+        Assert.InRange((double)counts["b"] / 1000.0, 0.25, 0.35);
+        Assert.InRange((double)counts["c"] / 1000.0, 0.05, 0.15);
+        Assert.InRange((double)counts["d"] / 1000.0, 0.01, 0.1);
+        Assert.InRange((double)counts["e"] / 1000.0, 0.01, 0.1);
     }
 
     [Fact]
@@ -229,25 +258,6 @@ public class PMF
         Assert.Equal(0.6, coin.table["heads"]);
         Assert.Equal(0.4, coin.table["tails"]);
     }
-
-    [Fact]
-    public void ToSampler()
-    {
-        string[] target = new string[] { "a", "b", "c", "d", "e" };
-        double[] weights = new double[] { 50, 30, 10, 5, 5 };
-        CsML.Probability.PMF<string> pmf = new CsML.Probability.PMF<string>();
-        foreach ((string, double) pair in target.Zip(weights))
-            pmf[pair.Item1] = pair.Item2;
-        var sampler = pmf.ToSampler();
-        string[] result = sampler.SampleTarget(1000);
-        var counts = CsML.Util.Array.ElementCounts(result);
-        Assert.InRange((double)counts["a"] / 1000.0, 0.45, 0.55);
-        Assert.InRange((double)counts["b"] / 1000.0, 0.25, 0.35);
-        Assert.InRange((double)counts["c"] / 1000.0, 0.05, 0.15);
-        Assert.InRange((double)counts["d"] / 1000.0, 0.01, 0.1);
-        Assert.InRange((double)counts["e"] / 1000.0, 0.01, 0.1);
-    }
-
 }
 
 public class RandomClassifier
