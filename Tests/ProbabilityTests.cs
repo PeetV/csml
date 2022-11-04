@@ -226,7 +226,7 @@ public class ProbabilityMassFunction
     }
 
     [Fact]
-    public void SumProbabilities_lowerboundsonly()
+    public void SumProbabilities_lowerOnly()
     {
         string[] target = new string[] { "a", "b", "c", "d", "e" };
         double[] weights = new double[] { 50, 30, 10, 5, 5 };
@@ -237,9 +237,33 @@ public class ProbabilityMassFunction
         Assert.Equal(0.5, pmf["a"]);
         Assert.Equal(0.1, pmf.SumProbabilities("c", null, false));
         Assert.Equal(0.2, pmf.SumProbabilities("c", null, true));
+    }
+
+    [Fact]
+    public void SumProbabilities_upperOnly()
+    {
+        string[] target = new string[] { "a", "b", "c", "d", "e" };
+        double[] weights = new double[] { 50, 30, 10, 5, 5 };
+        CsML.Probability.ProbabilityMassFunction<string> pmf = new CsML.Probability.ProbabilityMassFunction<string>();
+        foreach ((string, double) pair in target.Zip(weights))
+            pmf[pair.Item1] = pair.Item2;
+        pmf.Normalise();
+        Assert.Equal(0.5, pmf["a"]);
         Assert.Equal(0.8, pmf.SumProbabilities(null, "c", includeUpper: false));
         Assert.Equal(0.9, pmf.SumProbabilities(null, "c", includeUpper: true));
+    }
+    [Fact]
+    public void SumProbabilities_bothUpperandLower()
+    {
+        string[] target = new string[] { "a", "b", "c", "d", "e" };
+        double[] weights = new double[] { 50, 30, 10, 5, 5 };
+        CsML.Probability.ProbabilityMassFunction<string> pmf = new CsML.Probability.ProbabilityMassFunction<string>();
+        foreach ((string, double) pair in target.Zip(weights))
+            pmf[pair.Item1] = pair.Item2;
+        pmf.Normalise();
+        Assert.Equal(0.5, pmf["a"]);
         Assert.Equal(0.1, pmf.SumProbabilities("c", "d"));
+        Assert.True((pmf.SumProbabilities("c", "d", includeUpper: true) - 0.15) < 0.00000001);
     }
 
     [Fact]

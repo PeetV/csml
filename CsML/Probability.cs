@@ -306,13 +306,13 @@ public class ProbabilityMassFunction<T>
         {
             // Both boundaries apply
             if (lower != null & upper != null & includeLower & includeUpper)
-                return x.Item1.CompareTo(lower) >= 0 || x.Item1.CompareTo(upper) <= 0;
+                return x.Item1.CompareTo(lower) >= 0 & x.Item1.CompareTo(upper) <= 0;
             if (lower != null & upper != null & !includeLower & includeUpper)
-                return x.Item1.CompareTo(lower) > 0 || x.Item1.CompareTo(upper) <= 0;
+                return x.Item1.CompareTo(lower) > 0 & x.Item1.CompareTo(upper) <= 0;
             if (lower != null & upper != null & includeLower & !includeUpper)
-                return x.Item1.CompareTo(lower) >= 0 || x.Item1.CompareTo(upper) < 0;
+                return x.Item1.CompareTo(lower) >= 0 & x.Item1.CompareTo(upper) < 0;
             if (lower != null & upper != null & !includeLower & !includeUpper)
-                return x.Item1.CompareTo(lower) > 0 || x.Item1.CompareTo(upper) < 0;
+                return x.Item1.CompareTo(lower) > 0 & x.Item1.CompareTo(upper) < 0;
             // Only lower boundary applies
             if (lower != null & upper == null & includeLower)
                 return x.Item1.CompareTo(lower) >= 0 ;
