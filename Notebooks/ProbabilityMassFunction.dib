@@ -15,12 +15,41 @@ using CsML;
 
 ### The Cookie Problem
 
-See [Think Bayes](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/notebooks/chap03.ipynb#scrollTo=YLZZrYq1uFX-).
+See [Think Bayes](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/notebooks/chap02.ipynb).
 
 #!csharp
 
-var pmf = new CsML.Probability.ProbabilityMassFunction<string>(
+var bowls = new CsML.Probability.ProbabilityMassFunction<string>(
     new string[]{"bowl 1", "bowl2"});
-pmf.Update(new double[]{0.75, 0.5});
-pmf.Normalise();
-pmf.zipped
+bowls.Update(new double[]{0.75, 0.5});
+bowls.Normalise();
+bowls.zipped
+
+#!markdown
+
+### The Dice Problem
+
+See [Think Bayes](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/notebooks/chap02.ipynb#scrollTo=r8czwqLOwuHU).
+
+#!csharp
+
+int[] hypos = new int[]{6, 8 , 12};
+var dice = new CsML.Probability.ProbabilityMassFunction<int>(hypos);
+double[] likelihoods = new double[]{1.0 / 6.0, 1.0 / 8.0, 1.0 / 12.0 };
+dice.Update(likelihoods);
+dice.Normalise();
+dice.zipped
+
+#!markdown
+
+### The Trick Coin problem
+
+Suppose you have two coins in a box. One is a normal coin with heads on one side and tails on the other, and one is a trick coin with heads on both sides. You choose a coin at random and see that one of the sides is heads. What is the probability that you chose the trick coin?
+
+#!csharp
+
+var coin = new CsML.Probability.ProbabilityMassFunction<string>(
+    new string[]{"normal", "trick"});
+bowls.Update(new double[]{0.5, 1});
+bowls.Normalise();
+bowls.zipped
