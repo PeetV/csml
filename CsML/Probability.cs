@@ -290,12 +290,10 @@ public class ProbabilityMassFunction<T>
     /// <param name="lower">Lower range boundary. Can be null.</param>
     /// <param name="upper">Upper range boundary. Can be null.</param>
     /// <param name="includeLower">
-    /// Inlude lower bounder i.e. greater than or equal if true.
-    /// Defaults to true.
+    /// Inlude lower bounderay i.e. greater than or equal. Defaults to true.
     /// </param>
     /// <param name="includeUpper">
-    /// Include the upper bounder i.e. less than or equal if true.
-    /// Defaults to false.
+    /// Include the upper bounderay i.e. less than or equal. Defaults to false.
     /// </param>
     public double SumProbabilities(
         T? lower, T? upper, bool includeLower=true, bool includeUpper=false)
