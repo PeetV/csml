@@ -203,7 +203,7 @@ public class NaiveBayesClassifier<T>
 /// Think Bayes by Allen B. Downey.
 /// </summary>
 public class PMF<T>
-    where T : notnull
+    where T : IComparable
 {
     public Dictionary<T, double> table;
 
@@ -297,11 +297,35 @@ public class PMF<T>
     /// Include the upper bounder i.e. less than or equal if true.
     /// Defaults to false.
     /// </param>
-    //public SumProbabilities(
-    //    T? lower, T? upper, bool includeLower=true, bool includeUpper=false)
-    //{
-    //    (T, double)[] zipped = 
-    //}
+    public double SumProbabilities(
+        T? lower, T? upper, bool includeLower=true, bool includeUpper=false)
+    {
+        if (lower == null & upper == null)
+            return 0.0;
+        return this.zipped.Where((x) =>
+        {
+            // Both boundaries apply
+            if (lower != null & upper != null & includeLower & includeUpper)
+                return x.Item1.CompareTo(lower) >= 0 || x.Item1.CompareTo(upper) <= 0;
+            if (lower != null & upper != null & !includeLower & includeUpper)
+                return x.Item1.CompareTo(lower) > 0 || x.Item1.CompareTo(upper) <= 0;
+            if (lower != null & upper != null & includeLower & !includeUpper)
+                return x.Item1.CompareTo(lower) >= 0 || x.Item1.CompareTo(upper) < 0;
+            if (lower != null & upper != null & !includeLower & !includeUpper)
+                return x.Item1.CompareTo(lower) > 0 || x.Item1.CompareTo(upper) < 0;
+            // Only lower boundary applies
+            if (lower != null & upper == null & includeLower)
+                return x.Item1.CompareTo(lower) >= 0 ;
+            if (lower != null & upper == null & !includeLower)
+                return x.Item1.CompareTo(lower) > 0;
+            // Only upper boundary applies
+            if (lower == null & upper != null & includeUpper)
+                return x.Item1.CompareTo(upper) <= 0;
+            if (lower == null & upper != null & !includeUpper)
+                return x.Item1.CompareTo(upper) < 0;
+            return false;
+        }).Select(x => x.Item2).Sum();
+    }
 
     /// <summary>
     /// Convert the PMF into a weighted random sampler, sampling the hypotheses
