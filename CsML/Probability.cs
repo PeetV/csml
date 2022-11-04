@@ -227,6 +227,16 @@ public class PMF<T>
         }
     }
 
+    public (T, double)[] zipped
+    { 
+        get 
+        {
+            return table.Keys.Zip(table.Values)
+                .OrderBy(x => x.First)
+                .ToArray();
+        }
+    }
+
     /// <summary>
     /// Create an empty PMF.
     /// </summary>
@@ -272,6 +282,26 @@ public class PMF<T>
             table[hypothesis] /= total;
         }
     }
+
+    /// <summary>
+    /// Sum the probablities across a range of hypotheses. Include all values
+    /// less than, or greater than range boundaries.
+    /// </summary>
+    /// <param name="lower">Lower range boundary. Can be null.</param>
+    /// <param name="upper">Upper range boundary. Can be null.</param>
+    /// <param name="includeLower">
+    /// Inlude lower bounder i.e. greater than or equal if true.
+    /// Defaults to true.
+    /// </param>
+    /// <param name="includeUpper">
+    /// Include the upper bounder i.e. less than or equal if true.
+    /// Defaults to false.
+    /// </param>
+    //public SumProbabilities(
+    //    T? lower, T? upper, bool includeLower=true, bool includeUpper=false)
+    //{
+    //    (T, double)[] zipped = 
+    //}
 
     /// <summary>
     /// Convert the PMF into a weighted random sampler, sampling the hypotheses

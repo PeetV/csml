@@ -196,6 +196,16 @@ public class PMF
     }
 
     [Fact]
+    public void Get_zipped()
+    {
+        string[] outcomes = new string[] { "b", "a", "c" };
+        CsML.Probability.PMF<string> pmf = new CsML.Probability.PMF<string>(outcomes);
+        var expected = new (string, double)[] { 
+            ("a", 1.0/3.0), ("b", 1.0 / 3.0), ("c", 1.0 / 3.0) };
+        Assert.True(expected.SequenceEqual(pmf.zipped));
+    }
+
+    [Fact]
     public void HighestProbability()
     {
         string[] outcomes = new string[] { "b", "a", "c" };
