@@ -202,7 +202,7 @@ public class NaiveBayesClassifier<T>
 /// A Probability Mass Function for modelling descrete outcomes. Adapted from
 /// Think Bayes by Allen B. Downey.
 /// </summary>
-public class PMF<T>
+public class ProbabilityMassFunction<T>
     where T : IComparable
 {
     public Dictionary<T, double> table;
@@ -240,7 +240,7 @@ public class PMF<T>
     /// <summary>
     /// Create an empty PMF.
     /// </summary>
-    public PMF()
+    public ProbabilityMassFunction()
     {
         table = new Dictionary<T, double>();
     }
@@ -250,7 +250,7 @@ public class PMF<T>
     /// probability).
     /// </summary>
     /// <param name="hypotheses"></param>
-    public PMF(T[] hypotheses)
+    public ProbabilityMassFunction(T[] hypotheses)
     {
         table = new Dictionary<T, double>();
         foreach (T hypothesis in hypotheses)

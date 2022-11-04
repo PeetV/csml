@@ -165,13 +165,13 @@ public class NaiveBayesClassifier
     }
 }
 
-public class PMF
+public class ProbabilityMassFunction
 {
     [Fact]
     public void BracketOperator()
     {
         string[] outcomes = new string[] { "heads", "tails" };
-        CsML.Probability.PMF<string> coin = new CsML.Probability.PMF<string>(outcomes);
+        CsML.Probability.ProbabilityMassFunction<string> coin = new CsML.Probability.ProbabilityMassFunction<string>(outcomes);
         Assert.Equal(0.5, coin["heads"]);
         Assert.Equal(0.5, coin["tails"]);
     }
@@ -180,7 +180,7 @@ public class PMF
     public void Get_hypotheses()
     {
         string[] outcomes = new string[] { "b", "a", "c" };
-        CsML.Probability.PMF<string> pmf = new CsML.Probability.PMF<string>(outcomes);
+        CsML.Probability.ProbabilityMassFunction<string> pmf = new CsML.Probability.ProbabilityMassFunction<string>(outcomes);
         Assert.True(pmf.hypotheses.SequenceEqual(new string[] {"a", "b", "c"}));
     }
 
@@ -188,7 +188,7 @@ public class PMF
     public void Get_probabilities()
     {
         string[] outcomes = new string[] { "b", "a", "c" };
-        CsML.Probability.PMF<string> pmf = new CsML.Probability.PMF<string>(outcomes);
+        CsML.Probability.ProbabilityMassFunction<string> pmf = new CsML.Probability.ProbabilityMassFunction<string>(outcomes);
         pmf["a"] = 0.1;
         pmf["b"] = 0.2;
         pmf["c"] = 0.3;
@@ -199,7 +199,7 @@ public class PMF
     public void Get_zipped()
     {
         string[] outcomes = new string[] { "b", "a", "c" };
-        CsML.Probability.PMF<string> pmf = new CsML.Probability.PMF<string>(outcomes);
+        CsML.Probability.ProbabilityMassFunction<string> pmf = new CsML.Probability.ProbabilityMassFunction<string>(outcomes);
         var expected = new (string, double)[] { 
             ("a", 1.0/3.0), ("b", 1.0 / 3.0), ("c", 1.0 / 3.0) };
         Assert.True(expected.SequenceEqual(pmf.zipped));
@@ -209,7 +209,7 @@ public class PMF
     public void HighestProbability()
     {
         string[] outcomes = new string[] { "b", "a", "c" };
-        CsML.Probability.PMF<string> pmf = new CsML.Probability.PMF<string>(outcomes);
+        CsML.Probability.ProbabilityMassFunction<string> pmf = new CsML.Probability.ProbabilityMassFunction<string>(outcomes);
         pmf["a"] = 0.1;
         pmf["b"] = 0.2;
         pmf["c"] = 0.3;
@@ -220,9 +220,26 @@ public class PMF
     public void Normalise()
     {
         string[] outcomes = new string[] { "heads", "tails" };
-        CsML.Probability.PMF<string> coin = new CsML.Probability.PMF<string>(outcomes);
+        CsML.Probability.ProbabilityMassFunction<string> coin = new CsML.Probability.ProbabilityMassFunction<string>(outcomes);
         Assert.Equal(0.5, coin.table["heads"]);
         Assert.Equal(0.5, coin.table["tails"]);
+    }
+
+    [Fact]
+    public void SumProbabilities_lowerboundsonly()
+    {
+        string[] target = new string[] { "a", "b", "c", "d", "e" };
+        double[] weights = new double[] { 50, 30, 10, 5, 5 };
+        CsML.Probability.ProbabilityMassFunction<string> pmf = new CsML.Probability.ProbabilityMassFunction<string>();
+        foreach ((string, double) pair in target.Zip(weights))
+            pmf[pair.Item1] = pair.Item2;
+        pmf.Normalise();
+        Assert.Equal(0.5, pmf["a"]);
+        Assert.Equal(0.1, pmf.SumProbabilities("c", null, false));
+        Assert.Equal(0.2, pmf.SumProbabilities("c", null, true));
+        Assert.Equal(0.8, pmf.SumProbabilities(null, "c", includeUpper: false));
+        Assert.Equal(0.9, pmf.SumProbabilities(null, "c", includeUpper: true));
+        Assert.Equal(0.1, pmf.SumProbabilities("c", "d"));
     }
 
     [Fact]
@@ -230,7 +247,7 @@ public class PMF
     {
         string[] target = new string[] { "a", "b", "c", "d", "e" };
         double[] weights = new double[] { 50, 30, 10, 5, 5 };
-        CsML.Probability.PMF<string> pmf = new CsML.Probability.PMF<string>();
+        CsML.Probability.ProbabilityMassFunction<string> pmf = new CsML.Probability.ProbabilityMassFunction<string>();
         foreach ((string, double) pair in target.Zip(weights))
             pmf[pair.Item1] = pair.Item2;
         var sampler = pmf.ToSampler();
@@ -247,7 +264,7 @@ public class PMF
     public void Update_dictionary()
     {
         string[] outcomes = new string[] { "heads", "tails" };
-        CsML.Probability.PMF<string> coin = new CsML.Probability.PMF<string>(outcomes);
+        CsML.Probability.ProbabilityMassFunction<string> coin = new CsML.Probability.ProbabilityMassFunction<string>(outcomes);
         coin.Update(new Dictionary<string, double> { { "heads", 0.75 }, { "tails", 0.5 } });
         Assert.Equal(0.375, coin.table["heads"]);
         Assert.Equal(0.25, coin.table["tails"]);
@@ -260,7 +277,7 @@ public class PMF
     public void Update_array()
     {
         string[] outcomes = new string[] { "heads", "tails" };
-        CsML.Probability.PMF<string> coin = new CsML.Probability.PMF<string>(outcomes);
+        CsML.Probability.ProbabilityMassFunction<string> coin = new CsML.Probability.ProbabilityMassFunction<string>(outcomes);
         coin.Update(new double[] {0.75, 0.5 } );
         Assert.Equal(0.375, coin.table["heads"]);
         Assert.Equal(0.25, coin.table["tails"]);
