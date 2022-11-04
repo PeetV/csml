@@ -1,0 +1,26 @@
+#!markdown
+
+# ProbabilityMassFunction
+
+#!csharp
+
+#i "nuget:/Users/peet/Sources/csml/CsML/bin/Release"
+#r "nuget:CsML,*-*"
+
+#!csharp
+
+using CsML;
+
+#!markdown
+
+### The Cookie Problem
+
+See [Think Bayes](https://colab.research.google.com/github/AllenDowney/ThinkBayes2/blob/master/notebooks/chap03.ipynb#scrollTo=YLZZrYq1uFX-).
+
+#!csharp
+
+var pmf = new CsML.Probability.ProbabilityMassFunction<string>(
+    new string[]{"bowl 1", "bowl2"});
+pmf.Update(new double[]{0.75, 0.5});
+pmf.Normalise();
+pmf.zipped
