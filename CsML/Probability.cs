@@ -308,6 +308,24 @@ public class ProbabilityMassFunction<T>
     }
 
     /// <summary>
+    /// Create a PMF from a series of k values.
+    /// </summary>
+    /// <param name="n">
+    /// Number of independent experiments, each asking a yes–no question, and 
+    /// each with its own Boolean-valued outcome: success (with probability p).
+    /// </param>
+    /// <param name="ks">Arrays of k values representing number of successes.</param>
+    /// <param name="p">Probability of experiment success.</param>
+    public static ProbabilityMassFunction<int> FromBinomial(int n, int[] ks, double p)
+    {
+        ProbabilityMassFunction<int> intPMF = new ProbabilityMassFunction<int>();
+        double[] probs = CsML.Probability.Distributions.Binomial(n, ks, p);
+        for (int i = 0; i < ks.Length; i++)
+            intPMF[ks[i]] = probs[i];
+        return intPMF;
+    }
+
+    /// <summary>
     /// Get the hypothesis with the highest probability, together with the
     /// probability value.
     /// </summary>
