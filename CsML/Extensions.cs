@@ -15,4 +15,13 @@ public static class IEnumerable
             yield return sum;
         }
     }
+
+    /// <summary>
+    /// Count of ocurrences of each array element.
+    /// </summary>
+    public static Dictionary<T, int> ElementCounts<T>(this IEnumerable<T> sequence)
+        where T : notnull
+    {
+        return CsML.Util.Array.ElementCounts<T>(sequence.ToArray());
+    }
 }

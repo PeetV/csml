@@ -1,5 +1,7 @@
 using Microsoft.Toolkit.HighPerformance;
 
+using CsML.Extensions;
+
 using Xunit;
 
 namespace Csml.Tests.Probability;
@@ -181,7 +183,7 @@ public class ProbabilityMassFunction
     {
         string[] outcomes = new string[] { "b", "a", "c" };
         CsML.Probability.ProbabilityMassFunction<string> pmf = new CsML.Probability.ProbabilityMassFunction<string>(outcomes);
-        Assert.True(pmf.hypotheses.SequenceEqual(new string[] {"a", "b", "c"}));
+        Assert.True(pmf.hypotheses.SequenceEqual(new string[] { "a", "b", "c" }));
     }
 
     [Fact]
@@ -200,7 +202,7 @@ public class ProbabilityMassFunction
     {
         string[] outcomes = new string[] { "b", "a", "c" };
         CsML.Probability.ProbabilityMassFunction<string> pmf = new CsML.Probability.ProbabilityMassFunction<string>(outcomes);
-        var expected = new (string, double)[] { 
+        var expected = new (string, double)[] {
             ("a", 1.0/3.0), ("b", 1.0 / 3.0), ("c", 1.0 / 3.0) };
         Assert.True(expected.SequenceEqual(pmf.zipped));
     }
@@ -276,7 +278,7 @@ public class ProbabilityMassFunction
             pmf[pair.Item1] = pair.Item2;
         var sampler = pmf.ToSampler();
         string[] result = sampler.SampleTarget(1000);
-        var counts = CsML.Util.Array.ElementCounts(result);
+        var counts = result.ElementCounts();
         Assert.InRange((double)counts["a"] / 1000.0, 0.45, 0.55);
         Assert.InRange((double)counts["b"] / 1000.0, 0.25, 0.35);
         Assert.InRange((double)counts["c"] / 1000.0, 0.05, 0.15);
@@ -302,7 +304,7 @@ public class ProbabilityMassFunction
     {
         string[] outcomes = new string[] { "heads", "tails" };
         CsML.Probability.ProbabilityMassFunction<string> coin = new CsML.Probability.ProbabilityMassFunction<string>(outcomes);
-        coin.Update(new double[] {0.75, 0.5 } );
+        coin.Update(new double[] { 0.75, 0.5 });
         Assert.Equal(0.375, coin.table["heads"]);
         Assert.Equal(0.25, coin.table["tails"]);
         coin.Normalise();
@@ -326,7 +328,7 @@ public class RandomClassifier
         Assert.Equal(100, target.Length);
         cfier.Train(new double[,] { }, target);
         string[] result = cfier.Predict(new double[1000, 1]);
-        var counts = CsML.Util.Array.ElementCounts(result);
+        var counts = result.ElementCounts();
         Assert.Equal(1000, result.Length);
         Assert.InRange((double)counts["a"] / 1000.0, 0.45, 0.55);
         Assert.InRange((double)counts["b"] / 1000.0, 0.25, 0.35);
@@ -345,7 +347,7 @@ public class WeightedIndexSampler
         double[] weights = new double[] { 50, 30, 10, 5, 5 };
         var wis = new CsML.Probability.WeightedIndexSampler<string>(target, weights);
         int[] result = wis.SampleIndex(1000);
-        var counts = CsML.Util.Array.ElementCounts(result);
+        var counts = result.ElementCounts();
         Assert.Equal(new int[] { 0, 1, 2, 3, 4 }, counts.Keys.OrderBy(x => x).ToArray());
         Assert.InRange((double)counts[0] / 1000.0, 0.45, 0.55);
         Assert.InRange((double)counts[1] / 1000.0, 0.25, 0.35);
@@ -361,7 +363,7 @@ public class WeightedIndexSampler
         double[] weights = new double[] { 50, 30, 10, 5, 5 };
         var wis = new CsML.Probability.WeightedIndexSampler<string>(target, weights);
         string[] result = wis.SampleTarget(1000);
-        var counts = CsML.Util.Array.ElementCounts(result);
+        var counts = result.ElementCounts();
         Assert.InRange((double)counts["a"] / 1000.0, 0.45, 0.55);
         Assert.InRange((double)counts["b"] / 1000.0, 0.25, 0.35);
         Assert.InRange((double)counts["c"] / 1000.0, 0.05, 0.15);

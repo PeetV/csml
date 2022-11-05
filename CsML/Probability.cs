@@ -172,7 +172,7 @@ public class NaiveBayesClassifier<T>
     private void CalculateClassProbabilities(T[] target)
     {
         int lenTarget = target.Length;
-        var counts = CsML.Util.Array.ElementCounts(target);
+        var counts = target.ElementCounts();
         foreach (var key in counts.Keys)
             classProbabilities[key] = (double)counts[key] / (double)lenTarget;
     }
@@ -199,7 +199,7 @@ public class NaiveBayesClassifier<T>
 }
 
 /// <summary>
-/// A Probability Mass Function for modelling descrete outcomes. Adapted from
+/// A Probability Mass Function for modelling discrete outcomes. Adapted from
 /// Think Bayes by Allen B. Downey.
 /// </summary>
 public class ProbabilityMassFunction<T>
@@ -228,8 +228,8 @@ public class ProbabilityMassFunction<T>
     }
 
     public (T, double)[] zipped
-    { 
-        get 
+    {
+        get
         {
             return table.Keys.Zip(table.Values)
                 .OrderBy(x => x.First)
@@ -296,7 +296,7 @@ public class ProbabilityMassFunction<T>
     /// Include the upper bounderay i.e. less than or equal. Defaults to false.
     /// </param>
     public double SumProbabilities(
-        T? lower, T? upper, bool includeLower=true, bool includeUpper=false)
+        T? lower, T? upper, bool includeLower = true, bool includeUpper = false)
     {
         if (lower == null & upper == null)
             return 0.0;
@@ -313,7 +313,7 @@ public class ProbabilityMassFunction<T>
                 return x.Item1.CompareTo(lower) > 0 & x.Item1.CompareTo(upper) < 0;
             // Only lower boundary applies
             if (lower != null & upper == null & includeLower)
-                return x.Item1.CompareTo(lower) >= 0 ;
+                return x.Item1.CompareTo(lower) >= 0;
             if (lower != null & upper == null & !includeLower)
                 return x.Item1.CompareTo(lower) > 0;
             // Only upper boundary applies
@@ -342,7 +342,7 @@ public class ProbabilityMassFunction<T>
     {
         if (!table.Keys.SequenceEqual(likelihoods.Keys))
             throw new ArgumentException("Input needs same keys as outcome table");
-        foreach(T hypothesis in table.Keys)
+        foreach (T hypothesis in table.Keys)
             table[hypothesis] *= likelihoods[hypothesis];
     }
 
@@ -382,7 +382,7 @@ public class RandomClassifier<T>
     /// </summary>
     public void Train(double[,] matrix, T[] target)
     {
-        var counts = CsML.Util.Array.ElementCounts(target);
+        var counts = target.ElementCounts();
         classes = counts.Keys.OrderBy(x => x).ToArray();
         weights = new double[classes.Length];
         T key;

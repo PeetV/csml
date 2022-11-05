@@ -1,5 +1,7 @@
 using Microsoft.Toolkit.HighPerformance;
 
+using CsML.Extensions;
+
 namespace CsML.Tree;
 
 /// <summary>
@@ -217,7 +219,7 @@ public class BinaryTree
         }
         else
         {
-            classCounts = CsML.Util.Array.ElementCounts(target);
+            classCounts = target.ElementCounts();
             predicted = classCounts.MaxBy(kvp => kvp.Value).Key;
         }
         BinaryNode node = new BinaryNode();
