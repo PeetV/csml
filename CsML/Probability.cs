@@ -4,6 +4,40 @@ using CsML.Extensions;
 
 namespace CsML.Probability;
 
+public class Distributions
+{
+    //     public static double[] Binomial(int n, int[] ks, double p)
+    //     {
+
+    //     }
+
+    /// <summary>
+    /// Calculate a Binomial probability.
+    /// </summary>
+    /// <param name="n">
+    /// Number of independent experiments, each asking a yes–no question, and 
+    /// each with its own Boolean-valued outcome: success (with probability p).
+    /// </param>
+    /// <param name="k">Number of successes.</param>
+    /// <param name="p">Probability of experiment success.</param>
+    public static double ProbabilityBinomial(int n, int k, double p)
+    {
+        double bc = CsML.Probability.Functions.NChooseK(n, k);
+        return bc * Math.Pow(p, (double)k) * Math.Pow(1.0 - p, (double)(n - k));
+    }
+
+    /// <summary>
+    /// Calculate the probability of a value assuming a normal distribution
+    /// defined by the mean and variance parameters.
+    /// </summary>
+    public static double ProbabilityNormal(double value, double mean, double variance)
+    {
+        return 1.0 /
+               (Math.Sqrt(2.0 * Math.PI) * Math.Sqrt(variance)) *
+               Math.Pow(Math.Exp(1.0), -(Math.Pow(value - mean, 2.0) / (2.0 * variance)));
+    }
+}
+
 public class Functions
 {
     /// <summary>
@@ -52,17 +86,6 @@ public class Functions
     public static double Probability(bool[] a)
     {
         return a.Select(x => x ? 1 : 0).Sum() / (double)a.Length;
-    }
-
-    /// <summary>
-    /// Calculate the probability of a value assuming a normal distribution
-    /// defined by the mean and variance parameters.
-    /// </summary>
-    public static double ProbabilityNormal(double value, double mean, double variance)
-    {
-        return 1.0 /
-               (Math.Sqrt(2.0 * Math.PI) * Math.Sqrt(variance)) *
-               Math.Pow(Math.Exp(1.0), -(Math.Pow(value - mean, 2.0) / (2.0 * variance)));
     }
 }
 
@@ -169,7 +192,7 @@ public class NaiveBayesClassifier<T>
                     {
                         colvals = columnMeans[c];
                         (mn, var) = colvals[classLabel];
-                        prob = CsML.Probability.Functions.ProbabilityNormal(row[c], mn, var);
+                        prob = CsML.Probability.Distributions.ProbabilityNormal(row[c], mn, var);
                     }
                     else prob = 0.0001;
                     // Some underflow protection given values can get really small

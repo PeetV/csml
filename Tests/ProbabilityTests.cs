@@ -6,6 +6,23 @@ using Xunit;
 
 namespace Csml.Tests.Probability;
 
+public class Distributions
+{
+    [Fact]
+    public void ProbabilityBinomial()
+    {
+        double result = CsML.Probability.Distributions.ProbabilityBinomial(2, 1, 0.5);
+        Assert.Equal(0.5, result);
+    }
+
+    [Fact]
+    public void ProbabilityNormal()
+    {
+        double result = CsML.Probability.Distributions.ProbabilityNormal(120, 110, 2975);
+        Assert.Equal(0.007192295359419549, result);
+    }
+}
+
 public class Functions
 {
     [Fact]
@@ -52,13 +69,6 @@ public class Functions
     {
         bool[] a = new bool[] { true, false, false };
         Assert.Equal(1.0 / 3.0, CsML.Probability.Functions.Probability(a));
-    }
-
-    [Fact]
-    public void ProbabilityNormal()
-    {
-        Assert.Equal(0.007192295359419549,
-                    CsML.Probability.Functions.ProbabilityNormal(120, 110, 2975));
     }
 }
 
