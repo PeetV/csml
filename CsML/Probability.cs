@@ -23,6 +23,21 @@ public class Functions
         return CsML.Probability.Functions.Probability(cond);
     }
 
+    /// <summary> Calculate the Binomial Coefficient.</summary>
+    /// From https://stackoverflow.com/a/12983878/4285191.
+    public static double NChooseK(int n, int k)
+    {
+        if (k > n) return 0;
+        if (k > n - k) k = n - k;
+
+        double val = 1;
+        for (int rk = 1, rn = n - k + 1; rk <= k; ++rk, ++rn)
+        {
+            val = (rn) * val / (rk);
+        }
+        return val;
+    }
+
     /// <summary>
     /// Merge two boolean arrays using an | operator on elements.
     /// </summary>

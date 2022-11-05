@@ -27,6 +27,17 @@ public class Functions
     }
 
     [Fact]
+    public void NChooseK()
+    {
+        double result = CsML.Probability.Functions.NChooseK(4, 4);
+        Assert.Equal(1.0, result);
+        result = CsML.Probability.Functions.NChooseK(9, 4);
+        Assert.Equal(126.0, result);
+        result = CsML.Probability.Functions.NChooseK(52, 5);
+        Assert.Equal(2598960.0, result);
+    }
+
+    [Fact]
     public void Or()
     {
         bool[] a = new bool[] { true, false, false, true, false };
