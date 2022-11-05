@@ -6,10 +6,21 @@ namespace CsML.Probability;
 
 public class Distributions
 {
-    //     public static double[] Binomial(int n, int[] ks, double p)
-    //     {
 
-    //     }
+    /// <summary>
+    /// Calculate a Binomial probabilities for a series of k values.
+    /// </summary>
+    /// <param name="n">
+    /// Number of independent experiments, each asking a yes–no question, and 
+    /// each with its own Boolean-valued outcome: success (with probability p).
+    /// </param>
+    /// <param name="ks">Arrays of k values representing number of successes.</param>
+    /// <param name="p">Probability of experiment success.</param>
+    public static double[] Binomial(int n, int[] ks, double p)
+    {
+        double[] result = ks.Select(k => ProbabilityBinomial(n, k, p)).ToArray();
+        return result;
+    }
 
     /// <summary>
     /// Calculate a Binomial probability.

@@ -9,6 +9,16 @@ namespace Csml.Tests.Probability;
 public class Distributions
 {
     [Fact]
+    public void Binomial()
+    {
+        int[] ks = new int[] { 0, 1, 2 };
+        double[] result = CsML.Probability.Distributions.Binomial(2, ks, 0.5);
+        double[] expected = new double[] { 0.25, 0.5, 0.25 };
+        Assert.Equal(expected[0], result[0]);
+        Assert.True(expected.SequenceEqual(result));
+    }
+
+    [Fact]
     public void ProbabilityBinomial()
     {
         double result = CsML.Probability.Distributions.ProbabilityBinomial(2, 1, 0.5);
