@@ -25,6 +25,70 @@ bowls.Update(new double[]{0.75, 0.5});
 bowls.Normalise();
 bowls.zipped
 
+#!csharp
+
+bowls.Update(new double[]{0.75, 0.5});
+bowls.Update(new double[]{0.25, 0.5});
+bowls.Normalise();
+bowls.zipped
+
+#!csharp
+
+var bowls100 = new CsML.Probability.ProbabilityMassFunction<int>(
+    Enumerable.Range(1, 101).ToArray()
+);
+bowls100[1]
+
+#!csharp
+
+#r "nuget: Plotly.NET.CSharp,*-*"
+
+#!csharp
+
+using Plotly.NET.CSharp;
+
+#!csharp
+
+void ShowChart() {
+    Chart.Line<int, double, string>(
+        x: bowls100.hypotheses, 
+        y: bowls100.probabilities
+    )
+    .WithXAxisStyle<double, double, string>(Title: Plotly.NET.Title.init("Bowl"))
+    .WithYAxisStyle<double, double, string>(Title: Plotly.NET.Title.init("Probability"))
+.Show();
+}
+ShowChart()
+
+#!csharp
+
+var likelihoodVanilla = bowls100.hypotheses.Select(x => (double)x / 100.0).ToArray();
+bowls100.Update(likelihoodVanilla);
+bowls100.Normalise();
+ShowChart()
+
+#!csharp
+
+var likelihoodVanilla = bowls100.hypotheses.Select(x => (double)x / 100.0).ToArray();
+bowls100.Update(likelihoodVanilla);
+bowls100.Normalise();
+ShowChart()
+
+#!csharp
+
+var likelihoodChocolote = bowls100.hypotheses.Select(x => 1.0 - (double)x / 100.0).ToArray();
+bowls100.Update(likelihoodChocolote);
+bowls100.Normalise();
+ShowChart()
+
+#!csharp
+
+bowls100.HighestProbability()
+
+#!csharp
+
+bowls100.SumProbabilities(10, 90)
+
 #!markdown
 
 ### The Dice Problem
@@ -50,6 +114,6 @@ Suppose you have two coins in a box. One is a normal coin with heads on one side
 
 var coin = new CsML.Probability.ProbabilityMassFunction<string>(
     new string[]{"normal", "trick"});
-bowls.Update(new double[]{0.5, 1});
-bowls.Normalise();
-bowls.zipped
+coin.Update(new double[]{0.5, 1});
+coin.Normalise();
+coin.zipped
