@@ -36,6 +36,7 @@ public class BinaryTree
     private int _maxsplits = 10000;
 
     public List<BinaryNode> nodes;
+    /// <summary>The number of matrix columns the model was trained on.</summary>
     public int minColumns;
     public int inputRecordCount;
     public int maxdepth = 15;

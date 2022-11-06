@@ -7,7 +7,8 @@ public static class IEnumerable
 {
 
     /// <summary>
-    /// Turn a double enumerable into cumulative sums.
+    /// Turn a double enumerable into cumulative sums. [1, 2, 3 ...] becomes
+    /// [1, 3, 6 ...].
     /// </summary>
     public static IEnumerable<double> CumulativeSum(this IEnumerable<double> sequence)
     {

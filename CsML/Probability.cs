@@ -185,9 +185,7 @@ public class NaiveBayesClassifier<T>
     /// </summary>
     public Dictionary<int, Dictionary<T, (double, double)>> columnMeans;
 
-    /// <summary>
-    /// Caputures the number of columns the model was trained on.
-    /// </summary>
+    /// <summary>The number of matrix columns the model was trained on.</summary>
     public int minColumns;
 
     public NaiveBayesClassifier()

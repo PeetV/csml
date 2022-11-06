@@ -7,18 +7,54 @@ namespace CsML.Forest;
 /// </summary>
 public class RandomForest
 {
+    /// <summary>The trees that make up the forest once trained.</summary>
     public List<BinaryTree> trees;
+
+    /// <summary>The number of tress in the forest.</summary>
     public int treeCount;
+
+    /// <summary>The number of matrix columns the model was trained on.</summary>
     public int minColumns;
+
+    /// <summary>The number of matrix rows the model was trained on.</summary>
     public int inputRecordCount;
+
+    /// <summary>Maximum tree depth stopping condition.</summary>
     public int maxdepth = 1000;
+
+    /// <summary>Minimum rows in a tree stopping condition.</summary>
     public int minrows = 3;
+
+    /// <summary>
+    /// Number of random features to use at each split point during training.
+    /// Used to add randomisation to a random forest. Defaults to square
+    /// root of the number of columns.
+    /// </summary>
     public int randomFeatures;
+
+    /// <summary>
+    /// The distinct class labels if creating a classification model.
+    /// </summary>
     public double[]? classes;
+
+    /// <summary>
+    /// The function to use to calculate the purity of a slice of the
+    /// target array.
+    /// <see> See
+    /// <seealso cref="CsML.Util.Statistics.Gini{T}(IEnumerable{T})" />
+    /// for default function to use.
+    /// </see>
+    /// </summary>
     public Func<double[], double> purityFn;
+
+    /// <summary>
+    /// Sample input data with replacement when training each tree if true.
+    /// </summary>
     public bool bootstrapSampleData = true;
 
     private string _mode;
+
+    /// <summary>Mode can be either "classify" or "regress".</summary>
     public string mode
     {
         get { return _mode; }
@@ -30,6 +66,7 @@ public class RandomForest
         }
     }
 
+    /// <summary>Create an untrained random forest.</summary>
     public RandomForest(string mode,
         Func<double[], double> purityFn,
         int treeCount = 103,
