@@ -258,6 +258,17 @@ public class ProbabilityMassFunction
     }
 
     [Fact]
+    public void FromNormal()
+    {
+        CsML.Probability.ProbabilityMassFunction<double> pmf;
+        double[] hypotheses = Enumerable.Range(0, 1001).Select(x => (double)x).ToArray();
+        pmf = CsML.Probability.ProbabilityMassFunction<double>.FromNormal(hypotheses, 500, 200 * 200);
+        Assert.Equal((500, 0.0020196170605523193), pmf.HighestProbability());
+        Assert.Equal(0.6899874672473569, pmf.SumProbabilities(300, 700, includeLower: false));
+        Assert.Equal(0.9661436914270904, pmf.SumProbabilities(100, 900, includeLower: false));
+    }
+
+    [Fact]
     public void HighestProbability()
     {
         string[] outcomes = new string[] { "b", "a", "c" };

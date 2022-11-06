@@ -562,9 +562,7 @@ public class Statistics
     /// </summary>
     public static double StdevP(double[] input)
     {
-        double mn = input.Average();
-        double dev = input.Select(x => Math.Pow(x - mn, 2)).Sum();
-        return Math.Sqrt(dev / input.Length);
+        return Math.Sqrt(Variance(input));
     }
 
     /// <summary>

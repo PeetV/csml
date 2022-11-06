@@ -314,7 +314,8 @@ public class ProbabilityMassFunction<T>
     }
 
     /// <summary>
-    /// Create a PMF from a series of k values.
+    /// Create a Binomial distribution PMF from a series of k values
+    /// and p value.
     /// </summary>
     /// <param name="n">
     /// Number of independent experiments, each asking a yes–no question, and 
@@ -328,7 +329,23 @@ public class ProbabilityMassFunction<T>
         double[] probs = CsML.Probability.Distributions.Binomial(n, ks, p);
         for (int i = 0; i < ks.Length; i++)
             intPMF[ks[i]] = probs[i];
+        intPMF.Normalise();
         return intPMF;
+    }
+
+    /// <summary>
+    /// Create a Normal distribution PMF from a series of hypotheses values,
+    /// mean and variance.
+    /// </summary>
+    public static ProbabilityMassFunction<double> FromNormal(
+        double[] hypotheses, double mean, double variance)
+    {
+        ProbabilityMassFunction<double> doublePMF = new ProbabilityMassFunction<double>();
+        for (int i = 0; i < hypotheses.Length; i++)
+            doublePMF[hypotheses[i]] = CsML.Probability.Distributions.ProbabilityNormal(
+                hypotheses[i], mean, variance);
+        doublePMF.Normalise();
+        return doublePMF;
     }
 
     /// <summary>
