@@ -10,17 +10,37 @@ namespace CsML.Tree;
 /// </summary>
 public class BinaryNode
 {
+    /// <summary>Index of this node in list of nodes.</summary>
     public int index;
+
+    /// <summary>Identify the node as a decision node vs a leaf node.</summary>
     public bool isLeaf;
-    // Decision node criteria
+
+    /// <summary>Column to evaluate in a dicision node.</summary>
     public int? columnIndex;
-    public double? splitPoint; // value used for split (> goes yes, <= no)
+
+    /// <summary>
+    /// Value used for split (greater than goes to yes index, else to no
+    /// index).
+    /// </summary>
+    public double? splitPoint;
+
+    /// <summary>Index of yes node to go to on evaluation of split point.</summary>
     public int? yesIndex;
+
+    /// <summary>Index of no node to go to on evaluation of split point.</summary>
     public int? noIndex;
-    // Leaf node data
-    public int? recordCount;
-    public Dictionary<double, int>? classCounts;
+
+    /// <summary>Gain in purity on split.</summary>
     public double? purityGain;
+
+    /// <summary>Number of records used to calculate leaf node metrics.</summary>
+    public int? recordCount;
+
+    /// <summary>Class counts in leaf node data.</summary>
+    public Dictionary<double, int>? classCounts;
+
+    /// <summary>Class most likely from leaf node data.</summary>
     public double? predicted;
 }
 
@@ -35,18 +55,51 @@ public class BinaryTree
     private int _maxrecursions = 10000;
     private int _maxsplits = 10000;
 
+    /// <summary>The list containing nodes in the tree once trained.</summary>
     public List<BinaryNode> nodes;
+
     /// <summary>The number of matrix columns the model was trained on.</summary>
     public int minColumns;
+
+    /// <summary>The number of matrix rows the model was trained on.</summary>
     public int inputRecordCount;
+
+    /// <summary>Maximum tree depth stopping condition.</summary>
     public int maxdepth = 15;
+
+    /// <summary>Minimum rows in a tree stopping condition.</summary>
     public int minrows = 3;
+
+    /// <summary>
+    /// Number of random features to use at each split point during training.
+    /// Used to add randomisation to a random forest. Defaults to square
+    /// root of the number of columns. Not relevant if a single tree is trained
+    /// (ignored if less than 0).
+    /// </summary>
     public int randomFeatures = -1;
+
+    /// <summary>
+    /// The distinct class labels if creating a classification model.
+    /// </summary>
     public double[]? classes;
+
+
+    /// <summary>
+    /// The function to use to calculate the purity of a slice of the
+    /// target array.
+    /// <see> See
+    /// <seealso cref="CsML.Util.Statistics.Gini" />
+    /// for default function to use.
+    /// </see>
+    /// </summary>
     public Func<double[], double> purityFn;
+
+    /// <summary>Sample input data with replacement if true.</summary>
     public bool bootstrapSampleData = false;
 
     private string _mode;
+
+    /// <summary>Mode can be either "classify" or "regress".</summary>
     public string mode
     {
         get { return _mode; }
@@ -58,6 +111,7 @@ public class BinaryTree
         }
     }
 
+    /// <summary>Create an untrained model.</summary>
     public BinaryTree(string mode, Func<double[], double> purityFn)
     {
         nodes = new List<BinaryNode>();
@@ -76,6 +130,10 @@ public class BinaryTree
     /// </summary>
     /// <param name="matrix">The features to train the model on.</param>
     /// <param name="target">The target vector to train on.</param>
+    /// <param name="skipchecks">
+    /// Skip input checks if true. Used in random forest to avoid repeated
+    /// checking of same input data.
+    /// </param>
     public void Train(double[,] matrix, double[] target, bool skipchecks = false)
     {
         inputRecordCount = matrix.GetLength(0);

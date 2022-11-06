@@ -41,7 +41,7 @@ public class RandomForest
     /// The function to use to calculate the purity of a slice of the
     /// target array.
     /// <see> See
-    /// <seealso cref="CsML.Util.Statistics.Gini{T}(IEnumerable{T})" />
+    /// <seealso cref="CsML.Util.Statistics.Gini" />
     /// for default function to use.
     /// </see>
     /// </summary>
