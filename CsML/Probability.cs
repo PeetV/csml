@@ -18,6 +18,10 @@ public class Distributions
     /// </param>
     /// <param name="ks">Arrays of k values representing number of successes.</param>
     /// <param name="p">Probability of experiment success.</param>
+    /// <returns>
+    /// An array of doubles representing the proability of each corresponding
+    /// k values specified in the ks parameter.
+    /// </returns>
     public static double[] Binomial(int n, int[] ks, double p)
     {
         double[] result = ks.Select(k => ProbabilityBinomial(n, k, p)).ToArray();
