@@ -61,7 +61,7 @@ public class Array
     /// Calculate classification accuracy from a predictions array compared to an
     /// actuals array.
     /// </summary>
-    /// <exception cref="ArgumentException">
+    /// <exception cref="System.ArgumentException">
     /// Throws an exception if inputs aren't the same length.
     /// </exception>
     public static double ClassificationAccuracy<T>(
@@ -83,7 +83,7 @@ public class Array
     /// Calculate classification error from a predictions array compared to an
     /// actuals array.
     /// </summary>
-    /// <exception cref="ArgumentException">
+    /// <exception cref="System.ArgumentException">
     /// Throws an exception if inputs aren't the same length.
     /// </exception>
     public static double ClassificationError<T>(
@@ -97,7 +97,7 @@ public class Array
     /// and Recall (proportion of true positives found) from a predictions
     /// array compared to an actuals array.
     /// </summary>
-    /// <exception cref="ArgumentException">
+    /// <exception cref="System.ArgumentException">
     /// Throws an exception if inputs aren't the same length.
     /// </exception>
     public static Dictionary<T, (double, double)> ClassificationMetrics<T>(
@@ -203,7 +203,7 @@ public class Features
     /// <returns>
     /// A new matrix and target array containing bootstrap samples.
     /// </returns>
-    /// <exception cref="ArgumentException">
+    /// <exception cref="System.ArgumentException">
     /// Throws an exception if inputs aren't the same length.
     /// </exception>
     public static (double[,], double[]) Bootstrap(double[,] matrix, double[] target)
@@ -229,7 +229,7 @@ public class Features
     /// Shuffle a matrix containing features and a target array maintaining the
     /// relationship between matrix rows and array items.
     /// </summary>
-    /// <exception cref="ArgumentException">
+    /// <exception cref="System.ArgumentException">
     /// Throws an exception if inputs aren't the same length.
     /// </exception>
     public static (double[,], double[]) Shuffle(double[,] matrix, double[] target)
@@ -256,7 +256,7 @@ public class Features
     /// into train and test sets using a ratio between 0 and 1, e.g. 0.7
     /// places 70% into train and keeps 30% for test.
     /// </summary>
-    /// <exception cref="ArgumentException">
+    /// <exception cref="System.ArgumentException">
     /// Throws an exception if inputs aren't the same length or if `ratio` is
     /// not between 0 and 1.
     /// </exception>

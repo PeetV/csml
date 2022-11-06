@@ -8,7 +8,9 @@ public class Distributions
 {
 
     /// <summary>
-    /// Calculate a Binomial probabilities for a series of k values.
+    /// Calculate Binomial probabilities for a series of k values. The Binomial
+    /// distribution is used to model the probability of a number of successes
+    /// during a certain number of trials.
     /// </summary>
     /// <param name="n">
     /// Number of independent experiments, each asking a yes–no question, and 
