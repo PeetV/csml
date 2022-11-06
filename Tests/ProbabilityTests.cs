@@ -26,6 +26,13 @@ public class Distributions
     }
 
     [Fact]
+    public void ProbabilityBinomial_kGreaterThanN()
+    {
+        double result = CsML.Probability.Distributions.ProbabilityBinomial(9, 10, 0.5);
+        Assert.Equal(0.0, result);
+    }
+
+    [Fact]
     public void ProbabilityNormal()
     {
         double result = CsML.Probability.Distributions.ProbabilityNormal(120, 110, 2975);
