@@ -72,9 +72,10 @@ public class BinaryTree
     }
 
     /// <summary>
-    /// Perform decision tree induction from the dataset contained in the matrix
-    /// parameter and values contained in target parameter.
+    /// Train the model.
     /// </summary>
+    /// <param name="matrix">The features to train the model on.</param>
+    /// <param name="target">The target vector to train on.</param>
     public void Train(double[,] matrix, double[] target, bool skipchecks = false)
     {
         inputRecordCount = matrix.GetLength(0);
@@ -106,8 +107,13 @@ public class BinaryTree
     }
 
     /// <summary>
-    /// Infer target values from new data.
+    /// Make predictions using the model.
     /// </summary>
+    /// <param name="matrix">New data to infer predictions from.</param>
+    /// <param name="skipchecks">
+    /// Skip input checks if true. Used in random forest to avoid repeated
+    /// checking of same input data.
+    /// </param>
     public double[] Predict(double[,] matrix, bool skipchecks = false)
     {
         inputRecordCount = matrix.GetLength(0);

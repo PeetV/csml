@@ -188,12 +188,18 @@ public class NaiveBayesClassifier<T>
     /// <summary>The number of matrix columns the model was trained on.</summary>
     public int minColumns;
 
+    /// <summary>Create an untrained Naive Bayes classifier.</summary>
     public NaiveBayesClassifier()
     {
         classProbabilities = new Dictionary<T, double> { };
         columnMeans = new Dictionary<int, Dictionary<T, (double, double)>> { };
     }
 
+    /// <summary>
+    /// Train the model.
+    /// </summary>
+    /// <param name="matrix">The features to train the model on.</param>
+    /// <param name="target">The target vector to train on.</param>
     public void Train(double[,] matrix, T[] target)
     {
         int inputRecordCount = matrix.GetLength(0);
@@ -210,6 +216,10 @@ public class NaiveBayesClassifier<T>
             CalculateColumnMeans(matrix, target, colidx);
     }
 
+    /// <summary>
+    /// Make predictions using the model.
+    /// </summary>
+    /// <param name="matrix">New data to infer predictions from.</param>
     public T[] Predict(double[,] matrix)
     {
         int inputRecordCount = matrix.GetLength(0);
@@ -287,17 +297,25 @@ public class NaiveBayesClassifier<T>
 public class ProbabilityMassFunction<T>
     where T : IComparable
 {
+    /// <summary>
+    /// A dictionary containing hypotheses as keys and corresponding probabilities
+    /// as values.
+    /// </summary>
     public Dictionary<T, double> table;
 
-    // Overload the square-bracket operator to work on the table field
+    /// <summary>
+    /// Overload the square-bracket operator to work on the table field.
+    /// </summary>
     public object this[T hypothesis]
     {
         get { return table[hypothesis]; }
         set { table[hypothesis] = (double)value; }
     }
 
+    /// <summary>Hypotheses sorted.</summary>
     public T[] hypotheses { get { return table.Keys.OrderBy(x => x).ToArray(); } }
 
+    /// <summary>Probabilities in order of hypotheses sorted.</summary>
     public double[] probabilities
     {
         get
@@ -309,6 +327,10 @@ public class ProbabilityMassFunction<T>
         }
     }
 
+    /// <summary>
+    /// Array of tuples containing each hypotheses and corresponding probability,
+    /// in order of hypotheses sorted.
+    /// </summary>
     public (T, double)[] zipped
     {
         get
@@ -484,9 +506,18 @@ public class ProbabilityMassFunction<T>
 public class RandomClassifier<T>
     where T : notnull
 {
+    /// <summary>
+    /// The distinct class labels from the target vector.
+    /// </summary>
     public T[] classes;
+
+    /// <summary>
+    /// Weights to apply to class labels. As the size of the sample increases,
+    /// class proportions will get closer to the weights.
+    /// </summary>
     public double[] weights;
 
+    /// <summary>Create an untrained model.</summary>
     public RandomClassifier()
     {
         classes = new T[] { };
@@ -494,9 +525,10 @@ public class RandomClassifier<T>
     }
 
     /// <summary>
-    /// Train the classifier by calculating class label weightings from the
-    /// target parameter array.
+    /// Train the model.
     /// </summary>
+    /// <param name="matrix">The features to train the model on.</param>
+    /// <param name="target">The target vector to train on.</param>
     public void Train(double[,] matrix, T[] target)
     {
         var counts = target.ElementCounts();
@@ -509,10 +541,11 @@ public class RandomClassifier<T>
             weights[i] = counts[key];
         }
     }
+
     /// <summary>
-    /// Randomly choose from class labels applying weightings to emulate
-    /// the distribution of the labels identified in train method.
+    /// Make predictions using the model.
     /// </summary>
+    /// <param name="matrix">New data to infer predictions from.</param>
     public T[] Predict(double[,] matrix)
     {
         var sampler = new WeightedIndexSampler<T>(classes, weights);
@@ -529,6 +562,14 @@ public class WeightedIndexSampler<T>
     private double[] weights;
     private Random random;
 
+    /// <summary>
+    /// Create a new sampler.
+    /// </summary>
+    /// <param name="target">The array to draw samples from.</param>
+    /// <param name="weights">
+    /// The corresponding weights to apply when sampling. As the size of the sample
+    /// increases the proportion will become closer to the weights proportions.
+    /// </param>
     public WeightedIndexSampler(T[] target, double[] weights)
     {
         if (target.Length != weights.Length)

@@ -90,9 +90,10 @@ public class RandomForest
     }
 
     /// <summary>
-    /// Perform forest induction from the dataset contained in the matrix
-    /// parameter and values contained in target parameter.
+    /// Train the model.
     /// </summary>
+    /// <param name="matrix">The features to train the model on.</param>
+    /// <param name="target">The target vector to train on.</param>
     public void Train(double[,] matrix, double[] target)
     {
         inputRecordCount = matrix.GetLength(0);
@@ -121,8 +122,9 @@ public class RandomForest
     }
 
     /// <summary>
-    /// Infer target values from new data.
+    /// Make predictions using the model.
     /// </summary>
+    /// <param name="matrix">New data to infer predictions from.</param>
     public double[] Predict(double[,] matrix)
     {
         inputRecordCount = matrix.GetLength(0);
