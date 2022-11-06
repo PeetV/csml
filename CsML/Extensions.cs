@@ -23,6 +23,9 @@ public static class IEnumerable
     /// <summary>
     /// Count of ocurrences of each array element.
     /// </summary>
+    /// <returns>
+    /// A dictionary containing distinct array elements as keys and counts values.
+    /// </returns>
     public static Dictionary<T, int> ElementCounts<T>(this IEnumerable<T> sequence)
         where T : notnull
     {

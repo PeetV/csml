@@ -55,18 +55,54 @@ pmf.SumProbabilities(10, 100)
 
 pmf.SumProbabilities(15, 100)
 
-#!csharp
-
-pmf.SumProbabilities(1, 10)
-
 #!markdown
 
-### Returns to a store
+### Coin tosses
 
- Assume it is known that 10% of all orders get returned at a certain store each week. If there are 50 orders that week, what is the probability of more than 5, 10 and 15 returns?
+See [Think Bayes](http://allendowney.github.io/ThinkBayes2/chap04.html)
 
 #!csharp
 
-ks = Enumerable.Range(1, 51).ToArray();
-pmf = ProbabilityMassFunction<int>.FromBinomial(50, ks, 0.1);
-pmf.SumProbabilities(6, 51)
+ks = Enumerable.Range(1, 251).ToArray();
+pmf = ProbabilityMassFunction<int>.FromBinomial(250, ks, 0.5);
+PlotIntPMF(pmf);
+
+#!csharp
+
+pmf.HighestProbability()
+
+#!csharp
+
+double[] hypos = Enumerable.Range(0, 101).Select(x => (double)x / 100).ToArray();
+var coinbal = new ProbabilityMassFunction<double>(hypos);
+coinbal.zipped[0..3]
+
+#!csharp
+
+double[] likelihoodHeads = hypos;
+double[] likelihoodTails = hypos.Select(x => 1 - x).ToArray();
+likelihoodTails[0..3]
+
+#!csharp
+
+string[] data = Enumerable.Repeat("H", 140).Concat(Enumerable.Repeat("T", 110)).ToArray();
+data[0..3]
+
+#!csharp
+
+foreach (var item in data)
+{
+    if (item == "H")
+        coinbal.Update(likelihoodHeads);
+    else coinbal.Update(likelihoodTails);
+    coinbal.Normalise();
+}
+Chart.Line<double, double, string>(
+    x: coinbal.hypotheses, 
+    y: coinbal.probabilities
+)
+    .WithXAxisStyle<double, double, string>(
+        Title: Plotly.NET.Title.init("Hypotheses"))
+    .WithYAxisStyle<double, double, string>(
+        Title: Plotly.NET.Title.init("Probability"))
+    .Show();
