@@ -1,0 +1,72 @@
+#!markdown
+
+# Binomial distribution
+
+The Binomial distribution is used to model the probability of the number of successes that occur during a number of experiments.
+
+#!csharp
+
+#i "nuget:/Users/peet/Sources/csml/CsML/bin/Release"
+#r "nuget:CsML,*-*"
+using CsML;
+using CsML.Probability;
+
+#!csharp
+
+#r "nuget: Plotly.NET.CSharp,*-*"
+using Plotly.NET.CSharp;
+
+#!csharp
+
+void PlotIntPMF(ProbabilityMassFunction<int> pmf)
+{
+    Chart.Line<int, double, string>(
+        x: pmf.hypotheses, 
+        y: pmf.probabilities
+    )
+        .WithXAxisStyle<double, double, string>(
+            Title: Plotly.NET.Title.init("Hypotheses"))
+        .WithYAxisStyle<double, double, string>(
+            Title: Plotly.NET.Title.init("Probability"))
+        .Show();
+}
+
+#!markdown
+
+### Medication side effects
+
+Assume it is known that 5% of adults who take a certain medication experience negative side effects. If the medication is provided to 100 people, what is the probility that more than 5, 10 and 15 people will experience side effects?
+
+#!csharp
+
+int[] ks = Enumerable.Range(1, 101).ToArray();
+var pmf = ProbabilityMassFunction<int>.FromBinomial(100, ks, 0.05);
+PlotIntPMF(pmf);
+
+#!csharp
+
+pmf.SumProbabilities(6, 100)
+
+#!csharp
+
+pmf.SumProbabilities(10, 100)
+
+#!csharp
+
+pmf.SumProbabilities(15, 100)
+
+#!csharp
+
+pmf.SumProbabilities(1, 10)
+
+#!markdown
+
+### Returns to a store
+
+ Assume it is known that 10% of all orders get returned at a certain store each week. If there are 50 orders that week, what is the probability of more than 5, 10 and 15 returns?
+
+#!csharp
+
+ks = Enumerable.Range(1, 51).ToArray();
+pmf = ProbabilityMassFunction<int>.FromBinomial(50, ks, 0.1);
+pmf.SumProbabilities(6, 51)
