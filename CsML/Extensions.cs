@@ -1,5 +1,8 @@
 namespace CsML.Extensions;
 
+/// <summary>
+/// Extensions on IEnumerable adding functionality or improving readability.
+/// </summary>
 public static class IEnumerable
 {
 

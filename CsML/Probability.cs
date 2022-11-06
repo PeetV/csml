@@ -4,6 +4,9 @@ using CsML.Extensions;
 
 namespace CsML.Probability;
 
+/// <summary>
+/// A collection of functions dealing with or to generate distributions.
+/// </summary>
 public class Distributions
 {
 
@@ -55,10 +58,13 @@ public class Distributions
     }
 }
 
+/// <summary>
+/// A general collection of functions for probability calculations.
+/// </summary>
 public class Functions
 {
     /// <summary>
-    /// Merge two boolean arrays using an & operator on elements.
+    /// Merge two boolean arrays using an And operator on elements.
     /// </summary>
     public static bool[] And(bool[] a, bool[] b)
     {
@@ -74,7 +80,9 @@ public class Functions
         return CsML.Probability.Functions.Probability(cond);
     }
 
-    /// <summary> Calculate the Binomial Coefficient.</summary>
+    /// <summary>
+    /// Calculate the Binomial Coefficient.
+    /// </summary>
     /// From https://stackoverflow.com/a/12983878/4285191.
     public static double NChooseK(int n, int k)
     {
@@ -90,7 +98,7 @@ public class Functions
     }
 
     /// <summary>
-    /// Merge two boolean arrays using an | operator on elements.
+    /// Merge two boolean arrays using an Or operator on elements.
     /// </summary>
     public static bool[] Or(bool[] a, bool[] b)
     {
@@ -106,6 +114,9 @@ public class Functions
     }
 }
 
+/// <summary>
+/// A collection of functions for random sampling.
+/// </summary>
 public class Sample
 {
     /// <summary>
@@ -122,7 +133,7 @@ public class Sample
     /// <summary>
     /// Sample integers in a range with replacement.
     /// </summary>
-    /// <param name="minvalue">Range starting value.</param>
+    /// <param name="minValue">Range starting value.</param>
     /// <param name="maxValue">Range stopping value (not included in sample).</param>
     /// <param name="count">The number of sample items.</param>
     public static int[] RangeWithReplacement(int minValue, int maxValue, int count)
@@ -134,6 +145,9 @@ public class Sample
     }
 }
 
+/// <summary>
+/// A collection of functions for shuffling things randomly.
+/// </summary>
 public class Shuffle
 {
     /// <summary>
@@ -158,8 +172,22 @@ public class Shuffle
 public class NaiveBayesClassifier<T>
     where T : IComparable<T>
 {
+    /// <summary>
+    /// The probability of each class, estimated from data in model training.
+    /// </summary>
     public Dictionary<T, double> classProbabilities;
+
+    /// <summary>
+    /// Mean values calculated from each column. The outer dictionary maps
+    /// column indices to inner dictionaries. Inner dictionaries contain
+    /// tuples with mean and variance as dictionary values, and class labels
+    /// as keys (i.e. for column values related to each class label).
+    /// </summary>
     public Dictionary<int, Dictionary<T, (double, double)>> columnMeans;
+
+    /// <summary>
+    /// Caputures the number of columns the model was trained on.
+    /// </summary>
     public int minColumns;
 
     public NaiveBayesClassifier()
@@ -167,6 +195,7 @@ public class NaiveBayesClassifier<T>
         classProbabilities = new Dictionary<T, double> { };
         columnMeans = new Dictionary<int, Dictionary<T, (double, double)>> { };
     }
+
     public void Train(double[,] matrix, T[] target)
     {
         int inputRecordCount = matrix.GetLength(0);
