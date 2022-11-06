@@ -2,6 +2,7 @@
 
 namespace CsML.Util;
 
+/// <summary>A collection of array utility functions.</summary>
 public class Array
 {
     /// <summary>
@@ -280,6 +281,7 @@ public class Features
     }
 }
 
+/// <summary>A collection of matrix utility functions, using 2D arrays.</summary>
 public class Matrix
 {
     /// <summary>
@@ -353,6 +355,10 @@ public class Matrix
     /// <param name="mapping">
     /// A dictionary used to convert string columns to numeric values of the format
     /// { {column id , { {string val, numeric val}, {string val, numeric val} ...}.
+    /// </param>
+    /// <param name="separator">The field delimeter.</param>
+    /// <param name="loadFromRow">
+    /// The index of the row to load from, e.g. 1 skips the first row.
     /// </param>
     public static double[,] FromCSV(
         string inputfile,
@@ -493,6 +499,7 @@ public class Matrix
     }
 }
 
+/// <summary>A collection of statistics utility functions.</summary>
 public class Statistics
 {
     /// <summary>
@@ -529,6 +536,8 @@ public class Statistics
     /// Coefficient Of Determination.
     /// </see>
     /// </summary>
+    /// <param name="actuals">Actual values to compare with predicted values.</param>
+    /// <param name="predictions">Predicted values to compare with actual values.</param>
     /// <param name="p">
     /// p is the number of explanatory terms used in the regression to calculated adjusted r-squared
     /// (returns 0 for adjusted r-squared if p is null).
@@ -583,10 +592,16 @@ public class Statistics
 /// </summary>
 public class KFoldIterator : IEnumerable<bool[]>
 {
+    /// <summary>The number of records to split into folds.</summary>
     public int size;
+
+    /// <summary>The number of folds to iterate over.</summary>
     public int kfolds;
+
+    /// <summary>The start and end index values of each fold.</summary>
     public List<(int, int)> foldIndeces;
 
+    /// <summary>Create a new k-fold iterator.</summary>
     public KFoldIterator(int size, int kfolds)
     {
         this.size = size;
@@ -602,6 +617,7 @@ public class KFoldIterator : IEnumerable<bool[]>
         }
     }
 
+    /// <summary>Get the IEnumerator to iterate over.</summary>
     public IEnumerator<bool[]> GetEnumerator()
     {
         for (int currentFold = 0; currentFold < kfolds; currentFold++)
