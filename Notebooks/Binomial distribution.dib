@@ -16,45 +16,6 @@ using CsML.Probability;
 #r "nuget: Plotly.NET.CSharp,*-*"
 using Plotly.NET.CSharp;
 
-#!csharp
-
-void PlotIntPMF(ProbabilityMassFunction<int> pmf)
-{
-    Chart.Line<int, double, string>(
-        x: pmf.hypotheses, 
-        y: pmf.probabilities
-    )
-        .WithXAxisStyle<double, double, string>(
-            Title: Plotly.NET.Title.init("Hypotheses"))
-        .WithYAxisStyle<double, double, string>(
-            Title: Plotly.NET.Title.init("Probability"))
-        .Show();
-}
-
-#!markdown
-
-### Medication side effects
-
-Assume it is known that 5% of adults who take a certain medication experience negative side effects. If the medication is provided to 100 people, what is the probility that more than 5, 10 and 15 people will experience side effects?
-
-#!csharp
-
-int[] ks = Enumerable.Range(1, 101).ToArray();
-var pmf = ProbabilityMassFunction<int>.FromBinomial(100, ks, 0.05);
-PlotIntPMF(pmf);
-
-#!csharp
-
-pmf.SumProbabilities(6, 100)
-
-#!csharp
-
-pmf.SumProbabilities(10, 100)
-
-#!csharp
-
-pmf.SumProbabilities(15, 100)
-
 #!markdown
 
 ### Coin tosses
@@ -65,7 +26,15 @@ See [Think Bayes](http://allendowney.github.io/ThinkBayes2/chap04.html)
 
 ks = Enumerable.Range(1, 251).ToArray();
 pmf = ProbabilityMassFunction<int>.FromBinomial(250, ks, 0.5);
-PlotIntPMF(pmf);
+Chart.Line<int, double, string>(
+    x: pmf.hypotheses, 
+    y: pmf.probabilities
+)
+    .WithXAxisStyle<double, double, string>(
+        Title: Plotly.NET.Title.init("Hypotheses"))
+    .WithYAxisStyle<double, double, string>(
+        Title: Plotly.NET.Title.init("Probability"))
+    .Show();
 
 #!csharp
 
