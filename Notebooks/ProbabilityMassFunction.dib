@@ -6,10 +6,12 @@
 
 #i "nuget:/Users/peet/Sources/csml/CsML/bin/Release"
 #r "nuget:CsML,*-*"
+using CsML;
 
 #!csharp
 
-using CsML;
+#r "nuget: Plotly.NET.CSharp,*-*"
+using Plotly.NET.CSharp;
 
 #!markdown
 
@@ -41,45 +43,19 @@ bowls100[1]
 
 #!csharp
 
-#r "nuget: Plotly.NET.CSharp,*-*"
-
-#!csharp
-
-using Plotly.NET.CSharp;
-
-#!csharp
-
-void ShowChart() {
-    Chart.Line<int, double, string>(
-        x: bowls100.hypotheses, 
-        y: bowls100.probabilities
-    )
-    .WithXAxisStyle<double, double, string>(Title: Plotly.NET.Title.init("Bowl"))
-    .WithYAxisStyle<double, double, string>(Title: Plotly.NET.Title.init("Probability"))
-.Show();
-}
-ShowChart()
-
-#!csharp
-
-var likelihoodVanilla = bowls100.hypotheses.Select(x => (double)x / 100.0).ToArray();
+double[] likelihoodVanilla = bowls100.hypotheses.Select(x => (double)x / 100.0).ToArray();
+double[] likelihoodChocolote = bowls100.hypotheses.Select(x => 1.0 - (double)x / 100.0).ToArray();
 bowls100.Update(likelihoodVanilla);
-bowls100.Normalise();
-ShowChart()
-
-#!csharp
-
-var likelihoodVanilla = bowls100.hypotheses.Select(x => (double)x / 100.0).ToArray();
 bowls100.Update(likelihoodVanilla);
-bowls100.Normalise();
-ShowChart()
-
-#!csharp
-
-var likelihoodChocolote = bowls100.hypotheses.Select(x => 1.0 - (double)x / 100.0).ToArray();
 bowls100.Update(likelihoodChocolote);
 bowls100.Normalise();
-ShowChart()
+Chart.Line<int, double, string>(
+    x: bowls100.hypotheses, 
+    y: bowls100.probabilities
+)
+.WithXAxisStyle<double, double, string>(Title: Plotly.NET.Title.init("Bowl"))
+.WithYAxisStyle<double, double, string>(Title: Plotly.NET.Title.init("Probability"))
+.Show();
 
 #!csharp
 
@@ -106,14 +82,66 @@ dice.zipped
 
 #!markdown
 
-### The Trick Coin problem
+# Binomial distribution
 
-Suppose you have two coins in a box. One is a normal coin with heads on one side and tails on the other, and one is a trick coin with heads on both sides. You choose a coin at random and see that one of the sides is heads. What is the probability that you chose the trick coin?
+The Binomial distribution is used to model the probability of the number of successes that occur during a number of experiments.
+
+#!markdown
+
+### Coin tosses
+
+See [Think Bayes](http://allendowney.github.io/ThinkBayes2/chap04.html)
 
 #!csharp
 
-var coin = new CsML.Probability.ProbabilityMassFunction<string>(
-    new string[]{"normal", "trick"});
-coin.Update(new double[]{0.5, 1});
-coin.Normalise();
-coin.zipped
+var ks = Enumerable.Range(1, 251).ToArray();
+var pmf = CsML.Probability.ProbabilityMassFunction<int>.FromBinomial(250, ks, 0.5);
+Chart.Line<int, double, string>(
+    x: pmf.hypotheses, 
+    y: pmf.probabilities
+)
+    .WithXAxisStyle<double, double, string>(
+        Title: Plotly.NET.Title.init("Hypotheses"))
+    .WithYAxisStyle<double, double, string>(
+        Title: Plotly.NET.Title.init("Probability"))
+    .Show();
+
+#!csharp
+
+pmf.HighestProbability()
+
+#!csharp
+
+double[] hypos = Enumerable.Range(0, 101).Select(x => (double)x / 100).ToArray();
+var coinbal = new CsML.Probability.ProbabilityMassFunction<double>(hypos);
+coinbal.zipped[0..3]
+
+#!csharp
+
+double[] likelihoodHeads = hypos;
+double[] likelihoodTails = hypos.Select(x => 1 - x).ToArray();
+likelihoodTails[0..3]
+
+#!csharp
+
+string[] data = Enumerable.Repeat("H", 140).Concat(Enumerable.Repeat("T", 110)).ToArray();
+data[0..3]
+
+#!csharp
+
+foreach (var item in data)
+{
+    if (item == "H")
+        coinbal.Update(likelihoodHeads);
+    else coinbal.Update(likelihoodTails);
+    coinbal.Normalise();
+}
+Chart.Line<double, double, string>(
+    x: coinbal.hypotheses, 
+    y: coinbal.probabilities
+)
+    .WithXAxisStyle<double, double, string>(
+        Title: Plotly.NET.Title.init("Hypotheses"))
+    .WithYAxisStyle<double, double, string>(
+        Title: Plotly.NET.Title.init("Probability"))
+    .Show();

@@ -397,6 +397,11 @@ public class ProbabilityMassFunction<T>
         return doublePMF;
     }
 
+    // public void Add(ProbabilityMassFunction<T> pmf)
+    // {
+
+    // }
+
     /// <summary>
     /// Get the hypothesis with the highest probability, together with the
     /// probability value.
