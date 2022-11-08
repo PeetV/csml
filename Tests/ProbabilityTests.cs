@@ -120,6 +120,10 @@ public class Shuffle
         var result = CsML.Probability.Shuffle.Array(input, inPlace: false);
         Assert.Equal(3, result.Length);
         Assert.True(result.All(x => input.Contains(x)));
+        input = new string[] { "a", "b", "c" };
+        result = CsML.Probability.Shuffle.Array(input, inPlace: true);
+        Assert.Equal(3, result.Length);
+        Assert.True(result.All(x => input.Contains(x)));
     }
 }
 
