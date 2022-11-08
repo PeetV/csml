@@ -24,8 +24,8 @@ See [Think Bayes](http://allendowney.github.io/ThinkBayes2/chap04.html)
 
 #!csharp
 
-ks = Enumerable.Range(1, 251).ToArray();
-pmf = ProbabilityMassFunction<int>.FromBinomial(250, ks, 0.5);
+var ks = Enumerable.Range(1, 251).ToArray();
+var pmf = ProbabilityMassFunction<int>.FromBinomial(250, ks, 0.5);
 Chart.Line<int, double, string>(
     x: pmf.hypotheses, 
     y: pmf.probabilities
