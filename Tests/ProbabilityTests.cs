@@ -284,6 +284,17 @@ public class ProbabilityMassFunction
     }
 
     [Fact]
+    public void Mean()
+    {
+        double[] hypos = new double[] { 10, 20, 30 };
+        var pmf = new CsML.Probability.ProbabilityMassFunction<double>(hypos);
+        pmf[10] = 0.5;
+        pmf[20] = 0.25;
+        pmf[30] = 0.25;
+        Assert.Equal(10 * 0.5 + 20 * 0.25 + 30 * 0.25, pmf.Mean());
+    }
+
+    [Fact]
     public void Normalise()
     {
         string[] outcomes = new string[] { "heads", "tails" };

@@ -411,6 +411,22 @@ public class ProbabilityMassFunction<T>
     }
 
     /// <summary>
+    /// Calculate the mean of the PMF.
+    /// </summary>
+    /// <exception cref="System.ArithmeticException">
+    /// Throws an exception if the hypotheses type is not double.
+    /// </exception>
+    public double Mean()
+    {
+        if (typeof(T) != typeof(double))
+            throw new ArithmeticException("Hypotheses type must be double");
+        double result = 0.0;
+        foreach (var pair in zipped)
+            result += Convert.ToDouble(pair.Item1) * pair.Item2;
+        return result;
+    }
+
+    /// <summary>
     /// Normalise the hypotheses table, making the probabilities add up to 1.
     /// </summary>
     public void Normalise()
