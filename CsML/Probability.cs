@@ -408,15 +408,15 @@ public class ProbabilityMassFunction<T>
         if (typeof(T) != typeof(double))
             throw new ArithmeticException("Hypotheses type must be double");
         ProbabilityMassFunction<double> newPmf = new ProbabilityMassFunction<double>();
-        foreach (var key1 in table.Keys)
+        foreach (var key1 in this.table.Keys)
         {
             foreach (var key2 in pmf.table.Keys)
             {
                 double sumHypos = Convert.ToDouble(key1) + Convert.ToDouble(key2);
                 if (!newPmf.table.ContainsKey(sumHypos))
-                    newPmf.table[sumHypos] = table[key1] * pmf.table[key2];
+                    newPmf.table[sumHypos] = this.table[key1] * pmf.table[key2];
                 else
-                    newPmf.table[sumHypos] = newPmf.table[sumHypos] + (table[key1] * pmf.table[key2]);
+                    newPmf.table[sumHypos] = newPmf.table[sumHypos] + (this.table[key1] * pmf.table[key2]);
             }
         }
         newPmf.Normalise();

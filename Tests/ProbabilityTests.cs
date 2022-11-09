@@ -275,14 +275,16 @@ public class ProbabilityMassFunction
     [Fact]
     public void Add()
     {
-        double[] diceValues = Enumerable.Range(1, 7).Select(x => (double)x).ToArray();
-        var dice1 = new CsML.Probability.ProbabilityMassFunction<double>(diceValues);
-        var dice2 = new CsML.Probability.ProbabilityMassFunction<double>(diceValues);
+        double[] diceValues = Enumerable.Range(1, 6).Select(x => (double)x).ToArray();
+        Assert.Equal(1, diceValues.Min());
+        Assert.Equal(6, diceValues.Max());
+        var dice1 = new CsML.Probability.ProbabilityMassFunction<double>((double[])diceValues.Clone());
+        var dice2 = new CsML.Probability.ProbabilityMassFunction<double>((double[])diceValues.Clone());
         var pmf = dice1.Add(dice2);
-        double[] sumDice = Enumerable.Range(2, 13).Select(x => (double)x).ToArray();
-        Assert.True(sumDice.SequenceEqual(pmf.hypotheses));
+        double[] summmedDice = Enumerable.Range(2, 11).Select(x => (double)x).ToArray();
+        Assert.True(summmedDice.SequenceEqual(pmf.hypotheses));
         Assert.True(1.0 - pmf.probabilities.Sum() < 0.0000000001);
-        Assert.Equal((0, 0), pmf.HighestProbability());
+        Assert.Equal((7, 0.166666666666666666), pmf.HighestProbability());
     }
 
     [Fact]
