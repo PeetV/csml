@@ -138,7 +138,7 @@ public class Sample
     /// <param name="count">The number of sample items.</param>
     public static int[] RangeWithReplacement(int minValue, int maxValue, int count)
     {
-        Random random = new Random();
+        var random = new Random();
         return Enumerable.Range(0, count)
                          .Select(_ => random.Next(minValue, maxValue))
                          .ToArray();
@@ -159,7 +159,7 @@ public class Shuffle
     /// </param>
     public static T[] Array<T>(T[] input, bool inPlace = false)
     {
-        Random random = new Random();
+        var random = new Random();
         T[] result = inPlace ? input : (T[])input.Clone();
         return result.OrderBy(x => random.Next()).ToArray();
     }

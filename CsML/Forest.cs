@@ -219,7 +219,7 @@ public class RandomForest
     /// </returns>
     public double[] PurityGains()
     {
-        double[] result = new double[minColumns];
+        var result = new double[minColumns];
         foreach (var tree in trees)
         {
             double[] treeGains = tree.PurityGains();

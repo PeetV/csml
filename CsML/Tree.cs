@@ -275,7 +275,7 @@ public class BinaryTree
         Dictionary<double, int> counts)
     {
         double total = counts.Values.Sum();
-        Dictionary<double, double> result = new Dictionary<double, double>();
+        var result = new Dictionary<double, double>();
         foreach (double key in counts.Keys)
             result[key] = counts[key] / total;
         return result;

@@ -108,7 +108,7 @@ public class Array
         if (lenActuals != lenPredictions)
             throw new ArgumentException("Inputs must be same length");
         (T, T)[] zipped = actuals.Zip(predictions).ToArray();
-        Dictionary<T, double[]> counts = new Dictionary<T, double[]> { };
+        var counts = new Dictionary<T, double[]> { };
         foreach ((T, T) pair in zipped)
         {
             // True positive
@@ -140,7 +140,7 @@ public class Array
             }
             else counts[pair.Item1] = new double[] { 0.0, 0.0, 1.0 };
         }
-        Dictionary<T, (double, double)> result = new Dictionary<T, (double, double)> { };
+        var result = new Dictionary<T, (double, double)> { };
         double[] tpfpfn;
         double prec, rec;
         foreach (T k in counts.Keys)
@@ -161,7 +161,7 @@ public class Array
     /// </returns>
     public static Dictionary<T, int> ElementCounts<T>(T[] input) where T : notnull
     {
-        Dictionary<T, int> counts = new Dictionary<T, int>();
+        var counts = new Dictionary<T, int>();
         foreach (T item in input)
         {
             if (counts.ContainsKey(item)) counts[item] += 1;
@@ -425,7 +425,7 @@ public class Matrix
             return matrixSpan.GetRow(index).ToArray();
         }
         int width = matrix.GetLength(1);
-        double[] result = new double[width];
+        var result = new double[width];
         for (int cidx = 0; cidx < width; cidx++)
             result[cidx] = matrix[index, cidx];
         return result;
@@ -509,7 +509,7 @@ public class Statistics
     {
         int length = 0;
         // Get bin counts
-        Dictionary<T, int> counts = new Dictionary<T, int>();
+        var counts = new Dictionary<T, int>();
         foreach (T val in vector)
         {
             if (counts.ContainsKey(val)) counts[val] += 1;
