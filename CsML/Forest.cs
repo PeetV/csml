@@ -164,6 +164,49 @@ public class RandomForest
     }
 
     /// <summary>
+    /// Predict labels for new data and return corresponding class probability estimates.
+    /// </summary>
+    public (double, Dictionary<double, double>)[] PredictWithProbabilities(
+        double[,] matrix,
+        bool skipchecks = false)
+    {
+        inputRecordCount = matrix.GetLength(0);
+        if (!skipchecks)
+        {
+            if (trees.Count == 0)
+                throw new ArgumentException("Forest is untrained");
+            if (matrix.GetLength(1) != minColumns)
+                throw new ArgumentException("Forest trained on different number of columns");
+            if (inputRecordCount == 0)
+                throw new ArgumentException("Empty input");
+            if (Mode == "regress")
+                throw new ArgumentException("Probabilities require treemode to be 'classify'");
+        }
+        var result = new (double, Dictionary<double, double>)[inputRecordCount];
+        Parallel.For(0, inputRecordCount, i =>
+        {
+            List<double[]> input = new List<double[]>();
+            input = input.Append(CsML.Util.Matrix.GetRow(matrix, i, false)).ToList();
+            var counts = new Dictionary<double, int>();
+            var probs = new Dictionary<double, double>();
+            (double, Dictionary<double, double>) vote;
+            foreach (var tree in trees)
+            {
+                vote = tree.PredictWithProbabilities(CsML.Util.Matrix.FromList2D(input))[0];
+                if (counts.ContainsKey(vote.Item1)) counts[vote.Item1] += 1;
+                else counts[vote.Item1] = 1;
+                foreach (double key in vote.Item2.Keys)
+                    probs[key] += vote.Item2[key];
+            }
+            double sumprobs = probs.Values.Sum();
+            foreach (double key in probs.Keys)
+                probs[key] = probs[key] / sumprobs;
+            result[i] = (counts.MaxBy(kvp => kvp.Value).Key, probs);
+        });
+        return result;
+    }
+
+    /// <summary>
     /// Calculate the mean weighted purity gains across trees.
     /// </summary>
     /// <returns>

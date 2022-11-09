@@ -208,8 +208,7 @@ public class BinaryTree
     }
 
     /// <summary>
-    /// Predict labels for new data and return corresponding class counts to use for
-    /// probability estimates.
+    /// Predict labels for new data and return corresponding class probability estimates.
     /// </summary>
     public (double, Dictionary<double, double>)[] PredictWithProbabilities(
         double[,] matrix,
