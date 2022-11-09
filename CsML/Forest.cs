@@ -196,7 +196,12 @@ public class RandomForest
                 if (counts.ContainsKey(vote.Item1)) counts[vote.Item1] += 1;
                 else counts[vote.Item1] = 1;
                 foreach (double key in vote.Item2.Keys)
-                    probs[key] += vote.Item2[key];
+                {
+                    if (probs.ContainsKey(key))
+                        probs[key] += vote.Item2[key];
+                    else
+                        probs[key] = vote.Item2[key];
+                }
             }
             double sumprobs = probs.Values.Sum();
             foreach (double key in probs.Keys)
