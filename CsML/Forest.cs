@@ -111,11 +111,12 @@ public class RandomForest
                          randomFeatures;
         foreach (int cntr in Enumerable.Range(0, treeCount))
         {
-            var tree = new BinaryTree(mode, purityFn);
-            tree.maxdepth = maxdepth;
-            tree.minrows = minrows;
-            tree.randomFeatures = randomFeatures;
-            tree.bootstrapSampleData = bootstrapSampleData;
+            // Note that mode and purityFn is set in the constructor
+            var tree = new BinaryTree(this.mode, this.purityFn);
+            tree.maxdepth = this.maxdepth;
+            tree.minrows = this.minrows;
+            tree.randomFeatures = this.randomFeatures;
+            tree.bootstrapSampleData = this.bootstrapSampleData;
             trees.Add(tree);
         }
         Parallel.ForEach(trees, tree => tree.Train(matrix, target, true));
