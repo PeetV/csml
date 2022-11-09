@@ -6,9 +6,6 @@
 
 #i "nuget:/Users/peet/Sources/csml/CsML/bin/Release"
 #r "nuget:CsML,*-*"
-
-#!csharp
-
 using CsML;
 
 #!markdown
