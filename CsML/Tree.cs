@@ -211,7 +211,7 @@ public class BinaryTree
     /// Predict labels for new data and return corresponding class counts to use for
     /// probability estimates.
     /// </summary>
-    public (double, Dictionary<double, int>)[] PredictWithClassCounts(
+    public (double, Dictionary<double, double>)[] PredictWithProbabilities(
         double[,] matrix,
         bool skipchecks = false)
     {
@@ -228,7 +228,7 @@ public class BinaryTree
                 throw new ArgumentException("Probabilities require treemode to be 'classify'");
         }
         Span2D<double> matrixSpan = matrix;
-        var result = new (double, Dictionary<double, int>)[inputRecordCount];
+        var result = new (double, Dictionary<double, double>)[inputRecordCount];
         for (int i = 0; i < inputRecordCount; i++)
         {
             double[] row = matrixSpan.GetRow(i).ToArray();
@@ -239,7 +239,8 @@ public class BinaryTree
                 iterations += 1;
                 if (node.isLeaf)
                 {
-                    result[i] = ((double)node.predicted!, node.classCounts!);
+                    var probs = ClassCountsToProbabilities(node.classCounts!);
+                    result[i] = ((double)node.predicted!, probs);
                     break;
                 }
                 if (row[(int)node.columnIndex!] > node.splitPoint)
@@ -268,6 +269,16 @@ public class BinaryTree
             double weighted = (double)node.purityGain! * weight;
             result[idx] = result[idx] + weighted;
         }
+        return result;
+    }
+
+    private static Dictionary<double, double> ClassCountsToProbabilities(
+        Dictionary<double, int> counts)
+    {
+        double total = counts.Values.Sum();
+        Dictionary<double, double> result = new Dictionary<double, double>();
+        foreach (double key in counts.Keys)
+            result[key] = counts[key] / total;
         return result;
     }
 

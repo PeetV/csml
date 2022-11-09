@@ -249,23 +249,23 @@ public class BinaryTree
         var newData = new double[,]{
             { 1, 1, 1}, { 1, 1, 40}, { 20, 1, 1}, { 20, 30, 1}
         };
-        var results = tree.PredictWithClassCounts(newData);
-        Assert.Equal(1, results[0].Item2[3]);
-        Assert.Equal(2, results[0].Item2[4]);
-        Assert.Equal(2, results[0].Item2[5]);
-        Assert.Equal(35, results[0].Item2[6]);
-        Assert.Equal(1, results[1].Item2[3]);
-        Assert.Equal(2, results[1].Item2[4]);
-        Assert.Equal(25, results[1].Item2[5]);
-        Assert.Equal(2, results[1].Item2[6]);
-        Assert.Equal(4, results[2].Item2[3]);
-        Assert.Equal(10, results[2].Item2[4]);
-        Assert.Equal(2, results[2].Item2[5]);
-        Assert.Equal(4, results[2].Item2[6]);
-        Assert.Equal(6, results[3].Item2[3]);
-        Assert.Equal(2, results[3].Item2[4]);
-        Assert.Equal(1, results[3].Item2[5]);
-        Assert.Equal(1, results[3].Item2[6]);
+        var results = tree.PredictWithProbabilities(newData);
+        Assert.Equal(1.0 / 40.0, results[0].Item2[3]);
+        Assert.Equal(2.0 / 40.0, results[0].Item2[4]);
+        Assert.Equal(2.0 / 40.0, results[0].Item2[5]);
+        Assert.Equal(35.0 / 40.0, results[0].Item2[6]);
+        Assert.Equal(1.0 / 30.0, results[1].Item2[3]);
+        Assert.Equal(2.0 / 30.0, results[1].Item2[4]);
+        Assert.Equal(25.0 / 30.0, results[1].Item2[5]);
+        Assert.Equal(2.0 / 30.0, results[1].Item2[6]);
+        Assert.Equal(4.0 / 20.0, results[2].Item2[3]);
+        Assert.Equal(10.0 / 20.0, results[2].Item2[4]);
+        Assert.Equal(2.0 / 20.0, results[2].Item2[5]);
+        Assert.Equal(4.0 / 20.0, results[2].Item2[6]);
+        Assert.Equal(6.0 / 10.0, results[3].Item2[3]);
+        Assert.Equal(2.0 / 10.0, results[3].Item2[4]);
+        Assert.Equal(1.0 / 10.0, results[3].Item2[5]);
+        Assert.Equal(1.0 / 10.0, results[3].Item2[6]);
     }
 
     [Fact]
