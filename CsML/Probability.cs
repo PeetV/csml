@@ -600,9 +600,9 @@ public class RandomClassifier<T>
 /// </summary>
 public class WeightedIndexSampler<T>
 {
-    private T[] target;
-    private double[] weights;
-    private Random random;
+    private readonly T[] _target;
+    private readonly double[] _weights;
+    private readonly Random _random;
 
     /// <summary>
     /// Create a new sampler.
@@ -618,14 +618,14 @@ public class WeightedIndexSampler<T>
             throw new ArgumentException("Inputs must be same length");
         if (target.Length == 0)
             throw new ArgumentException("Empty input");
-        this.target = target;
-        this.weights = (double[])weights.Clone();
+        this._target = target;
+        this._weights = (double[])weights.Clone();
         double weightsSum = weights.Sum();
-        this.weights = this.weights
+        this._weights = this._weights
                     .Select(x => x / weightsSum)
                     .CumulativeSum()
                     .ToArray();
-        random = new Random();
+        _random = new Random();
     }
 
     /// <summary>
@@ -641,7 +641,7 @@ public class WeightedIndexSampler<T>
         int[] result = new int[count];
         for (int i = 0; i < count; i++)
         {
-            randNum = random.NextDouble();
+            randNum = _random.NextDouble();
             result[i] = IndexAtCumVal(randNum);
         }
         return result;
@@ -658,20 +658,20 @@ public class WeightedIndexSampler<T>
         T[] result = new T[count];
         for (int i = 0; i < count; i++)
         {
-            randNum = random.NextDouble();
-            result[i] = target[IndexAtCumVal(randNum)];
+            randNum = _random.NextDouble();
+            result[i] = _target[IndexAtCumVal(randNum)];
         }
         return result;
     }
 
     private int IndexAtCumVal(double randNum)
     {
-        for (int i = 0; i < weights.Length; i++)
+        for (int i = 0; i < _weights.Length; i++)
         {
-            if (randNum <= weights[i])
+            if (randNum <= _weights[i])
                 return i;
 
         }
-        return weights.Length - 1;
+        return _weights.Length - 1;
     }
 }

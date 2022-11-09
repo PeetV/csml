@@ -55,7 +55,7 @@ public class RandomForest
     private string _mode;
 
     /// <summary>Mode can be either "classify" or "regress".</summary>
-    public string mode
+    public string Mode
     {
         get { return _mode; }
         set
@@ -77,7 +77,7 @@ public class RandomForest
         inputRecordCount = 0;
         _mode = "classify";
         this.randomFeatures = randomFeatures;
-        this.mode = mode;
+        Mode = mode;
         this.purityFn = purityFn;
         this.treeCount = treeCount;
     }
@@ -112,7 +112,7 @@ public class RandomForest
         foreach (int cntr in Enumerable.Range(0, treeCount))
         {
             // Note that mode and purityFn is set in the constructor
-            var tree = new BinaryTree(this.mode, this.purityFn);
+            var tree = new BinaryTree(this.Mode, this.purityFn);
             tree.maxdepth = this.maxdepth;
             tree.minrows = this.minrows;
             tree.randomFeatures = this.randomFeatures;
@@ -140,7 +140,7 @@ public class RandomForest
         {
             List<double[]> input = new List<double[]>();
             input = input.Append(CsML.Util.Matrix.GetRow(matrix, i, false)).ToList();
-            if (mode == "regress")
+            if (Mode == "regress")
             {
                 List<double> predictions = new List<double>(trees.Count);
                 foreach (var tree in trees)

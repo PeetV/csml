@@ -52,8 +52,8 @@ public class BinaryTree
     private int _recursions;
     private int _splitCount;
     private int _depth;
-    private int _maxrecursions = 10000;
-    private int _maxsplits = 10000;
+    private readonly int _maxrecursions = 10000;
+    private readonly int _maxsplits = 10000;
 
     /// <summary>The list containing nodes in the tree once trained.</summary>
     public List<BinaryNode> nodes;
@@ -100,7 +100,7 @@ public class BinaryTree
     private string _mode;
 
     /// <summary>Mode can be either "classify" or "regress".</summary>
-    public string mode
+    public string Mode
     {
         get { return _mode; }
         set
@@ -121,7 +121,7 @@ public class BinaryTree
         _depth = 0;
         inputRecordCount = 0;
         _mode = "classify";
-        this.mode = mode;
+        Mode = mode;
         this.purityFn = purityFn;
     }
 
@@ -224,7 +224,7 @@ public class BinaryTree
                 throw new ArgumentException("Tree trained on different number of columns");
             if (inputRecordCount == 0)
                 throw new ArgumentException("Empty input");
-            if (mode == "regress")
+            if (Mode == "regress")
                 throw new ArgumentException("Probabilities require treemode to be 'classify'");
         }
         Span2D<double> matrixSpan = matrix;
