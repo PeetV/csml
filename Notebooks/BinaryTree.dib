@@ -6,14 +6,11 @@
 
 #i "nuget:/Users/peet/Sources/csml/CsML/bin/Release"
 #r "nuget:CsML,*-*"
-
-#!csharp
-
 using CsML;
 
 #!markdown
 
-### Iris test data example
+### Iris example
 
 #!markdown
 
@@ -102,46 +99,6 @@ CsML.Util.Array.ClassificationMetrics(strtest, strpred)
 
 #!markdown
 
-Predictions with class counts:
-
-#!csharp
-
-(double, Dictionary<double, int>)[] pwcc = tree.PredictWithClassCounts(ftest);
-predictions = pwcc.Select(x => x.Item1).ToArray();
-CsML.Util.Array.ClassificationAccuracy(ttest, predictions)
-
-#!csharp
-
-int[] verscounts = pwcc.Select(x => {
-    if (x.Item2.ContainsKey(0)) return x.Item2[0];
-    else return 0;
-}).ToArray();
-int[] virgcounts = pwcc.Select(x => {
-    if (x.Item2.ContainsKey(1)) return x.Item2[1];
-    else return 0;
-}).ToArray();
-int[] setcounts = pwcc.Select(x => {
-    if (x.Item2.ContainsKey(2)) return x.Item2[2];
-    else return 0;
-}).ToArray();
-
-#!csharp
-
-#r "nuget:Microsoft.Data.Analysis,*-*"
-using Microsoft.Data.Analysis;
-
-#!csharp
-
-StringDataFrameColumn colactual = new StringDataFrameColumn("actuals", strtest);
-StringDataFrameColumn colpreds = new StringDataFrameColumn("preds", strpred);
-PrimitiveDataFrameColumn<int> colvers = new PrimitiveDataFrameColumn<int>("vers", verscounts);
-PrimitiveDataFrameColumn<int> colvirg = new PrimitiveDataFrameColumn<int>("virg", virgcounts);
-PrimitiveDataFrameColumn<int> colset = new PrimitiveDataFrameColumn<int>("set", setcounts);
-DataFrame df = new DataFrame(colactual, colpreds, colvers, colvirg, colset);
-DataFrame.WriteCsv(df, "/Users/peet/tmp.csv");
-
-#!markdown
-
 10 fold cross-validation:
 
 #!csharp
@@ -170,7 +127,7 @@ Console.WriteLine($"Average {mean}");
 
 #!markdown
 
-### LED data example
+### LED  example
 
 #!csharp
 
@@ -190,6 +147,82 @@ for (int r=0; r < data.GetLength(0); r++)
     }
     target[r] = data[r, 7];
 }
+
+#!csharp
+
+(features, target) = CsML.Util.Features.Shuffle(features, target);
+
+#!csharp
+
+results = new List<double>(){};
+iter = new CsML.Util.KFoldIterator(dataLength, 10);
+foreach(bool[] f in iter)
+{    
+
+    Console.Write(".");
+    (ftrain, ftest) = CsML.Util.Matrix.Split(features, f);
+    (ttrain, ttest) = CsML.Util.Array.Split(target, f);
+    rcfier = new CsML.Probability.RandomClassifier<double>();
+    rcfier.Train(ftrain, ttrain);
+    double[] predictions = rcfier.Predict(ftest);
+    results.Add(CsML.Util.Array.ClassificationAccuracy(ttest, predictions));
+}
+var mean = results.Average();
+results = results.Select(x => Math.Round(x, 4)).ToList();
+Console.WriteLine("");
+Console.WriteLine(string.Join(", ", results.ToArray()));
+Console.WriteLine($"Average {mean}");
+
+#!csharp
+
+results = new List<double>(){};
+iter = new CsML.Util.KFoldIterator(dataLength, 10);
+foreach(bool[] f in iter)
+{
+    Console.Write(".");
+    (ftrain, ftest) = CsML.Util.Matrix.Split(features, f);
+    (ttrain, ttest) = CsML.Util.Array.Split(target, f);
+    var tree = new CsML.Tree.BinaryTree("classify", CsML.Util.Statistics.Gini);
+    tree.maxdepth = 15;
+    tree.minrows = 3;
+    tree.Train(ftrain, ttrain);
+    double[] predictions = tree.Predict(ftest);
+    results.Add(CsML.Util.Array.ClassificationAccuracy(ttest, predictions));
+}
+var mean = results.Average();
+results = results.Select(x => Math.Round(x, 4)).ToList();
+Console.WriteLine("");
+Console.WriteLine(string.Join(", ", results.ToArray()));
+Console.WriteLine($"Average {mean}");
+
+#!markdown
+
+### Sonar example
+
+#!csharp
+
+mapping = new Dictionary<int, Dictionary<string, double>>();
+mapping[60] = new Dictionary<string, double>{ { "R", 0 }, {"M", 1 }};
+inpuPath = "/Users/peet/Sources/csml/Tests/Data/sonar.csv";
+data = CsML.Util.Matrix.FromCSV(inpuPath, mapping, loadFromRow: 0);
+
+#!csharp
+
+dataLength = data.GetLength(0);
+features = new double[dataLength, 59];
+target = new double[dataLength];
+for (int r=0; r < data.GetLength(0); r++)
+{
+    for (int c=0; c < 59; c++)
+    {
+        features[r, c] = data[r, c];
+    }
+    target[r] = data[r, 60];
+}
+
+#!csharp
+
+(features, target) = CsML.Util.Features.Shuffle(features, target);
 
 #!csharp
 
