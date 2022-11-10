@@ -248,7 +248,7 @@ foreach(bool[] f in iter)
     (ftrain, ftest) = CsML.Util.Matrix.Split(features, f);
     (ttrain, ttest) = CsML.Util.Array.Split(target, f);
     var forest = new CsML.Forest.RandomForest("classify", CsML.Util.Statistics.Gini);
-    forest.treeCount = 1000;
+    forest.treeCount = 500;
     forest.Train(ftrain, ttrain);
     double[] predictions = forest.Predict(ftest);
     results.Add(CsML.Util.Array.ClassificationAccuracy(ttest, predictions));
