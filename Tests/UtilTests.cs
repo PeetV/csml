@@ -1,7 +1,7 @@
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace Csml.Tests.Util;
+namespace CsML.Tests.Util;
 
 public class Array
 {
@@ -160,6 +160,14 @@ public class Array
 
 public class Features
 {
+    [Fact]
+    public void ClassProportions()
+    {
+        var target = new double[] { 1, 1, 2, 2, 3, 3, 4, 4, 5, 5 };
+        var result = CsML.Util.Features.ClassProportions(target);
+        Assert.Equal(1, 0);
+    }
+
     [Fact]
     public void Bootstrap()
     {

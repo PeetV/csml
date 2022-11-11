@@ -201,6 +201,22 @@ public class Array
 /// </summary>
 public class Features
 {
+    /// <summary>Calculate class proportions in a target array.</summary>
+    /// <param name="target">The target input array.</param>
+    /// <returns>An array of tuples containing class labels and proportions.</returns>
+    public static (T, double)[] ClassProportions<T>(T[] target)
+        where T : notnull
+    {
+        var counts = CsML.Util.Array.ElementCounts(target);
+        int total = counts.Values.Sum();
+        var result = new (T, double)[counts.Count];
+        foreach (T key in counts.Keys.Order())
+        {
+            result.Append((key, (double)counts[key] / (double)total));
+        }
+        return result;
+    }
+
     /// <summary>
     /// Bootstrap sample from feature matrix and correspondnig target array, with
     /// replacement, e.g. to add ramdomisation to a Random Forest.
