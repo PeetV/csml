@@ -22,13 +22,12 @@ public class RandomForest
     /// <summary>Maximum tree depth stopping condition.</summary>
     public int maxdepth = 1000;
 
-    /// <summary>Minimum rows in a tree stopping condition.</summary>
+    /// <summary>Minimum rows stopping condition.</summary>
     public int minrows = 3;
 
     /// <summary>
     /// Number of random features to use at each split point during training.
-    /// Used to add randomisation to a random forest. Defaults to square
-    /// root of the number of columns.
+    /// Used to add randomisation. Defaults to square root of the number of columns.
     /// </summary>
     public int randomFeatures;
 
@@ -38,8 +37,7 @@ public class RandomForest
     public double[]? classes;
 
     /// <summary>
-    /// The function to use to calculate the purity of a slice of the
-    /// target array.
+    /// The function to use to calculate the purity of a slice of the target array.
     /// <see> See
     /// <seealso cref="CsML.Util.Statistics.Gini" />
     /// for default function to use.
@@ -51,6 +49,9 @@ public class RandomForest
     /// Sample input data with replacement when training each tree if true.
     /// </summary>
     public bool bootstrapSampleData = true;
+
+    /// <summary>Keep out of bag indeces when bootstrap sampling.</summary>
+    public bool retainOutOfBagIndeces = false;
 
     private string _mode;
 
@@ -89,9 +90,7 @@ public class RandomForest
         return (int)Math.Sqrt(n);
     }
 
-    /// <summary>
-    /// Train the model.
-    /// </summary>
+    /// <summary>Train the model.</summary>
     /// <param name="matrix">The features to train the model on.</param>
     /// <param name="target">The target vector to train on.</param>
     public void Train(double[,] matrix, double[] target)
@@ -117,14 +116,13 @@ public class RandomForest
             tree.minrows = this.minrows;
             tree.randomFeatures = this.randomFeatures;
             tree.bootstrapSampleData = this.bootstrapSampleData;
+            tree.retainOutOfBagIndeces = this.retainOutOfBagIndeces;
             trees.Add(tree);
         }
         Parallel.ForEach(trees, tree => tree.Train(matrix, target, true));
     }
 
-    /// <summary>
-    /// Make predictions using the model.
-    /// </summary>
+    /// <summary>Make predictions using the model.</summary>
     /// <param name="matrix">New data to infer predictions from.</param>
     public double[] Predict(double[,] matrix)
     {
