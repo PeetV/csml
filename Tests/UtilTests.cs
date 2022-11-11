@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Csml.Tests.Util;
@@ -10,7 +11,9 @@ public class Array
         double[] values = { 1.0, 1.0, 1.0, 2.0, 12.0, 1.0, 1.0, 2.0, 1.0, 2.0, 3.0, 1.0 };
         double[] target = { 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0 };
         var result = CsML.Util.Array.BestSplit(
-            values, target, CsML.Util.Statistics.Gini);
+            values,
+            target,
+            CsML.Util.Statistics.Gini);
         Assert.Equal(7.5, result.Item1);
         Assert.Equal(0.061868686868686684, result.Item2);
     }
@@ -23,7 +26,9 @@ public class Array
         double[] target = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0,
         0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
         var result = CsML.Util.Array.BestSplit(
-            values, target, CsML.Util.Statistics.Gini);
+            values,
+            target,
+            CsML.Util.Statistics.Gini);
         Assert.Equal(0.5, result.Item1);
         Assert.Equal(0.0625, result.Item2);
     }
@@ -34,47 +39,81 @@ public class Array
         double[] values = { 5.0, 5.0, 5.0, 5.0, 5.0 };
         double[] target = { 1.0, 2.0, 1.0, 2.0, 1.0 };
         var result = CsML.Util.Array.BestSplit(
-            values, target, CsML.Util.Statistics.Gini);
+            values,
+            target,
+            CsML.Util.Statistics.Gini);
         Assert.Equal(4.0, result.Item1);
         Assert.Equal(0.0, result.Item2);
     }
 
     [Fact]
-    public void ClassificationAccuracy()
+    public void ClassificationAccuracy_all_match()
     {
         double[] values = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         double[] target = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         double result = CsML.Util.Array.ClassificationAccuracy(values, target);
         Assert.Equal(1, result);
-        values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
-        target = new double[] { 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 };
-        result = CsML.Util.Array.ClassificationAccuracy(values, target);
-        Assert.Equal(0.5, result);
-        values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
-        target = new double[] { 5.0, 5.0, 1.0, 5.0, 5.0, 5.0 };
-        result = CsML.Util.Array.ClassificationAccuracy(values, target);
-        Assert.Equal(2.0 / 6.0, result);
-        result = CsML.Util.Array.ClassificationAccuracy(new double[] { }, new double[] { });
+    }
+
+    [Fact]
+    public void ClassificationAccuracy_empty()
+    {
+        double result = CsML.Util.Array.ClassificationAccuracy(new double[] { }, new double[] { });
         Assert.Equal(0.0, result);
     }
 
     [Fact]
-    public void ClassificationError()
+    public void ClassificationAccuracy_half_match()
+    {
+        double[] values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
+        double[] target = new double[] { 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 };
+        double result = CsML.Util.Array.ClassificationAccuracy(values, target);
+        Assert.Equal(0.5, result);
+    }
+
+    [Fact]
+    public void ClassificationAccuracy_some_match()
+    {
+        var values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
+        var target = new double[] { 5.0, 5.0, 1.0, 5.0, 5.0, 5.0 };
+        var result = CsML.Util.Array.ClassificationAccuracy(values, target);
+        Assert.Equal(2.0 / 6.0, result);
+    }
+
+    [Fact]
+    public void ClassificationError_all_same()
     {
         double[] values = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         double[] target = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         double result = CsML.Util.Array.ClassificationError(values, target);
         Assert.Equal(0, result);
-        values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
-        target = new double[] { 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 };
-        result = CsML.Util.Array.ClassificationError(values, target);
-        Assert.Equal(0.5, result);
-        values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
-        target = new double[] { 5.0, 5.0, 1.0, 5.0, 5.0, 5.0 };
-        result = CsML.Util.Array.ClassificationError(values, target);
-        Assert.True(4.0 / 6.0 - result < 0.00000001);
-        result = CsML.Util.Array.ClassificationAccuracy(new double[] { }, new double[] { });
+ 
+    }
+
+    [Fact]
+    public void ClassificationError_empty()
+    {
+
+        var result = CsML.Util.Array.ClassificationAccuracy(new double[] { }, new double[] { });
         Assert.Equal(0.0, result);
+    }
+
+    [Fact]
+    public void ClassificationError_half_same()
+    {
+        var values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
+        var target = new double[] { 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 };
+        var result = CsML.Util.Array.ClassificationError(values, target);
+        Assert.Equal(0.5, result);
+    }
+
+    [Fact]
+    public void ClassificationError_some_match()
+    {
+        var values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
+        var target = new double[] { 5.0, 5.0, 1.0, 5.0, 5.0, 5.0 };
+        var result = CsML.Util.Array.ClassificationError(values, target);
+        Assert.True(4.0 / 6.0 - result < 0.00000001);
     }
 
     [Fact]
@@ -89,7 +128,12 @@ public class Array
         Assert.Equal(0.5, result["A"].Item2);
         Assert.Equal(1, result["B"].Item2);
         Assert.Equal(0.6666666666666666, result["C"].Item2);
-        result = CsML.Util.Array.ClassificationMetrics(new string[] { }, new string[] { });
+    }
+
+    [Fact]
+    public void ClassificationMetrics_empty()
+    {
+        var result = CsML.Util.Array.ClassificationMetrics(new string[] { }, new string[] { });
         Assert.True(result.Keys.Count == 0);
     }
 
@@ -163,13 +207,13 @@ public class Features
     public void Split()
     {
         double[,] matrix = new double[,]
-                {
+         {
             {1, 1, 1},
             {2, 2, 2},
             {3, 3, 3},
             {4, 4, 4},
             {5, 5, 5}
-                };
+         };
         double[] target = new double[] { 1, 2, 3, 4, 5 };
         double[,] mlhs, mrhs;
         double[] tlhs, trhs;
