@@ -623,7 +623,7 @@ public class WeightedIndexSampler<T>
         double weightsSum = weights.Sum();
         this._weights = this._weights
                     .Select(x => x / weightsSum)
-                    .CumulativeSum()
+                    .Cumulative()
                     .ToArray();
         _random = new Random();
     }

@@ -11,7 +11,7 @@ public class IEnumerable
     {
         double[] input = new double[] { 1, 2, 3 };
         double[] expected = new double[] { 1, 3, 6 };
-        double[] result = input.CumulativeSum().ToArray();
+        double[] result = input.Cumulative().ToArray();
         Assert.True(expected.SequenceEqual(result));
     }
 
