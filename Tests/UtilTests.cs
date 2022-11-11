@@ -254,8 +254,8 @@ public class Matrix
         var result = CsML.Util.Matrix.BestSplit(
             matrix, target, CsML.Util.Statistics.Gini, -1);
         Assert.Equal(0, result.Item1); // best column
-        Assert.Equal(0.5, result.Item2.Item1); // best split
-        Assert.Equal(0.05555555555555555, result.Item2.Item2); // best gain
+        Assert.Equal(0.5, result.Item2); // best split
+        Assert.Equal(0.05555555555555555, result.Item3); // best gain
     }
 
     [Fact]
@@ -336,9 +336,9 @@ public class Matrix
             true
         };
         var result = CsML.Util.Matrix.Split(matrix, 2, 0.5);
-        var lhs = result.Item1.Item1;
-        var rhs = result.Item1.Item2;
-        var filter = result.Item2;
+        var lhs = result.Item1;
+        var rhs = result.Item2;
+        var filter = result.Item3;
         Assert.True(CsML.Util.Matrix.Equal(expectedLhs, lhs));
         Assert.True(CsML.Util.Matrix.Equal(expectedRhs, rhs));
         Assert.False(CsML.Util.Matrix.Equal(lhs, rhs));

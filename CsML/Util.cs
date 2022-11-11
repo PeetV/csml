@@ -98,6 +98,10 @@ public class Array
     /// and Recall (proportion of true positives found) from a predictions
     /// array compared to an actuals array.
     /// </summary>
+    /// <returns>
+    /// A dictionary with distinct elements as keys and a tuple containing
+    /// precision and recall as the value.
+    /// </returns>
     /// <exception cref="System.ArgumentException">
     /// Throws an exception if inputs aren't the same length.
     /// </exception>
@@ -208,7 +212,8 @@ public class Features
     /// <exception cref="System.ArgumentException">
     /// Throws an exception if inputs aren't the same length.
     /// </exception>
-    public static (double[,], double[], int[]) Bootstrap(double[,] matrix, double[] target)
+    public static (double[,], double[], int[]) Bootstrap(
+        double[,] matrix, double[] target, bool returnOobIdx = false)
     {
         int numRows = matrix.GetLength(0), numCols = matrix.GetLength(1);
         if (numRows != target.Length)
@@ -216,7 +221,10 @@ public class Features
         double[,] resultmatrix = new double[numRows, numCols];
         double[] resulttarget = new double[numRows];
         int[] resultIndex = CsML.Probability.Sample.RangeWithReplacement(0, numRows, numRows);
-        int[] oobidx = Enumerable.Range(0, numRows).Where(x => !resultIndex.Contains(x)).ToArray();
+        int[] oobidx;
+        if (returnOobIdx)
+            oobidx = Enumerable.Range(0, numRows).Where(x => !resultIndex.Contains(x)).ToArray();
+        else oobidx = new int[] { };
         int idx;
         for (int i = 0; i < numRows; i++)
         {
@@ -299,11 +307,11 @@ public class Matrix
     /// to include (used to add randomisation to a Random Forest).
     /// </param>
     /// <returns>
-    /// A tuple containing the index of the column with best gain and a tuple
-    /// containing the split value and gain calculated by the gain
-    /// function specified through the purityfn parameter.
+    /// A tuple containing the index of the column with best gain, the split value
+    /// and gain calculated by the gain function specified through the purityfn
+    /// parameter.
     /// </returns>
-    public static (int, (double, double)) BestSplit<T>(
+    public static (int, double, double) BestSplit<T>(
         double[,] matrix,
         T[] target,
         Func<T[], double> purityfn,
@@ -331,7 +339,7 @@ public class Matrix
                 bestColumnIndex = columnIndex;
             }
         }
-        return (bestColumnIndex, (bestsplit, bestgain));
+        return (bestColumnIndex, bestsplit, bestgain);
     }
 
     /// <summary>
@@ -444,11 +452,11 @@ public class Matrix
     /// less than value splits right).
     /// </param>
     /// <returns>
-    /// Returns a Tuple containing a Tuple with left and right splits
+    /// Returns a Tuple containing the left and right splits
     /// and boolean filter array. The filter array can be applied to
     /// other arrays using Split1D.
     /// </returns>
-    public static ((double[,], double[,]), bool[])
+    public static (double[,], double[,], bool[])
         Split(
             double[,] matrix,
             int columnIndex,
@@ -473,7 +481,7 @@ public class Matrix
         else dlhs = new double[,] { };
         if (rhs.Count != 0) drhs = FromList2D(rhs);
         else drhs = new double[,] { };
-        return ((dlhs, drhs), filter);
+        return (dlhs, drhs, filter);
     }
 
     /// <summary>

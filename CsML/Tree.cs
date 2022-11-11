@@ -164,9 +164,9 @@ public class BinaryTree
         double[] inputt;
         if (bootstrapSampleData)
             if (retainOutOfBagIndeces)
-                (inputm, inputt, outOfBagIndeces) = CsML.Util.Features.Bootstrap(matrix, target);
+                (inputm, inputt, outOfBagIndeces) = CsML.Util.Features.Bootstrap(matrix, target, returnOobIdx: true);
             else
-                (inputm, inputt, _) = CsML.Util.Features.Bootstrap(matrix, target);
+                (inputm, inputt, _) = CsML.Util.Features.Bootstrap(matrix, target, returnOobIdx: false);
         else
         {
             inputm = (double[,])matrix.Clone();
@@ -331,10 +331,10 @@ public class BinaryTree
             _splitCount > _maxsplits)
             return AddLeaf(target!);
         var bs = Util.Matrix.BestSplit<double>(matrix, target!, purityFn, randomFeatures);
-        var sm = Util.Matrix.Split(matrix, bs.Item1, bs.Item2.Item1);
-        var st = Util.Array.Split(target!, sm.Item2);
-        int yesLength = sm.Item1.Item1.GetLength(0);
-        int noLength = sm.Item1.Item2.GetLength(0);
+        var sm = Util.Matrix.Split(matrix, bs.Item1, bs.Item2);
+        var st = Util.Array.Split(target!, sm.Item3);
+        int yesLength = sm.Item1.GetLength(0);
+        int noLength = sm.Item2.GetLength(0);
         if (yesLength == 0 ||
             noLength == 0 ||
             yesLength < minrows ||
@@ -349,12 +349,12 @@ public class BinaryTree
         node.index = nodeIndex;
         node.isLeaf = false;
         node.columnIndex = bs.Item1;
-        node.splitPoint = bs.Item2.Item1;
-        node.purityGain = bs.Item2.Item2;
+        node.splitPoint = bs.Item2;
+        node.purityGain = bs.Item3;
         node.recordCount = recordCount;
         nodes.Add(node);
-        node.yesIndex = Grow(sm.Item1.Item1, st.Item1, depth);
-        node.noIndex = Grow(sm.Item1.Item2, st.Item2, depth);
+        node.yesIndex = Grow(sm.Item1, st.Item1, depth);
+        node.noIndex = Grow(sm.Item2, st.Item2, depth);
         return nodeIndex;
     }
 }
