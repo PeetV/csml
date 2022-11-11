@@ -218,9 +218,9 @@ public class Features
         int numRows = matrix.GetLength(0), numCols = matrix.GetLength(1);
         if (numRows != target.Length)
             throw new ArgumentException("Inputs must be same length");
-        double[,] resultmatrix = new double[numRows, numCols];
-        double[] resulttarget = new double[numRows];
-        int[] resultIndex = CsML.Probability.Sample.RangeWithReplacement(0, numRows, numRows);
+        var resultmatrix = new double[numRows, numCols];
+        var resulttarget = new double[numRows];
+        var resultIndex = CsML.Probability.Sample.RangeWithReplacement(0, numRows, numRows);
         int[] oobidx;
         if (returnOobIdx)
             oobidx = Enumerable.Range(0, numRows).Where(x => !resultIndex.Contains(x)).ToArray();
@@ -251,8 +251,8 @@ public class Features
         int[] startingIndex = Enumerable.Range(0, inputLength).ToArray();
         int[] shuffledIndex = CsML.Probability.Shuffle.Array(startingIndex, inPlace: false);
         var fromtoIndex = startingIndex.Zip(shuffledIndex);
-        double[,] newmatrix = new double[inputLength, inputWidth];
-        double[] newtarget = new double[inputLength];
+        var newmatrix = new double[inputLength, inputWidth];
+        var newtarget = new double[inputLength];
         foreach (var fromto in fromtoIndex)
         {
             newtarget[fromto.First] = target[fromto.Second];
@@ -378,7 +378,7 @@ public class Matrix
     {
         var rawdata = File.ReadLines(inputfile).Select(x => x.Split(separator)).ToArray();
         int rowcount = rawdata.Length, columncount = rawdata[0].Length;
-        double[,] result = new double[rowcount - loadFromRow, columncount];
+        var result = new double[rowcount - loadFromRow, columncount];
         double cell;
         string rawval;
         for (int rowidx = loadFromRow; rowidx < rowcount; rowidx++)

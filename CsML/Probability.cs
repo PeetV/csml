@@ -638,7 +638,7 @@ public class WeightedIndexSampler<T>
     public int[] SampleIndex(int count)
     {
         double randNum;
-        int[] result = new int[count];
+        var result = new int[count];
         for (int i = 0; i < count; i++)
         {
             randNum = _random.NextDouble();
@@ -655,7 +655,7 @@ public class WeightedIndexSampler<T>
     public T[] SampleTarget(int count)
     {
         double randNum;
-        T[] result = new T[count];
+        var result = new T[count];
         for (int i = 0; i < count; i++)
         {
             randNum = _random.NextDouble();

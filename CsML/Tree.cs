@@ -196,7 +196,7 @@ public class BinaryTree
                 throw new ArgumentException("Empty input");
         }
         Span2D<double> matrixSpan = matrix;
-        double[] result = new double[inputRecordCount];
+        var result = new double[inputRecordCount];
         for (int i = 0; i < inputRecordCount; i++)
         {
             double[] row = matrixSpan.GetRow(i).ToArray();
@@ -270,7 +270,7 @@ public class BinaryTree
     /// </returns>
     public double[] PurityGains()
     {
-        double[] result = new double[minColumns];
+        var result = new double[minColumns];
         foreach (BinaryNode node in nodes)
         {
             if (node.isLeaf) continue;

@@ -133,21 +133,21 @@ public class RandomForest
             throw new ArgumentException("Forest trained on different number of columns");
         if (inputRecordCount == 0)
             throw new ArgumentException("Empty input");
-        double[] result = new double[inputRecordCount];
+        var result = new double[inputRecordCount];
         Parallel.For(0, inputRecordCount, i =>
         {
-            List<double[]> input = new List<double[]>();
+            var input = new List<double[]>();
             input = input.Append(CsML.Util.Matrix.GetRow(matrix, i, false)).ToList();
             if (Mode == "regress")
             {
-                List<double> predictions = new List<double>(trees.Count);
+                var predictions = new List<double>(trees.Count);
                 foreach (var tree in trees)
                     predictions.Add(tree.Predict(CsML.Util.Matrix.FromList2D(input))[0]);
                 result[i] = predictions.Average();
             }
             else
             {
-                Dictionary<double, int> counts = new Dictionary<double, int>();
+                var counts = new Dictionary<double, int>();
                 double vote;
                 foreach (var tree in trees)
                 {
@@ -183,7 +183,7 @@ public class RandomForest
         var result = new (double, Dictionary<double, double>)[inputRecordCount];
         Parallel.For(0, inputRecordCount, i =>
         {
-            List<double[]> input = new List<double[]>();
+            var input = new List<double[]>();
             input = input.Append(CsML.Util.Matrix.GetRow(matrix, i, false)).ToList();
             var counts = new Dictionary<double, int>();
             var probs = new Dictionary<double, double>();
