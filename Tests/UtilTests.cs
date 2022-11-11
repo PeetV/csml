@@ -87,7 +87,7 @@ public class Array
         double[] target = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         double result = CsML.Util.Array.ClassificationError(values, target);
         Assert.Equal(0, result);
- 
+
     }
 
     [Fact]
@@ -172,7 +172,7 @@ public class Features
             {5, 5, 5}
         };
         double[] target = new double[] { 1, 2, 3, 4, 5 };
-        (double[,] newm, double[] newt) = CsML.Util.Features.Bootstrap(matrix, target);
+        (double[,] newm, double[] newt, int[] oobidx) = CsML.Util.Features.Bootstrap(matrix, target);
         Assert.Equal(5, newm.GetLength(0));
         Assert.Equal(3, newm.GetLength(1));
         Assert.Equal(5, newt.Length);
@@ -181,6 +181,8 @@ public class Features
         Assert.True(row0.All(x => allowedVals.Contains(x)));
         Assert.Equal(3, row0.Length);
         Assert.True(row0.All(x => x == row0[0]));
+        var oobidxAllowed = new int[] { 0, 1, 2, 3, 4 };
+        Assert.True(oobidx.All(x => oobidxAllowed.Contains(x)));
     }
 
     [Fact]

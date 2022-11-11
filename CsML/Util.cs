@@ -202,12 +202,13 @@ public class Features
     /// replacement, e.g. to add ramdomisation to a Random Forest.
     /// </summary>
     /// <returns>
-    /// A new matrix and target array containing bootstrap samples.
+    /// A new matrix and target array containing bootstrap samples. The indeces of
+    /// out of bag items.
     /// </returns>
     /// <exception cref="System.ArgumentException">
     /// Throws an exception if inputs aren't the same length.
     /// </exception>
-    public static (double[,], double[]) Bootstrap(double[,] matrix, double[] target)
+    public static (double[,], double[], int[]) Bootstrap(double[,] matrix, double[] target)
     {
         int numRows = matrix.GetLength(0), numCols = matrix.GetLength(1);
         if (numRows != target.Length)
@@ -215,6 +216,7 @@ public class Features
         double[,] resultmatrix = new double[numRows, numCols];
         double[] resulttarget = new double[numRows];
         int[] resultIndex = CsML.Probability.Sample.RangeWithReplacement(0, numRows, numRows);
+        int[] oobidx = Enumerable.Range(0, numRows).Where(x => !resultIndex.Contains(x)).ToArray();
         int idx;
         for (int i = 0; i < numRows; i++)
         {
@@ -223,7 +225,7 @@ public class Features
                 resultmatrix[i, c] = matrix[idx, c];
             resulttarget[i] = target[idx];
         }
-        return (resultmatrix, resulttarget);
+        return (resultmatrix, resulttarget, oobidx);
     }
 
     /// <summary>

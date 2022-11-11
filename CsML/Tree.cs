@@ -83,7 +83,6 @@ public class BinaryTree
     /// </summary>
     public double[]? classes;
 
-
     /// <summary>
     /// The function to use to calculate the purity of a slice of the
     /// target array.
@@ -96,6 +95,15 @@ public class BinaryTree
 
     /// <summary>Sample input data with replacement if true.</summary>
     public bool bootstrapSampleData = false;
+
+    /// <summary>Keep out of bag indeces, if bootstrap sampling.</summary>
+    public bool retainOutOfBagIndeces = false;
+
+    /// <summary>
+    /// The indeces of out of bag samples with reference to the input matrix the tree
+    /// was trained on.
+    /// </summary>
+    public int[]? outOfBagIndeces;
 
     private string _mode;
 
@@ -155,7 +163,10 @@ public class BinaryTree
         double[,] inputm;
         double[] inputt;
         if (bootstrapSampleData)
-            (inputm, inputt) = CsML.Util.Features.Bootstrap(matrix, target);
+            if (retainOutOfBagIndeces)
+                (inputm, inputt, outOfBagIndeces) = CsML.Util.Features.Bootstrap(matrix, target);
+            else
+                (inputm, inputt, _) = CsML.Util.Features.Bootstrap(matrix, target);
         else
         {
             inputm = (double[,])matrix.Clone();

@@ -197,7 +197,6 @@ public class NaiveBayesClassifier
         double[] target = matrixSpan.GetColumn(4).ToArray();
         Assert.Equal(2, target[0]);
         Assert.Equal(150, target.Length);
-
         (features, target) = CsML.Util.Features.Shuffle(features, target);
         double[,] ftrain, ftest;
         double[] ttrain, ttest;
