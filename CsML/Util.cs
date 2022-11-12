@@ -209,12 +209,10 @@ public class Features
     {
         var counts = CsML.Util.Array.ElementCounts(target);
         int total = counts.Values.Sum();
-        var result = new (T, double)[counts.Count];
-        foreach (T key in counts.Keys.Order())
-        {
-            result.Append((key, (double)counts[key] / (double)total));
-        }
-        return result;
+        return counts.Keys
+            .Order()
+            .Select(key => (key, (double)counts[key] / (double)total))
+            .ToArray();
     }
 
     /// <summary>
