@@ -204,14 +204,14 @@ public class Features
     /// <summary>Calculate class proportions in a target array.</summary>
     /// <param name="target">The target input array.</param>
     /// <returns>An array of tuples containing class labels and proportions.</returns>
-    public static (T, double)[] ClassProportions<T>(T[] target)
+    public static (T, int, double)[] ClassProportions<T>(T[] target)
         where T : notnull
     {
         var counts = CsML.Util.Array.ElementCounts(target);
         int total = counts.Values.Sum();
         return counts.Keys
             .Order()
-            .Select(key => (key, (double)counts[key] / (double)total))
+            .Select(key => (key, counts[key], (double)counts[key] / (double)total))
             .ToArray();
     }
 

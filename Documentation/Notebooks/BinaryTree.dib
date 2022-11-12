@@ -23,8 +23,8 @@ mapping[4] = new Dictionary<string, double>
 {
     { "versicolor", 0 }, {"virginica", 1 }, {"setosa", 2}
 };
-string inpuPath = "/Users/peet/Sources/csml/Tests/Data/iris.csv";
-double[,] data = CsML.Util.Matrix.FromCSV(inpuPath, mapping, loadFromRow: 1);
+string inputPath = "/Users/peet/Sources/csml/Tests/Data/iris.csv";
+double[,] data = CsML.Util.Matrix.FromCSV(inputPath, mapping, loadFromRow: 1);
 
 #!markdown
 
@@ -131,8 +131,8 @@ Console.WriteLine($"Average {mean}");
 
 #!csharp
 
-inpuPath = "/Users/peet/Sources/csml/Tests/Data/led7.csv";
-data = CsML.Util.Matrix.FromCSV(inpuPath, null, loadFromRow: 1);
+inputPath = "/Users/peet/Sources/csml/Tests/Data/led7.csv";
+data = CsML.Util.Matrix.FromCSV(inputPath, null, loadFromRow: 1);
 
 #!csharp
 
@@ -203,8 +203,8 @@ Console.WriteLine($"Average {mean}");
 
 mapping = new Dictionary<int, Dictionary<string, double>>();
 mapping[60] = new Dictionary<string, double>{ { "R", 0 }, {"M", 1 }};
-inpuPath = "/Users/peet/Sources/csml/Tests/Data/sonar.csv";
-data = CsML.Util.Matrix.FromCSV(inpuPath, mapping, loadFromRow: 0);
+inputPath = "/Users/peet/Sources/csml/Tests/Data/sonar.csv";
+data = CsML.Util.Matrix.FromCSV(inputPath, mapping, loadFromRow: 0);
 
 #!csharp
 

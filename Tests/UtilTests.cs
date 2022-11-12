@@ -166,9 +166,11 @@ public class Features
         var target = new double[] { 1, 1, 2, 2, 3, 3, 4, 4, 5, 5 };
         var result = CsML.Util.Features.ClassProportions(target);
         Assert.Equal(1, result[0].Item1);
-        Assert.Equal(0.2, result[0].Item2);
+        Assert.Equal(2, result[0].Item2);
+        Assert.Equal(0.2, result[0].Item3);
         Assert.Equal(5, result[4].Item1);
-        Assert.Equal(0.2, result[4].Item2);
+        Assert.Equal(2, result[4].Item2);
+        Assert.Equal(0.2, result[4].Item3);
     }
 
     [Fact]
