@@ -10,11 +10,15 @@ public class Array
     /// in purity when the split is applied to a corresponding target array.
     /// </summary>
     /// <param name="vector">Numeric array to test split points on.</param>
-    /// <param name="target">Target array to find best gain in purity on split.</param>
-    /// <param name="purityfn">Function that calculates purity of an array, for example Gini.</param>
+    /// <param name="target">
+    /// Target array to find best gain in purity on split.
+    /// </param>
+    /// <param name="purityfn">
+    /// Function that calculates purity of an array, for example Gini.
+    /// </param>
     /// <returns>
-    /// A tuple containing the best split value and the gain calculated by the gain
-    /// function specified through the purityfn parameter.
+    /// A tuple containing the best split value and the gain calculated by the
+    /// gain function specified through the purityfn parameter.
     /// </returns>
     public static (double, double) BestSplit<T>(
         double[] vector,
@@ -24,7 +28,10 @@ public class Array
     {
         double bestsplit = 0.0, bestgain = 0.0;
         int lenVals = vector.Length;
-        (double, T)[] zipped = vector.Zip(target).OrderBy(x => x.First).ToArray();
+        (double, T)[] zipped = vector
+                                .Zip(target)
+                                .OrderBy(x => x.First)
+                                .ToArray();
         List<T> lhs = new List<T>(), rhs = new List<T>(target);
         double purityPreSplit = purityfn(target);
         bool allSame = true;
@@ -48,7 +55,8 @@ public class Array
             double gain = purityPreSplit - slice1Purity - slice2Purity;
             if (gain > bestgain)
             {
-                var midpoint = (zipped[idx].Item1 + zipped[idx + 1].Item1) / 2.0;
+                var midpoint = (zipped[idx].Item1 +
+                                zipped[idx + 1].Item1) / 2.0;
                 bestgain = gain;
                 bestsplit = midpoint;
             }
@@ -59,8 +67,8 @@ public class Array
     }
 
     /// <summary>
-    /// Calculate classification accuracy from a predictions array compared to an
-    /// actuals array.
+    /// Calculate classification accuracy from a predictions array compared to
+    /// an actuals array.
     /// </summary>
     /// <exception cref="System.ArgumentException">
     /// Throws an exception if inputs aren't the same length.
@@ -161,9 +169,11 @@ public class Array
     /// Count of ocurrences of each array element.
     /// </summary>
     /// <returns>
-    /// A dictionary containing array elements as keys and element counts as values.
+    /// A dictionary containing array elements as keys and element counts as
+    /// values.
     /// </returns>
-    public static Dictionary<T, int> ElementCounts<T>(T[] input) where T : notnull
+    public static Dictionary<T, int> ElementCounts<T>(T[] input)
+        where T : notnull
     {
         var counts = new Dictionary<T, int>();
         foreach (T item in input)
@@ -196,14 +206,16 @@ public class Array
 }
 
 /// <summary>
-/// A collection of functions that do work on model training inputs, comprising a matrix of
-/// features and a target variable array.
+/// A collection of functions that do work on model training inputs, comprising
+/// a matrix of features and a target variable array.
 /// </summary>
 public class Features
 {
     /// <summary>Calculate class proportions in a target array.</summary>
     /// <param name="target">The target input array.</param>
-    /// <returns>An array of tuples containing class labels and proportions.</returns>
+    /// <returns>
+    /// An array of tuples containing class labels and proportions.
+    /// </returns>
     public static (T, int, double)[] ClassProportions<T>(T[] target)
         where T : notnull
     {
@@ -211,17 +223,18 @@ public class Features
         int total = counts.Values.Sum();
         return counts.Keys
             .Order()
-            .Select(key => (key, counts[key], (double)counts[key] / (double)total))
+            .Select(key =>
+                (key, counts[key], (double)counts[key] / (double)total))
             .ToArray();
     }
 
     /// <summary>
-    /// Bootstrap sample from feature matrix and correspondnig target array, with
-    /// replacement, e.g. to add ramdomisation to a Random Forest.
+    /// Bootstrap sample from feature matrix and correspondnig target array,
+    /// with replacement, e.g. to add ramdomisation to a Random Forest.
     /// </summary>
     /// <returns>
-    /// A new matrix and target array containing bootstrap samples. The indeces of
-    /// out of bag items.
+    /// A new matrix and target array containing bootstrap samples. The indeces
+    /// of out of bag items.
     /// </returns>
     /// <exception cref="System.ArgumentException">
     /// Throws an exception if inputs aren't the same length.
@@ -234,10 +247,15 @@ public class Features
             throw new ArgumentException("Inputs must be same length");
         var resultmatrix = new double[numRows, numCols];
         var resulttarget = new double[numRows];
-        var resultIndex = CsML.Probability.Sample.RangeWithReplacement(0, numRows, numRows);
+        var resultIndex = CsML.Probability.Sample.RangeWithReplacement(
+                                0, numRows, numRows);
         int[] oobidx;
         if (returnOobIdx)
-            oobidx = Enumerable.Range(0, numRows).Where(x => !resultIndex.Contains(x)).ToArray();
+            oobidx = Enumerable
+                        .Range(0, numRows)
+                        .Where(x => !resultIndex
+                        .Contains(x))
+                        .ToArray();
         else oobidx = new int[] { };
         int idx;
         for (int i = 0; i < numRows; i++)
@@ -257,13 +275,15 @@ public class Features
     /// <exception cref="System.ArgumentException">
     /// Throws an exception if inputs aren't the same length.
     /// </exception>
-    public static (double[,], double[]) Shuffle(double[,] matrix, double[] target)
+    public static (double[,], double[]) Shuffle(
+        double[,] matrix, double[] target)
     {
         int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
         if (inputLength != target.Length)
             throw new ArgumentException("Inputs must be same length");
         int[] startingIndex = Enumerable.Range(0, inputLength).ToArray();
-        int[] shuffledIndex = CsML.Probability.Shuffle.Array(startingIndex, inPlace: false);
+        int[] shuffledIndex = CsML.Probability.Shuffle.Array(
+                                startingIndex, inPlace: false);
         var fromtoIndex = startingIndex.Zip(shuffledIndex);
         var newmatrix = new double[inputLength, inputWidth];
         var newtarget = new double[inputLength];
@@ -290,7 +310,8 @@ public class Features
     )
     {
         if (ratio <= 0 | ratio >= 1)
-            throw new ArgumentException("Splitting ratio must be between 0 and 1");
+            throw new ArgumentException(
+                "Splitting ratio must be between 0 and 1");
         int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
         if (inputLength != target.Length)
             throw new ArgumentException("Inputs must be same length");
@@ -305,7 +326,9 @@ public class Features
     }
 }
 
-/// <summary>A collection of matrix utility functions, using 2D arrays.</summary>
+/// <summary>
+/// A collection of matrix utility functions, using 2D arrays.
+/// </summary>
 public class Matrix
 {
     /// <summary>
@@ -313,17 +336,23 @@ public class Matrix
     /// maximise the weighted gain in purity when the split is applied to a
     /// corresponding target array.
     /// </summary>
-    /// <param name="matrix">Numeric two dimensional array to test split points on.</param>
-    /// <param name="target">Target array to find best gain in purity on split.</param>
-    /// <param name="purityfn">Function that calculates purity of an array.</param>
+    /// <param name="matrix">
+    /// Numeric two dimensional array to test split points on.
+    /// </param>
+    /// <param name="target">
+    /// Target array to find best gain in purity on split.
+    /// </param>
+    /// <param name="purityfn">
+    /// Function that calculates purity of an array.
+    /// </param>
     /// <param name="randomFeatures">
-    /// If randomFeatures is greater than 0, select a random number of specified columns
-    /// to include (used to add randomisation to a Random Forest).
+    /// If randomFeatures is greater than 0, select a random number of specified
+    /// columns to include (used to add randomisation to a Random Forest).
     /// </param>
     /// <returns>
-    /// A tuple containing the index of the column with best gain, the split value
-    /// and gain calculated by the gain function specified through the purityfn
-    /// parameter.
+    /// A tuple containing the index of the column with best gain, the split
+    /// value and gain calculated by the gain function specified through the
+    /// purityfn parameter.
     /// </returns>
     public static (int, double, double) BestSplit<T>(
         double[,] matrix,
@@ -344,8 +373,11 @@ public class Matrix
         double split, gain;
         foreach (int columnIndex in columnIndeces)
         {
-            double[] columnToCheck = matrixSpan.GetColumn(columnIndex).ToArray();
-            (split, gain) = CsML.Util.Array.BestSplit(columnToCheck, target, purityfn);
+            double[] columnToCheck = matrixSpan
+                                        .GetColumn(columnIndex)
+                                        .ToArray();
+            (split, gain) = CsML.Util.Array.BestSplit(
+                                columnToCheck, target, purityfn);
             if (gain > bestgain)
             {
                 bestgain = gain;
@@ -377,8 +409,9 @@ public class Matrix
     /// </summary>
     /// <param name="inputfile">Path of the CSV input file.</param>
     /// <param name="mapping">
-    /// A dictionary used to convert string columns to numeric values of the format
-    /// { {column id , { {string val, numeric val}, {string val, numeric val} ...}.
+    /// A dictionary used to convert string columns to numeric values of the
+    /// format  { {column id , { {string val, numeric val}, {string val,
+    /// numeric val} ...}.
     /// </param>
     /// <param name="separator">The field delimeter.</param>
     /// <param name="loadFromRow">
@@ -390,7 +423,10 @@ public class Matrix
         string separator = ",",
         int loadFromRow = 0)
     {
-        var rawdata = File.ReadLines(inputfile).Select(x => x.Split(separator)).ToArray();
+        var rawdata = File
+                        .ReadLines(inputfile)
+                        .Select(x => x.Split(separator))
+                        .ToArray();
         int rowcount = rawdata.Length, columncount = rawdata[0].Length;
         var result = new double[rowcount - loadFromRow, columncount];
         double cell;
@@ -441,7 +477,8 @@ public class Matrix
     /// Use Span2D to extract the row if true e.g. set to false in 
     /// parallel code if it doesn't accept Span2D.
     /// </param> 
-    public static double[] GetRow(double[,] matrix, int index, bool useSpan = true)
+    public static double[] GetRow(
+        double[,] matrix, int index, bool useSpan = true)
     {
         if (useSpan)
         {
@@ -554,20 +591,27 @@ public class Statistics
     }
 
     /// <summary>
-    /// Calculate the r-squared and adjusted r-squared of an actuals array vs predictions.
-    /// <see> See
-    /// <seealso href=" https://en.wikipedia.org/wiki/Coefficient_of_determination">Wikipedia</seealso>
-    /// Coefficient Of Determination.
+    /// Calculate the r-squared and adjusted r-squared of an actuals array vs
+    /// predictions.
+    /// <see> See <seealso
+    /// href="https://en.wikipedia.org/wiki/Coefficient_of_determination">
+    /// Wikipedia</seealso> Coefficient Of Determination.
     /// </see>
     /// </summary>
-    /// <param name="actuals">Actual values to compare with predicted values.</param>
-    /// <param name="predictions">Predicted values to compare with actual values.</param>
+    /// <param name="actuals">
+    /// Actual values to compare with predicted values.
+    /// </param>
+    /// <param name="predictions">
+    /// Predicted values to compare with actual values.
+    /// </param>
     /// <param name="p">
-    /// p is the number of explanatory terms used in the regression to calculated adjusted r-squared
-    /// (returns 0 for adjusted r-squared if p is null).
+    /// p is the number of explanatory terms used in the regression to
+    /// calculated adjusted r-squared (returns 0 for adjusted r-squared if p is
+    /// null).
     /// </param>
     /// <returns>A tuple containing r-squared and adjusted r-squared.</returns>
-    public static (double, double) RSquared(double[] actuals, double[] predictions, int? p)
+    public static (double, double) RSquared(
+        double[] actuals, double[] predictions, int? p)
     {
         double mn = actuals.Average();
         double sseVal = SSE(actuals, predictions);
@@ -587,7 +631,9 @@ public class Statistics
     public static double SSE(double[] actuals, double[] predictions)
     {
         IEnumerable<(double, double)> zipped = actuals.Zip(predictions);
-        return zipped.Select(x => Math.Pow((x.Item1 - x.Item2), 2)).ToArray().Sum();
+        return zipped
+                .Select(x => Math.Pow((x.Item1 - x.Item2), 2))
+                .Sum();
     }
 
     /// <summary>
@@ -610,9 +656,9 @@ public class Statistics
 }
 
 /// <summary>
-/// A class that yields a boolean filter containing train vs test splits for k-fold
-/// cross validation. E.g. a 10 fold iterator will iteratively yield 10 train / 90
-/// test, 10 test / 10 train / 80 test etc in folds.
+/// A class that yields a boolean filter containing train vs test splits for
+/// k-fold  cross validation. E.g. a 10 fold iterator will iteratively yield 10
+/// train / 90 test, 10 test / 10 train / 80 test etc in folds.
 /// </summary>
 public class KFoldIterator : IEnumerable<bool[]>
 {
@@ -658,7 +704,8 @@ public class KFoldIterator : IEnumerable<bool[]>
         }
     }
 
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    System.Collections.IEnumerator
+           System.Collections.IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
     }

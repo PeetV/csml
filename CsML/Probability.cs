@@ -19,7 +19,9 @@ public class Distributions
     /// Number of independent experiments, each asking a yes–no question, and 
     /// each with its own Boolean-valued outcome: success (with probability p).
     /// </param>
-    /// <param name="ks">Arrays of k values representing number of successes.</param>
+    /// <param name="ks">
+    /// Arrays of k values representing number of successes.
+    /// </param>
     /// <param name="p">Probability of experiment success.</param>
     /// <returns>
     /// An array of doubles representing the proability of each corresponding
@@ -27,7 +29,9 @@ public class Distributions
     /// </returns>
     public static double[] Binomial(int n, int[] ks, double p)
     {
-        double[] result = ks.Select(k => ProbabilityBinomial(n, k, p)).ToArray();
+        double[] result = ks
+            .Select(k => ProbabilityBinomial(n, k, p))
+            .ToArray();
         return result;
     }
 
@@ -50,11 +54,13 @@ public class Distributions
     /// Calculate the probability of a value assuming a normal distribution
     /// defined by the mean and variance parameters.
     /// </summary>
-    public static double ProbabilityNormal(double value, double mean, double variance)
+    public static double ProbabilityNormal(
+        double value, double mean, double variance)
     {
         return 1.0 /
                (Math.Sqrt(2.0 * Math.PI) * Math.Sqrt(variance)) *
-               Math.Pow(Math.Exp(1.0), -(Math.Pow(value - mean, 2.0) / (2.0 * variance)));
+               Math.Pow(Math.Exp(1.0),
+                        -(Math.Pow(value - mean, 2.0) / (2.0 * variance)));
     }
 }
 
@@ -76,7 +82,10 @@ public class Functions
     /// </summary>
     public static double Conditional(bool[] a, bool[] b)
     {
-        bool[] cond = a.Zip(b).Where(x => x.Second).Select(x => x.First).ToArray();
+        bool[] cond = a.Zip(b)
+            .Where(x => x.Second)
+            .Select(x => x.First)
+            .ToArray();
         return CsML.Probability.Functions.Probability(cond);
     }
 
@@ -134,9 +143,12 @@ public class Sample
     /// Sample integers in a range with replacement.
     /// </summary>
     /// <param name="minValue">Range starting value.</param>
-    /// <param name="maxValue">Range stopping value (not included in sample).</param>
+    /// <param name="maxValue">
+    /// Range stopping value (not included in sample).
+    /// </param>
     /// <param name="count">The number of sample items.</param>
-    public static int[] RangeWithReplacement(int minValue, int maxValue, int count)
+    public static int[] RangeWithReplacement(
+        int minValue, int maxValue, int count)
     {
         var random = new Random();
         return Enumerable.Range(0, count)
@@ -185,7 +197,9 @@ public class NaiveBayesClassifier<T>
     /// </summary>
     public Dictionary<int, Dictionary<T, (double, double)>> columnMeans;
 
-    /// <summary>The number of matrix columns the model was trained on.</summary>
+    /// <summary>
+    /// The number of matrix columns the model was trained on.
+    /// </summary>
     public int minColumns;
 
     /// <summary>Create an untrained Naive Bayes classifier.</summary>
@@ -226,7 +240,8 @@ public class NaiveBayesClassifier<T>
         if (classProbabilities.Count == 0)
             throw new ArgumentException("Classifier not trained");
         if (matrix.GetLength(1) != minColumns)
-            throw new ArgumentException("Tree trained on different number of columns");
+            throw new ArgumentException(
+                "Tree trained on different number of columns");
         if (inputRecordCount == 0)
             throw new ArgumentException("Empty input");
         T[] result = new T[inputRecordCount];
@@ -246,10 +261,12 @@ public class NaiveBayesClassifier<T>
                     {
                         colvals = columnMeans[c];
                         (mn, var) = colvals[classLabel];
-                        prob = CsML.Probability.Distributions.ProbabilityNormal(row[c], mn, var);
+                        prob = CsML.Probability.Distributions.ProbabilityNormal(
+                            row[c], mn, var);
                     }
                     else prob = 0.0001;
-                    // Some underflow protection given values can get really small
+                    // Some underflow protection given values can get really
+                    // small
                     if (probs[classLabel] < 2.2250738585072014e-50)
                         probs[classLabel] = 2.2250738585072014e-50;
                     else
@@ -269,7 +286,8 @@ public class NaiveBayesClassifier<T>
             classProbabilities[key] = (double)counts[key] / (double)lenTarget;
     }
 
-    private void CalculateColumnMeans(double[,] matrix, T[] target, int columnIndex)
+    private void CalculateColumnMeans(
+        double[,] matrix, T[] target, int columnIndex)
     {
         Span2D<double> matrixSpan = matrix;
         double[] workingColumn = matrixSpan.GetColumn(columnIndex).ToArray();
@@ -298,8 +316,8 @@ public class ProbabilityMassFunction<T>
     where T : IComparable
 {
     /// <summary>
-    /// A dictionary containing hypotheses as keys and corresponding probabilities
-    /// as values.
+    /// A dictionary containing hypotheses as keys and corresponding
+    /// probabilities as values.
     /// </summary>
     public Dictionary<T, double> table;
 
@@ -313,7 +331,10 @@ public class ProbabilityMassFunction<T>
     }
 
     /// <summary>Hypotheses sorted.</summary>
-    public T[] hypotheses { get { return table.Keys.OrderBy(x => x).ToArray(); } }
+    public T[] hypotheses
+    {
+        get { return table.Keys.OrderBy(x => x).ToArray(); }
+    }
 
     /// <summary>Probabilities in order of hypotheses sorted.</summary>
     public double[] probabilities
@@ -328,8 +349,8 @@ public class ProbabilityMassFunction<T>
     }
 
     /// <summary>
-    /// Array of tuples containing each hypotheses and corresponding probability,
-    /// in order of hypotheses sorted.
+    /// Array of tuples containing each hypotheses and corresponding
+    /// probability, in order of hypotheses sorted.
     /// </summary>
     public (T, double)[] zipped
     {
@@ -350,8 +371,8 @@ public class ProbabilityMassFunction<T>
     }
 
     /// <summary>
-    /// Create a PMF from an array of hypotheses (each hypothesis is set to equal
-    /// probability).
+    /// Create a PMF from an array of hypotheses (each hypothesis is set to
+    /// equal probability).
     /// </summary>
     /// <param name="hypotheses"></param>
     public ProbabilityMassFunction(T[] hypotheses)
@@ -370,11 +391,14 @@ public class ProbabilityMassFunction<T>
     /// Number of independent experiments, each asking a yes–no question, and 
     /// each with its own Boolean-valued outcome: success (with probability p).
     /// </param>
-    /// <param name="ks">Arrays of k values representing number of successes.</param>
+    /// <param name="ks">
+    /// Arrays of k values representing number of successes.
+    /// </param>
     /// <param name="p">Probability of experiment success.</param>
-    public static ProbabilityMassFunction<int> FromBinomial(int n, int[] ks, double p)
+    public static ProbabilityMassFunction<int> FromBinomial(
+        int n, int[] ks, double p)
     {
-        ProbabilityMassFunction<int> intPMF = new ProbabilityMassFunction<int>();
+        var intPMF = new ProbabilityMassFunction<int>();
         double[] probs = CsML.Probability.Distributions.Binomial(n, ks, p);
         for (int i = 0; i < ks.Length; i++)
             intPMF[ks[i]] = probs[i];
@@ -389,10 +413,10 @@ public class ProbabilityMassFunction<T>
     public static ProbabilityMassFunction<double> FromNormal(
         double[] hypotheses, double mean, double variance)
     {
-        ProbabilityMassFunction<double> doublePMF = new ProbabilityMassFunction<double>();
+        var doublePMF = new ProbabilityMassFunction<double>();
         for (int i = 0; i < hypotheses.Length; i++)
-            doublePMF[hypotheses[i]] = CsML.Probability.Distributions.ProbabilityNormal(
-                hypotheses[i], mean, variance);
+            doublePMF[hypotheses[i]] = CsML.Probability.Distributions
+                .ProbabilityNormal(hypotheses[i], mean, variance);
         doublePMF.Normalise();
         return doublePMF;
     }
@@ -403,20 +427,23 @@ public class ProbabilityMassFunction<T>
     /// <exception cref="System.ArithmeticException">
     /// Throws an exception if the hypotheses type is not double.
     /// </exception>
-    public ProbabilityMassFunction<double> Add(ProbabilityMassFunction<double> pmf)
+    public ProbabilityMassFunction<double> Add(
+        ProbabilityMassFunction<double> pmf)
     {
         if (typeof(T) != typeof(double))
             throw new ArithmeticException("Hypotheses type must be double");
-        ProbabilityMassFunction<double> newPmf = new ProbabilityMassFunction<double>();
+        var newPmf = new ProbabilityMassFunction<double>();
         foreach (var key1 in this.table.Keys)
         {
             foreach (var key2 in pmf.table.Keys)
             {
-                double sumHypos = Convert.ToDouble(key1) + Convert.ToDouble(key2);
+                double sumHypos = Convert.ToDouble(key1) +
+                    Convert.ToDouble(key2);
                 if (!newPmf.table.ContainsKey(sumHypos))
                     newPmf.table[sumHypos] = this.table[key1] * pmf.table[key2];
                 else
-                    newPmf.table[sumHypos] = newPmf.table[sumHypos] + (this.table[key1] * pmf.table[key2]);
+                    newPmf.table[sumHypos] = newPmf.table[sumHypos] +
+                        (this.table[key1] * pmf.table[key2]);
             }
         }
         newPmf.Normalise();
@@ -485,13 +512,17 @@ public class ProbabilityMassFunction<T>
         {
             // Both boundaries apply
             if (lower != null & upper != null & includeLower & includeUpper)
-                return x.Item1.CompareTo(lower) >= 0 & x.Item1.CompareTo(upper) <= 0;
+                return x.Item1.CompareTo(lower) >= 0 &
+                       x.Item1.CompareTo(upper) <= 0;
             if (lower != null & upper != null & !includeLower & includeUpper)
-                return x.Item1.CompareTo(lower) > 0 & x.Item1.CompareTo(upper) <= 0;
+                return x.Item1.CompareTo(lower) >
+                       0 & x.Item1.CompareTo(upper) <= 0;
             if (lower != null & upper != null & includeLower & !includeUpper)
-                return x.Item1.CompareTo(lower) >= 0 & x.Item1.CompareTo(upper) < 0;
+                return x.Item1.CompareTo(lower) >=
+                       0 & x.Item1.CompareTo(upper) < 0;
             if (lower != null & upper != null & !includeLower & !includeUpper)
-                return x.Item1.CompareTo(lower) > 0 & x.Item1.CompareTo(upper) < 0;
+                return x.Item1.CompareTo(lower) >
+                       0 & x.Item1.CompareTo(upper) < 0;
             // Only lower boundary applies
             if (lower != null & upper == null & includeLower)
                 return x.Item1.CompareTo(lower) >= 0;
@@ -518,11 +549,14 @@ public class ProbabilityMassFunction<T>
     /// <summary>
     /// Update the hypotheses table (priors, P(H)) with likelihoods (P(D|H).
     /// </summary>
-    /// <param name="likelihoods">A dictionary containing the likelihood for each outcome</param>
+    /// <param name="likelihoods">
+    /// A dictionary containing the likelihood for each outcome.
+    /// </param>
     public void Update(Dictionary<T, double> likelihoods)
     {
         if (!table.Keys.SequenceEqual(likelihoods.Keys))
-            throw new ArgumentException("Input needs same keys as outcome table");
+            throw new ArgumentException(
+                "Input needs same keys as outcome table");
         foreach (T hypothesis in table.Keys)
             table[hypothesis] *= likelihoods[hypothesis];
     }
@@ -530,11 +564,14 @@ public class ProbabilityMassFunction<T>
     /// <summary>
     /// Update the hypotheses table (priors, P(H)) with likelihoods (P(D|H).
     /// </summary>
-    /// <param name="likelihoods">An array of likelihood values in order of hypotheses sorted</param>
+    /// <param name="likelihoods">
+    /// An array of likelihood values in order ofhypotheses sorted.
+    /// </param>
     public void Update(double[] likelihoods)
     {
         if (likelihoods.Length != table.Count)
-            throw new ArgumentException("Input does not have same number of values as PMF hypotheses");
+            throw new ArgumentException(
+                "Input does not have same number of values as PMF hypotheses");
         foreach ((T, double) pair in this.hypotheses.Zip(likelihoods))
             table[pair.Item1] *= pair.Item2;
     }
@@ -609,8 +646,9 @@ public class WeightedIndexSampler<T>
     /// </summary>
     /// <param name="target">The array to draw samples from.</param>
     /// <param name="weights">
-    /// The corresponding weights to apply when sampling. As the size of the sample
-    /// increases the proportion will become closer to the weights proportions.
+    /// The corresponding weights to apply when sampling. As the size of the
+    /// sample increases the proportion will become closer to the weights
+    /// proportions.
     /// </param>
     public WeightedIndexSampler(T[] target, double[] weights)
     {

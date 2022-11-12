@@ -13,7 +13,9 @@ public class RandomForest
     /// <summary>The number of tress in the forest.</summary>
     public int treeCount;
 
-    /// <summary>The number of matrix columns the model was trained on.</summary>
+    /// <summary>
+    /// The number of matrix columns the model was trained on.
+    /// </summary>
     public int minColumns;
 
     /// <summary>The number of matrix rows the model was trained on.</summary>
@@ -27,8 +29,8 @@ public class RandomForest
 
     /// <summary>
     /// Number of random features to use at each split point during training.
-    /// Used to add randomisation. Defaults to square root of the number of columns.
-    /// </summary>
+    /// Used to add randomisation. Defaults to square root of the number of
+    /// columns.</summary>
     public int randomFeatures;
 
     /// <summary>
@@ -37,8 +39,8 @@ public class RandomForest
     public double[]? classes;
 
     /// <summary>
-    /// The function to use to calculate the purity of a slice of the target array.
-    /// <see> See
+    /// The function to use to calculate the purity of a slice of the target
+    /// array.<see> See
     /// <seealso cref="CsML.Util.Statistics.Gini" />
     /// for default function to use.
     /// </see>
@@ -62,7 +64,8 @@ public class RandomForest
         set
         {
             if (value != "classify" & value != "regress")
-                throw new ArgumentException("Mode must be 'classify' or 'regress'");
+                throw new ArgumentException(
+                    "Mode must be 'classify' or 'regress'");
             _mode = value;
         }
     }
@@ -130,19 +133,23 @@ public class RandomForest
         if (trees.Count == 0)
             throw new ArgumentException("Forest is untrained");
         if (matrix.GetLength(1) != minColumns)
-            throw new ArgumentException("Forest trained on different number of columns");
+            throw new ArgumentException(
+                "Forest trained on different number of columns");
         if (inputRecordCount == 0)
             throw new ArgumentException("Empty input");
         var result = new double[inputRecordCount];
         Parallel.For(0, inputRecordCount, i =>
         {
             var input = new List<double[]>();
-            input = input.Append(CsML.Util.Matrix.GetRow(matrix, i, false)).ToList();
+            input = input.Append(
+                CsML.Util.Matrix.GetRow(matrix, i, false)).ToList();
             if (Mode == "regress")
             {
                 var predictions = new List<double>(trees.Count);
                 foreach (var tree in trees)
-                    predictions.Add(tree.Predict(CsML.Util.Matrix.FromList2D(input))[0]);
+                    predictions.Add(
+                        tree.Predict(
+                            CsML.Util.Matrix.FromList2D(input))[0]);
                 result[i] = predictions.Average();
             }
             else
@@ -162,7 +169,8 @@ public class RandomForest
     }
 
     /// <summary>
-    /// Predict labels for new data and return corresponding class probability estimates.
+    /// Predict labels for new data and return corresponding class probability
+    /// estimates.
     /// </summary>
     public (double, Dictionary<double, double>)[] PredictWithProbabilities(
         double[,] matrix,
@@ -174,23 +182,27 @@ public class RandomForest
             if (trees.Count == 0)
                 throw new ArgumentException("Forest is untrained");
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException("Forest trained on different number of columns");
+                throw new ArgumentException(
+                    "Forest trained on different number of columns");
             if (inputRecordCount == 0)
                 throw new ArgumentException("Empty input");
             if (Mode == "regress")
-                throw new ArgumentException("Probabilities require treemode to be 'classify'");
+                throw new ArgumentException(
+                    "Probabilities require treemode to be 'classify'");
         }
         var result = new (double, Dictionary<double, double>)[inputRecordCount];
         Parallel.For(0, inputRecordCount, i =>
         {
             var input = new List<double[]>();
-            input = input.Append(CsML.Util.Matrix.GetRow(matrix, i, false)).ToList();
+            input = input.Append(
+                CsML.Util.Matrix.GetRow(matrix, i, false)).ToList();
             var counts = new Dictionary<double, int>();
             var probs = new Dictionary<double, double>();
             (double, Dictionary<double, double>) vote;
             foreach (var tree in trees)
             {
-                vote = tree.PredictWithProbabilities(CsML.Util.Matrix.FromList2D(input))[0];
+                vote = tree.PredictWithProbabilities(
+                    CsML.Util.Matrix.FromList2D(input))[0];
                 if (counts.ContainsKey(vote.Item1)) counts[vote.Item1] += 1;
                 else counts[vote.Item1] = 1;
                 foreach (double key in vote.Item2.Keys)

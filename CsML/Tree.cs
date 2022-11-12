@@ -5,8 +5,8 @@ using CsML.Extensions;
 namespace CsML.Tree;
 
 /// <summary>
-/// A binary decision tree node used to capture decision criteria for decision nodes
-/// or inference data for leaf nodes.
+/// A binary decision tree node used to capture decision criteria for decision
+/// nodes or inference data for leaf nodes.
 /// </summary>
 public class BinaryNode
 {
@@ -25,16 +25,22 @@ public class BinaryNode
     /// </summary>
     public double? splitPoint;
 
-    /// <summary>Index of yes node to go to on evaluation of split point.</summary>
+    /// <summary>
+    /// Index of yes node to go to on evaluation of split point.
+    /// </summary>
     public int? yesIndex;
 
-    /// <summary>Index of no node to go to on evaluation of split point.</summary>
+    /// <summary>
+    /// Index of no node to go to on evaluation of split point.
+    /// </summary>
     public int? noIndex;
 
     /// <summary>Gain in purity on split.</summary>
     public double? purityGain;
 
-    /// <summary>Number of records used to calculate leaf node metrics.</summary>
+    /// <summary>
+    /// Number of records used to calculate leaf node metrics.
+    /// </summary>
     public int? recordCount;
 
     /// <summary>Class counts in leaf node data.</summary>
@@ -58,7 +64,9 @@ public class BinaryTree
     /// <summary>The list containing nodes in the tree once trained.</summary>
     public List<BinaryNode> nodes;
 
-    /// <summary>The number of matrix columns the model was trained on.</summary>
+    /// <summary>
+    /// The number of matrix columns the model was trained on.
+    /// </summary>
     public int minColumns;
 
     /// <summary>The number of matrix rows the model was trained on.</summary>
@@ -100,8 +108,8 @@ public class BinaryTree
     public bool retainOutOfBagIndeces = false;
 
     /// <summary>
-    /// The indeces of out of bag samples with reference to the input matrix the tree
-    /// was trained on.
+    /// The indeces of out of bag samples with reference to the input matrix
+    /// the tree was trained on.
     /// </summary>
     public int[]? outOfBagIndeces;
 
@@ -114,7 +122,8 @@ public class BinaryTree
         set
         {
             if (value != "classify" & value != "regress")
-                throw new ArgumentException("Mode must be 'classify' or 'regress'");
+                throw new ArgumentException(
+                    "Mode must be 'classify' or 'regress'");
             _mode = value;
         }
     }
@@ -133,16 +142,15 @@ public class BinaryTree
         this.purityFn = purityFn;
     }
 
-    /// <summary>
-    /// Train the model.
-    /// </summary>
+    /// <summary>Train the model.</summary>
     /// <param name="matrix">The features to train the model on.</param>
     /// <param name="target">The target vector to train on.</param>
     /// <param name="skipchecks">
     /// Skip input checks if true. Used in random forest to avoid repeated
     /// checking of same input data.
     /// </param>
-    public void Train(double[,] matrix, double[] target, bool skipchecks = false)
+    public void Train(
+        double[,] matrix, double[] target, bool skipchecks = false)
     {
         inputRecordCount = matrix.GetLength(0);
         int targetLength = target.Length;
@@ -164,9 +172,11 @@ public class BinaryTree
         double[] inputt;
         if (bootstrapSampleData)
             if (retainOutOfBagIndeces)
-                (inputm, inputt, outOfBagIndeces) = CsML.Util.Features.Bootstrap(matrix, target, returnOobIdx: true);
+                (inputm, inputt, outOfBagIndeces) = CsML.Util.Features.
+                    Bootstrap(matrix, target, returnOobIdx: true);
             else
-                (inputm, inputt, _) = CsML.Util.Features.Bootstrap(matrix, target, returnOobIdx: false);
+                (inputm, inputt, _) = CsML.Util.Features.
+                    Bootstrap(matrix, target, returnOobIdx: false);
         else
         {
             inputm = (double[,])matrix.Clone();
@@ -191,7 +201,8 @@ public class BinaryTree
             if (nodes.Count == 0)
                 throw new ArgumentException("Tree is untrained");
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException("Tree trained on different number of columns");
+                throw new ArgumentException(
+                    "Tree trained on different number of columns");
             if (inputRecordCount == 0)
                 throw new ArgumentException("Empty input");
         }
@@ -219,7 +230,8 @@ public class BinaryTree
     }
 
     /// <summary>
-    /// Predict labels for new data and return corresponding class probability estimates.
+    /// Predict labels for new data and return corresponding class probability
+    /// estimates.
     /// </summary>
     public (double, Dictionary<double, double>)[] PredictWithProbabilities(
         double[,] matrix,
@@ -231,11 +243,13 @@ public class BinaryTree
             if (nodes.Count == 0)
                 throw new ArgumentException("Tree is untrained");
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException("Tree trained on different number of columns");
+                throw new ArgumentException(
+                    "Tree trained on different number of columns");
             if (inputRecordCount == 0)
                 throw new ArgumentException("Empty input");
             if (Mode == "regress")
-                throw new ArgumentException("Probabilities require treemode to be 'classify'");
+                throw new ArgumentException(
+                    "Probabilities require treemode to be 'classify'");
         }
         Span2D<double> matrixSpan = matrix;
         var result = new (double, Dictionary<double, double>)[inputRecordCount];
@@ -275,7 +289,8 @@ public class BinaryTree
         {
             if (node.isLeaf) continue;
             int idx = (int)node.columnIndex!;
-            double weight = (double)node.recordCount! / (double)inputRecordCount;
+            double weight = (double)node.recordCount! /
+                            (double)inputRecordCount;
             double weighted = (double)node.purityGain! * weight;
             result[idx] = result[idx] + weighted;
         }
@@ -330,7 +345,8 @@ public class BinaryTree
             target!.All(val => val.Equals(target![0])) ||
             _splitCount > _maxsplits)
             return AddLeaf(target!);
-        var bs = Util.Matrix.BestSplit<double>(matrix, target!, purityFn, randomFeatures);
+        var bs = Util.Matrix.BestSplit<double>(
+                    matrix, target!, purityFn, randomFeatures);
         var sm = Util.Matrix.Split(matrix, bs.Item1, bs.Item2);
         var st = Util.Array.Split(target!, sm.Item3);
         int yesLength = sm.Item1.GetLength(0);
