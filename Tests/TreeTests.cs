@@ -1,7 +1,7 @@
 using Microsoft.Toolkit.HighPerformance;
 using Xunit;
 
-namespace Csml.Tests.Tree;
+namespace CsML.Tests.Tree;
 
 public class BinaryTree
 {
@@ -23,7 +23,8 @@ public class BinaryTree
                 {2, 1.0},
             };
         double[] target = { 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1 };
-        CsML.Tree.BinaryTree tree = new CsML.Tree.BinaryTree("classify", CsML.Util.Statistics.Gini);
+        var tree = new CsML.Tree.BinaryTree("classify",
+                            CsML.Util.Statistics.Gini);
         tree.Train(features, target);
         Assert.Equal(0.5, tree.nodes[0].splitPoint);
         Assert.Equal(0.05555555555555555, tree.nodes[0].purityGain);
@@ -52,7 +53,8 @@ public class BinaryTree
                 {2, 1.0},
             };
         double[] target = { 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1 };
-        CsML.Tree.BinaryTree tree = new CsML.Tree.BinaryTree("regress", CsML.Util.Statistics.Gini);
+        var tree = new CsML.Tree.BinaryTree("regress",
+                        CsML.Util.Statistics.Gini);
         tree.Train(features, target);
         Assert.Equal(0.5, tree.nodes[0].splitPoint);
         Assert.Equal(0.05555555555555555, tree.nodes[0].purityGain);
@@ -82,7 +84,8 @@ public class BinaryTree
         double[] target = { 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1 };
         Assert.Throws<ArgumentException>(() =>
         {
-            CsML.Tree.BinaryTree tree = new CsML.Tree.BinaryTree("regression", CsML.Util.Statistics.Gini);
+            var tree = new CsML.Tree.BinaryTree("regression",
+                                CsML.Util.Statistics.Gini);
         }
         );
     }
@@ -90,7 +93,8 @@ public class BinaryTree
     [Fact]
     public void Train_input_exceptions()
     {
-        CsML.Tree.BinaryTree tree = new CsML.Tree.BinaryTree("classify", CsML.Util.Statistics.Gini);
+        var tree = new CsML.Tree.BinaryTree("classify",
+                            CsML.Util.Statistics.Gini);
         Assert.Throws<ArgumentException>(() =>
         {
             tree.Train(new double[,] { }, new double[] { });
@@ -120,7 +124,8 @@ public class BinaryTree
             { 2, 1.0 }
         };
         var target = new double[] { 1, 2, 1, 1, 2, 2.1, 1, 2, 5, 5, 5, 5 };
-        CsML.Tree.BinaryTree tree = new CsML.Tree.BinaryTree("regress", CsML.Util.Statistics.StdevP);
+        var tree = new CsML.Tree.BinaryTree("regress",
+                        CsML.Util.Statistics.StdevP);
         Assert.Equal("regress", tree.Mode);
         tree.Train(matrix, target);
         Assert.Equal(0, tree.nodes[0].columnIndex);
@@ -141,12 +146,13 @@ public class BinaryTree
 
     private static CsML.Tree.BinaryTree ManualTree()
     {
-        CsML.Tree.BinaryTree tree = new CsML.Tree.BinaryTree("classify", CsML.Util.Statistics.Gini);
+        var tree = new CsML.Tree.BinaryTree("classify",
+                            CsML.Util.Statistics.Gini);
         tree.minColumns = 3;
         tree.classes = new double[] { 3, 4, 5, 6 };
         tree.inputRecordCount = 60;
 
-        CsML.Tree.BinaryNode node1 = new CsML.Tree.BinaryNode();
+        var node1 = new CsML.Tree.BinaryNode();
         node1.index = 0;
         node1.yesIndex = 1;
         node1.noIndex = 2;
@@ -157,7 +163,7 @@ public class BinaryTree
         node1.purityGain = 1;
         tree.nodes.Add(node1);
 
-        CsML.Tree.BinaryNode node2 = new CsML.Tree.BinaryNode();
+        var node2 = new CsML.Tree.BinaryNode();
         node2.index = 1;
         node2.yesIndex = 3;
         node2.noIndex = 4;
@@ -168,7 +174,7 @@ public class BinaryTree
         node2.purityGain = 2;
         tree.nodes.Add(node2);
 
-        CsML.Tree.BinaryNode node3 = new CsML.Tree.BinaryNode();
+        var node3 = new CsML.Tree.BinaryNode();
         node3.index = 2;
         node3.yesIndex = 5;
         node3.noIndex = 6;
@@ -179,35 +185,39 @@ public class BinaryTree
         node3.purityGain = 3;
         tree.nodes.Add(node3);
 
-        CsML.Tree.BinaryNode node4 = new CsML.Tree.BinaryNode();
+        var node4 = new CsML.Tree.BinaryNode();
         node4.index = 3;
         node4.isLeaf = true;
         node4.recordCount = 10;
-        node4.classCounts = new Dictionary<double, int> { { 3, 6 }, { 4, 2 }, { 5, 1 }, { 6, 1 } };
+        node4.classCounts = new Dictionary<double, int> {
+            { 3, 6 }, { 4, 2 }, { 5, 1 }, { 6, 1 } };
         node4.predicted = 3;
         tree.nodes.Add(node4);
 
-        CsML.Tree.BinaryNode node5 = new CsML.Tree.BinaryNode();
+        var node5 = new CsML.Tree.BinaryNode();
         node5.index = 4;
         node5.isLeaf = true;
         node5.recordCount = 20;
-        node5.classCounts = new Dictionary<double, int> { { 3, 4 }, { 4, 10 }, { 5, 2 }, { 6, 4 } };
+        node5.classCounts = new Dictionary<double, int> {
+            { 3, 4 }, { 4, 10 }, { 5, 2 }, { 6, 4 } };
         node5.predicted = 4;
         tree.nodes.Add(node5);
 
-        CsML.Tree.BinaryNode node6 = new CsML.Tree.BinaryNode();
+        var node6 = new CsML.Tree.BinaryNode();
         node6.index = 5;
         node6.isLeaf = true;
         node6.recordCount = 30;
-        node6.classCounts = new Dictionary<double, int> { { 3, 1 }, { 4, 2 }, { 5, 25 }, { 6, 2 } };
+        node6.classCounts = new Dictionary<double, int> {
+            { 3, 1 }, { 4, 2 }, { 5, 25 }, { 6, 2 } };
         node6.predicted = 5;
         tree.nodes.Add(node6);
 
-        CsML.Tree.BinaryNode node7 = new CsML.Tree.BinaryNode();
+        var node7 = new CsML.Tree.BinaryNode();
         node7.index = 6;
         node7.isLeaf = true;
         node7.recordCount = 40;
-        node7.classCounts = new Dictionary<double, int> { { 3, 1 }, { 4, 2 }, { 5, 2 }, { 6, 35 } };
+        node7.classCounts = new Dictionary<double, int> {
+            { 3, 1 }, { 4, 2 }, { 5, 2 }, { 6, 35 } };
         node7.predicted = 6;
         tree.nodes.Add(node7);
 
@@ -219,8 +229,9 @@ public class BinaryTree
     {
         CsML.Tree.BinaryTree tree = ManualTree();
         Assert.Equal(7, tree.nodes.Count);
-        double[,] newdata = new double[,] { { 1, 1, 1 }, { 1, 1, 40 }, { 20, 1, 1 }, { 20, 30, 1 } };
-        double[] expected = new double[] { 6, 5, 4, 3 };
+        var newdata = new double[,] {
+            { 1, 1, 1 }, { 1, 1, 40 }, { 20, 1, 1 }, { 20, 30, 1 } };
+        var expected = new double[] { 6, 5, 4, 3 };
         var result = tree.Predict(newdata);
         Assert.True(result.SequenceEqual(expected));
     }
@@ -287,9 +298,14 @@ public class BinaryTree
            {
                { "versicolor", 0 }, {"virginica", 1 }, {"setosa", 2}
            };
-        string strWorkPath = Directory.GetParent(Environment.CurrentDirectory)!.Parent!.Parent!.FullName;
+        string strWorkPath = Directory
+                                .GetParent(Environment.CurrentDirectory)!
+                                .Parent!
+                                .Parent!
+                                .FullName;
         string inpuPath = Path.Combine(strWorkPath, "Data/iris.csv");
-        double[,] matrix = CsML.Util.Matrix.FromCSV(inpuPath, mapping, loadFromRow: 1);
+        double[,] matrix = CsML.Util.Matrix.FromCSV(
+                                inpuPath, mapping, loadFromRow: 1);
         Span2D<double> matrixSpan = matrix;
         double[,] features = matrixSpan.Slice(0, 0, 150, 4).ToArray();
         Assert.Equal(5.1, features[0, 0]);
@@ -303,11 +319,14 @@ public class BinaryTree
         (features, target) = CsML.Util.Features.Shuffle(features, target);
         double[,] ftrain, ftest;
         double[] ttrain, ttest;
-        ((ftrain, ttrain), (ftest, ttest)) = CsML.Util.Features.Split(features, target, 0.8);
-        CsML.Tree.BinaryTree tree = new CsML.Tree.BinaryTree("classify", CsML.Util.Statistics.Gini);
+        ((ftrain, ttrain), (ftest, ttest)) = CsML.Util.Features.Split(
+                                                features, target, 0.8);
+        var tree = new CsML.Tree.BinaryTree("classify",
+                            CsML.Util.Statistics.Gini);
         tree.Train(ftrain, ttrain);
         Assert.True(tree.nodes.Count > 0);
         double[] predictions = tree.Predict(ftest);
-        Assert.True(CsML.Util.Array.ClassificationAccuracy(ttest, predictions) > 0.8);
+        Assert.True(CsML.Util.Array.ClassificationAccuracy(
+                    ttest, predictions) > 0.8);
     }
 }

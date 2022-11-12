@@ -1,7 +1,7 @@
 using Xunit;
 using CsML.Extensions;
 
-namespace Csml.Tests.Extensions;
+namespace CsML.Tests.Extensions;
 
 public class IEnumerable
 {
