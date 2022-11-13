@@ -520,7 +520,7 @@ public class ProbabilityMassFunction<T>
     /// <returns>
     /// A tuple containing the hypothesis and corresponding probability.
     /// </returns>
-    public (T, double) HighestProbability()
+    public (T, double) Max()
     {
         T mostProbablyHypothesis = table.MaxBy(kvp => kvp.Value).Key;
         return (mostProbablyHypothesis, table[mostProbablyHypothesis]);

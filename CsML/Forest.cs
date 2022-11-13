@@ -200,15 +200,14 @@ public class RandomForest
             var input = new List<double[]>();
             input = input.Append(
                 CsML.Util.Matrix.GetRow(matrix, i, false)).ToList();
-            var counts = new Dictionary<double, int>();
+            var counts = new CsML.Probability.Counter<double>();
             var probs = new Dictionary<double, double>();
             (double, Dictionary<double, double>) vote;
             foreach (var tree in trees)
             {
                 vote = tree.PredictWithProbabilities(
                     CsML.Util.Matrix.FromList2D(input))[0];
-                if (counts.ContainsKey(vote.Item1)) counts[vote.Item1] += 1;
-                else counts[vote.Item1] = 1;
+                counts.Increment(vote.Item1);
                 foreach (double key in vote.Item2.Keys)
                 {
                     if (probs.ContainsKey(key))
@@ -220,7 +219,7 @@ public class RandomForest
             double sumprobs = probs.Values.Sum();
             foreach (double key in probs.Keys)
                 probs[key] = probs[key] / sumprobs;
-            result[i] = (counts.MaxBy(kvp => kvp.Value).Key, probs);
+            result[i] = (counts.MaxKey(), probs);
         });
         return result;
     }

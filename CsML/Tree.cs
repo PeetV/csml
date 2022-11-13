@@ -130,13 +130,13 @@ public class BinaryTree
     /// <summary>Create an untrained model.</summary>
     public BinaryTree(string mode, Func<double[], double> purityFn)
     {
-        nodes = new List<BinaryNode>();
         _recursions = 0;
         _splitCount = 0;
-        minColumns = 0;
         _depth = 0;
-        inputRecordCount = 0;
         _mode = "classify";
+        nodes = new List<BinaryNode>();
+        minColumns = 0;
+        inputRecordCount = 0;
         Mode = mode;
         this.purityFn = purityFn;
     }

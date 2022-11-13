@@ -320,7 +320,7 @@ public class ProbabilityMassFunction
         int[] ks = Enumerable.Range(1, 251).ToArray();
         pmf = CsML.Probability.ProbabilityMassFunction<int>
                               .FromBinomial(250, ks, 0.5);
-        Assert.Equal((125, 0.05041221314730964), pmf.HighestProbability());
+        Assert.Equal((125, 0.05041221314730964), pmf.Max());
         Assert.Equal(0.0083571817249182, pmf[140]);
         Assert.Equal(0.06642115124004333, 1 - pmf.SumProbabilities(
             110, 140, includeLower: false, includeUpper: false));
@@ -336,7 +336,7 @@ public class ProbabilityMassFunction
         pmf = CsML.Probability
                   .ProbabilityMassFunction<double>
                   .FromNormal(hypotheses, 500, 200 * 200);
-        Assert.Equal((500, 0.0020196170605523193), pmf.HighestProbability());
+        Assert.Equal((500, 0.0020196170605523193), pmf.Max());
         Assert.Equal(0.6899874672473569,
                      pmf.SumProbabilities(300, 700, includeLower: false));
         Assert.Equal(0.9661436914270904,
@@ -363,11 +363,11 @@ public class ProbabilityMassFunction
                                          .ToArray();
         Assert.True(summmedDice.SequenceEqual(pmf.hypotheses));
         Assert.True(1.0 - pmf.probabilities.Sum() < 0.0000000001);
-        Assert.Equal((7, 0.166666666666666666), pmf.HighestProbability());
+        Assert.Equal((7, 0.166666666666666666), pmf.Max());
     }
 
     [Fact]
-    public void HighestProbability()
+    public void Max()
     {
         string[] outcomes = new string[] { "b", "a", "c" };
         var pmf = new CsML.Probability
@@ -375,7 +375,7 @@ public class ProbabilityMassFunction
         pmf["a"] = 0.1;
         pmf["b"] = 0.2;
         pmf["c"] = 0.3;
-        Assert.Equal(("c", 0.3), pmf.HighestProbability());
+        Assert.Equal(("c", 0.3), pmf.Max());
     }
 
     [Fact]
