@@ -178,7 +178,7 @@ public class Shuffle
 }
 
 /// <summary>Count occurences of T.</summary>
-public class Counter<T> where T : IComparable<T>
+public class Counter<T> where T : notnull
 {
     /// <summary>
     /// A dictionary containing counts.
@@ -193,6 +193,9 @@ public class Counter<T> where T : IComparable<T>
         get { return counts[target]; }
         set { counts[target] = (int)value; }
     }
+
+    /// <summary>Get the sum of individual counts.</summary>
+    public int Total { get { return counts.Values.Sum(); } }
 
     /// <summary>Create an empty counter.</summary>
     public Counter()

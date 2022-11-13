@@ -139,6 +139,7 @@ public class Counter
         counter.Increment("b");
         Assert.Equal(2, counter["a"]);
         Assert.Equal(1, counter["b"]);
+        Assert.Equal(3, counter.Total);
     }
 
     [Fact]
@@ -148,6 +149,7 @@ public class Counter
         counter.Increment(new string[] { "a", "a", "b" });
         Assert.Equal(2, counter["a"]);
         Assert.Equal(1, counter["b"]);
+        Assert.Equal(3, counter.Total);
     }
 }
 
