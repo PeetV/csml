@@ -59,7 +59,7 @@ Chart.Line<int, double, string>(
 
 #!csharp
 
-bowls100.HighestProbability()
+bowls100.Max()
 
 #!csharp
 
@@ -108,7 +108,7 @@ Chart.Line<int, double, string>(
 
 #!csharp
 
-pmf.HighestProbability()
+pmf.Max()
 
 #!csharp
 
