@@ -177,6 +177,38 @@ public class Shuffle
     }
 }
 
+/// <summary>Count occurences of T.</summary>
+public class Counter<T> where T : IComparable<T>
+{
+    /// <summary>
+    /// A dictionary containing counts.
+    /// </summary>
+    public Dictionary<T, int> counts;
+
+    /// <summary>
+    /// Overload the square-bracket operator to work on the table field.
+    /// </summary>
+    public object this[T target]
+    {
+        get { return counts[target]; }
+        set { counts[target] = (int)value; }
+    }
+
+    /// <summary>Create an empty counter.</summary>
+    public Counter()
+    {
+        counts = new Dictionary<T, int>();
+    }
+
+    /// <summary>Increment target count.</summary>
+    public void Increment(T target, int increment = 1)
+    {
+        if (counts.ContainsKey(target))
+            counts[target] += increment;
+        else counts[target] = increment;
+    }
+}
+
 /// <summary>
 /// A naive Bayesian classifier (naive given assumption of column
 /// independence and normal distribution of features).
@@ -368,9 +400,7 @@ public class ProbabilityMassFunction<T>
         }
     }
 
-    /// <summary>
-    /// Create an empty PMF.
-    /// </summary>
+    /// <summary>Create an empty PMF.</summary>
     public ProbabilityMassFunction()
     {
         table = new Dictionary<T, double>();

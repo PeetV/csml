@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace CsML.Tests.Util;

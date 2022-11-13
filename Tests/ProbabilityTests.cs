@@ -1,8 +1,6 @@
 using Microsoft.Toolkit.HighPerformance;
-
-using CsML.Extensions;
-
 using Xunit;
+using CsML.Extensions;
 
 namespace Csml.Tests.Probability;
 
@@ -127,6 +125,20 @@ public class Shuffle
         result = CsML.Probability.Shuffle.Array(input, inPlace: true);
         Assert.Equal(3, result.Length);
         Assert.True(result.All(x => input.Contains(x)));
+    }
+}
+
+public class Counter
+{
+    [Fact]
+    public void Increment_single()
+    {
+        var counter = new CsML.Probability.Counter<string>();
+        counter.Increment("a");
+        counter.Increment("a");
+        counter.Increment("b");
+        Assert.Equal(2, counter["a"]);
+        Assert.Equal(1, counter["b"]);
     }
 }
 
