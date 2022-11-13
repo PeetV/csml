@@ -207,6 +207,13 @@ public class Counter<T> where T : IComparable<T>
             counts[target] += increment;
         else counts[target] = increment;
     }
+
+    /// <summary>Increment multiple target counts.</summary>
+    public void Increment(T[] targets, int increment = 1)
+    {
+        foreach (T target in targets)
+            Increment(target, increment: increment);
+    }
 }
 
 /// <summary>
@@ -636,7 +643,7 @@ public class RandomClassifier<T>
     public void Train(double[,] matrix, T[] target)
     {
         var counts = target.ElementCounts();
-        classes = counts.Keys.OrderBy(x => x).ToArray();
+        classes = counts.Keys.Order().ToArray();
         weights = new double[classes.Length];
         T key;
         for (int i = 0; i < classes.Length; i++)

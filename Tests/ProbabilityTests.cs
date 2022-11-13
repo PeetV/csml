@@ -140,6 +140,15 @@ public class Counter
         Assert.Equal(2, counter["a"]);
         Assert.Equal(1, counter["b"]);
     }
+
+    [Fact]
+    public void Increment_multiple()
+    {
+        var counter = new CsML.Probability.Counter<string>();
+        counter.Increment(new string[] { "a", "a", "b" });
+        Assert.Equal(2, counter["a"]);
+        Assert.Equal(1, counter["b"]);
+    }
 }
 
 public class NaiveBayesClassifier
