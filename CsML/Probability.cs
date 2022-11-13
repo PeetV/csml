@@ -217,6 +217,19 @@ public class Counter<T> where T : notnull
         foreach (T target in targets)
             Increment(target, increment: increment);
     }
+
+    /// <summary>Get the highest count key, value pair.</summary>
+    public (T, int) Max()
+    {
+        var pair = counts.MaxBy(kvp => kvp.Value);
+        return (pair.Key, pair.Value);
+    }
+
+    /// <summary>Get the item (key) with highest count.</summary>
+    public T MaxKey()
+    {
+        return counts.MaxBy(kvp => kvp.Value).Key;
+    }
 }
 
 /// <summary>

@@ -151,6 +151,22 @@ public class Counter
         Assert.Equal(1, counter["b"]);
         Assert.Equal(3, counter.Total);
     }
+
+    [Fact]
+    public void Max()
+    {
+        var counter = new CsML.Probability.Counter<string>();
+        counter.Increment(new string[] { "a", "a", "b" });
+        Assert.Equal(("a", 2), counter.Max());
+    }
+
+    [Fact]
+    public void MaxKey()
+    {
+        var counter = new CsML.Probability.Counter<string>();
+        counter.Increment(new string[] { "a", "a", "b" });
+        Assert.Equal("a", counter.MaxKey());
+    }
 }
 
 public class NaiveBayesClassifier
