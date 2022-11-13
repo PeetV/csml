@@ -5,7 +5,6 @@ namespace CsML.Extensions;
 /// </summary>
 public static class IEnumerable
 {
-
     /// <summary>
     /// Turn a double enumerable into cumulative sums. [1, 2, 3 ...] becomes
     /// [1, 3, 6 ...].
@@ -24,7 +23,8 @@ public static class IEnumerable
     /// <summary>Count ocurrences of each array element.</summary>
     /// <returns>
     /// A dictionary containing distinct array elements as keys and counts
-    /// values.</returns>
+    /// values.
+    /// </returns>
     public static Dictionary<T, int> ElementCounts<T>(
         this IEnumerable<T> sequence)
         where T : notnull
