@@ -371,8 +371,8 @@ public class Matrix
         int columnCount = matrix.GetLength(1);
         columnIndeces = Enumerable.Range(0, columnCount).ToArray();
         if (randomFeatures > 0 & randomFeatures < columnCount)
-            columnIndeces = CsML.Probability.Sample.ArrayWithoutReplacement(
-                columnIndeces, randomFeatures);
+            columnIndeces = CsML.Probability
+                .Sample.ArrayWithoutReplacement(columnIndeces, randomFeatures);
         double bestsplit = 0.0, bestgain = 0.0;
         int bestColumnIndex = 0;
         double split, gain;
