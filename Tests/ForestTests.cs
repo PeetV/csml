@@ -69,7 +69,7 @@ public class RandomForest
     }
 
     [Fact]
-    public void Train_Predict_iris()
+    public void Train_predict_iris()
     {
         var mapping = new Dictionary<int, Dictionary<string, double>>();
         mapping[4] = new Dictionary<string, double>

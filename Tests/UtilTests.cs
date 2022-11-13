@@ -6,7 +6,7 @@ namespace CsML.Tests.Util;
 public class Array
 {
     [Fact]
-    public void BestSplit_Accuracy_Test1()
+    public void BestSplit_accuracy_test1()
     {
         double[] values = { 1.0, 1.0, 1.0, 2.0, 12.0, 1.0, 1.0, 2.0, 1.0, 2.0,
                             3.0, 1.0 };
@@ -21,7 +21,7 @@ public class Array
     }
 
     [Fact]
-    public void BestSplit_Accuracy_Test2()
+    public void BestSplit_accuracy_test2()
     {
         double[] values = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0,
         1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
@@ -36,7 +36,7 @@ public class Array
     }
 
     [Fact]
-    public void BestSplit_ValuesAllSame()
+    public void BestSplit_valuesAllSame()
     {
         double[] values = { 5.0, 5.0, 5.0, 5.0, 5.0 };
         double[] target = { 1.0, 2.0, 1.0, 2.0, 1.0 };
@@ -396,7 +396,7 @@ public class Matrix
 public class Statistics
 {
     [Fact]
-    public void Gini_Strings()
+    public void Gini_strings()
     {
         string[] stringvals = { "a", "a", "a", "b", "b", "b" };
         double result = CsML.Util.Statistics.Gini(stringvals);
@@ -404,7 +404,7 @@ public class Statistics
     }
 
     [Fact]
-    public void Gini_Ints()
+    public void Gini_ints()
     {
         int[] intvals = { 1, 1, 1, 2, 2, 1 };
         double result = CsML.Util.Statistics.Gini(intvals);
@@ -412,7 +412,7 @@ public class Statistics
     }
 
     [Fact]
-    public void Gini_Empty()
+    public void Gini_empty()
     {
         int[] emptyvals = new int[] { };
         double result = CsML.Util.Statistics.Gini(emptyvals);
@@ -420,7 +420,7 @@ public class Statistics
     }
 
     [Fact]
-    public void Gini_Different()
+    public void Gini_different()
     {
         int[] emptyvals = new int[] { 1, 2, 3 };
         double result = CsML.Util.Statistics.Gini(emptyvals);
@@ -468,8 +468,6 @@ public class Statistics
     {
         var input = new double[] { 1, 2, 3, 4 };
         Assert.Equal(1.25, CsML.Util.Statistics.Variance(input));
-        input = new double[] { 1, 2 };
-        Assert.Equal(0.25, CsML.Util.Statistics.Variance(input));
     }
 }
 

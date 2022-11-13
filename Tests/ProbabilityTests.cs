@@ -180,7 +180,7 @@ public class NaiveBayesClassifier
     }
 
     [Fact]
-    public void Train_Predict_Iris()
+    public void Train_predict_iris()
     {
         var mapping = new Dictionary<int, Dictionary<string, double>>();
         mapping[4] = new Dictionary<string, double>
@@ -443,7 +443,7 @@ public class ProbabilityMassFunction
 public class RandomClassifier
 {
     [Fact]
-    public void TrainPredict()
+    public void Train_predict()
     {
         var cfier = new CsML.Probability.RandomClassifier<string>();
         string[] target = Enumerable.Repeat("a", 50)

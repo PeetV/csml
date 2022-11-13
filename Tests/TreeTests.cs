@@ -107,7 +107,7 @@ public class BinaryTree
 
 
     [Fact]
-    public void Train_Regression()
+    public void Train_regression()
     {
         var matrix = new double[,]{
             { 0, 1.0 },
@@ -254,7 +254,7 @@ public class BinaryTree
     }
 
     [Fact]
-    public void PredictWithClassCounts()
+    public void PredictWithProbabilities()
     {
         CsML.Tree.BinaryTree tree = ManualTree();
         var newData = new double[,]{
@@ -291,7 +291,7 @@ public class BinaryTree
     }
 
     [Fact]
-    public void Train_Predict_iris()
+    public void Train_predict_iris()
     {
         var mapping = new Dictionary<int, Dictionary<string, double>>();
         mapping[4] = new Dictionary<string, double>
