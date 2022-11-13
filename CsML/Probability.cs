@@ -650,10 +650,13 @@ public class WeightedIndexSampler<T>
     /// sample increases the proportion will become closer to the weights
     /// proportions.
     /// </param>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if inputs aren't the same length.
+    /// </exception>
     public WeightedIndexSampler(T[] target, double[] weights)
     {
         if (target.Length != weights.Length)
-            throw new ArgumentException("Inputs must be same length");
+            throw new ArgumentException(CsML.Errors.Types.E2);
         if (target.Length == 0)
             throw new ArgumentException("Empty input");
         this._target = target;

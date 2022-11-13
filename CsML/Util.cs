@@ -71,14 +71,15 @@ public class Array
     /// an actuals array.
     /// </summary>
     /// <exception cref="System.ArgumentException">
-    /// Throws an exception if inputs aren't the same length.
+    /// Thrown if inputs aren't the same length.
     /// </exception>
     public static double ClassificationAccuracy<T>(
-        T[] actuals, T[] predictions) where T : IComparable<T>
+        T[] actuals, T[] predictions)
+        where T : IComparable<T>
     {
         int lenActuals = actuals.Length, lenPredictions = predictions.Length;
         if (lenActuals != lenPredictions)
-            throw new ArgumentException("Inputs must be same length");
+            throw new ArgumentException(CsML.Errors.Types.E2);
         if (lenActuals == 0) return 0.0;
         double tptn = 0;
         for (int idx = 0; idx < lenActuals; idx++)
@@ -93,7 +94,7 @@ public class Array
     /// actuals array.
     /// </summary>
     /// <exception cref="System.ArgumentException">
-    /// Throws an exception if inputs aren't the same length.
+    /// Thrown if inputs aren't the same length.
     /// </exception>
     public static double ClassificationError<T>(
         T[] actuals, T[] predictions) where T : IComparable<T>
@@ -111,14 +112,14 @@ public class Array
     /// precision and recall as the value.
     /// </returns>
     /// <exception cref="System.ArgumentException">
-    /// Throws an exception if inputs aren't the same length.
+    /// Thrown if inputs aren't the same length.
     /// </exception>
     public static Dictionary<T, (double, double)> ClassificationMetrics<T>(
         T[] actuals, T[] predictions) where T : IComparable<T>
     {
         int lenActuals = actuals.Length, lenPredictions = predictions.Length;
         if (lenActuals != lenPredictions)
-            throw new ArgumentException("Inputs must be same length");
+            throw new ArgumentException(CsML.Errors.Types.E2);
         (T, T)[] zipped = actuals.Zip(predictions).ToArray();
         var counts = new Dictionary<T, double[]> { };
         foreach ((T, T) pair in zipped)
@@ -188,10 +189,15 @@ public class Array
     /// Split an array using a boolean filter array, with related true values 
     /// going to the left and false values going to the right.
     /// </summary>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if inputs aren't the same length.
+    /// </exception>
     public static (T[], T[]) Split<T>(
         T[] input,
         bool[] filter)
     {
+        if (input.Length != filter.Length)
+            throw new ArgumentException(CsML.Errors.Types.E2);
         List<T> lhs = new List<T>(), rhs = new List<T>();
         for (int index = 0; index < input.Length; index++)
         {
@@ -237,18 +243,18 @@ public class Features
     /// of out of bag items.
     /// </returns>
     /// <exception cref="System.ArgumentException">
-    /// Throws an exception if inputs aren't the same length.
+    /// Thrown if inputs aren't the same length.
     /// </exception>
     public static (double[,], double[], int[]) Bootstrap(
         double[,] matrix, double[] target, bool returnOobIdx = false)
     {
         int numRows = matrix.GetLength(0), numCols = matrix.GetLength(1);
         if (numRows != target.Length)
-            throw new ArgumentException("Inputs must be same length");
+            throw new ArgumentException(CsML.Errors.Types.E2);
         var resultmatrix = new double[numRows, numCols];
         var resulttarget = new double[numRows];
-        var resultIndex = CsML.Probability.Sample.RangeWithReplacement(
-                                0, numRows, numRows);
+        var resultIndex = CsML.Probability
+                            .Sample.RangeWithReplacement(0, numRows, numRows);
         int[] oobidx;
         if (returnOobIdx)
             oobidx = Enumerable
@@ -273,14 +279,14 @@ public class Features
     /// relationship between matrix rows and array items.
     /// </summary>
     /// <exception cref="System.ArgumentException">
-    /// Throws an exception if inputs aren't the same length.
+    /// Thrown if inputs aren't the same length.
     /// </exception>
     public static (double[,], double[]) Shuffle(
         double[,] matrix, double[] target)
     {
         int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
         if (inputLength != target.Length)
-            throw new ArgumentException("Inputs must be same length");
+            throw new ArgumentException(CsML.Errors.Types.E2);
         int[] startingIndex = Enumerable.Range(0, inputLength).ToArray();
         int[] shuffledIndex = CsML.Probability.Shuffle.Array(
                                 startingIndex, inPlace: false);
@@ -302,7 +308,7 @@ public class Features
     /// places 70% into train and keeps 30% for test.
     /// </summary>
     /// <exception cref="System.ArgumentException">
-    /// Throws an exception if inputs aren't the same length or if `ratio` is
+    /// Thrown if inputs aren't the same length or if ratio parameter is
     /// not between 0 and 1.
     /// </exception>
     public static ((double[,], double[]), (double[,], double[])) Split(
@@ -310,11 +316,10 @@ public class Features
     )
     {
         if (ratio <= 0 | ratio >= 1)
-            throw new ArgumentException(
-                "Splitting ratio must be between 0 and 1");
+            throw new ArgumentException("ratio must be between 0 and 1");
         int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
         if (inputLength != target.Length)
-            throw new ArgumentException("Inputs must be same length");
+            throw new ArgumentException(CsML.Errors.Types.E2);
         int[] index = Enumerable.Range(0, inputLength).ToArray();
         double cutPoint = (inputLength - 1) * ratio;
         bool[] filter = index.Select(x => x <= cutPoint).ToArray();
@@ -538,8 +543,13 @@ public class Matrix
     /// <summary>
     /// Split a matrix using a boolean filer matrix.
     /// </summary>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if inputs aren't the same length.
+    /// </exception>
     public static (double[,], double[,]) Split(double[,] matrix, bool[] filter)
     {
+        if (matrix.GetLength(0) != filter.Length)
+            throw new ArgumentException(CsML.Errors.Types.E2);
         List<double[]> lhs = new List<double[]>(), rhs = new List<double[]>();
         Span2D<double> matrixSpan = matrix;
         double[] row;
@@ -609,18 +619,21 @@ public class Statistics
     /// calculated adjusted r-squared (returns 0 for adjusted r-squared if p is
     /// null).
     /// </param>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if inputs aren't the same length.
+    /// </exception>
     /// <returns>A tuple containing r-squared and adjusted r-squared.</returns>
     public static (double, double) RSquared(
         double[] actuals, double[] predictions, int? p)
     {
+        if (actuals.Length != predictions.Length)
+            throw new ArgumentException(CsML.Errors.Types.E2);
         double mn = actuals.Average();
         double sseVal = SSE(actuals, predictions);
         double sstVal = actuals.Select(x => Math.Pow(x - mn, 2)).Sum();
         double rsq = 1.0 - sseVal / sstVal;
         if (p == null)
-        {
             return (rsq, 0.0);
-        }
         double n = (double)actuals.Length;
         return (rsq, 1.0 - (1.0 - rsq) * ((n - 1) / (n - (double)p! - 1)));
     }
@@ -628,8 +641,13 @@ public class Statistics
     /// <summary>
     /// Calculate the sum of the squared difference between two arrays.
     /// </summary>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if inputs aren't the same length.
+    /// </exception>
     public static double SSE(double[] actuals, double[] predictions)
     {
+        if (actuals.Length != predictions.Length)
+            throw new ArgumentException(CsML.Errors.Types.E2);
         IEnumerable<(double, double)> zipped = actuals.Zip(predictions);
         return zipped
                 .Select(x => Math.Pow((x.Item1 - x.Item2), 2))

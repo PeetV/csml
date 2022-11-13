@@ -96,14 +96,17 @@ public class RandomForest
     /// <summary>Train the model.</summary>
     /// <param name="matrix">The features to train the model on.</param>
     /// <param name="target">The target vector to train on.</param>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if inputs aren't the same length or empty.
+    /// </exception>
     public void Train(double[,] matrix, double[] target)
     {
         inputRecordCount = matrix.GetLength(0);
         int targetLength = target.Length;
         if (inputRecordCount == 0 | targetLength == 0)
-            throw new ArgumentException("Empty input");
+            throw new ArgumentException(CsML.Errors.Types.E1);
         if (inputRecordCount != targetLength)
-            throw new ArgumentException("Inputs must be the same length");
+            throw new ArgumentException(CsML.Errors.Types.E2);
         trees = new List<BinaryTree>();
         minColumns = matrix.GetLength(1);
         if (_mode == "classify")
@@ -127,16 +130,20 @@ public class RandomForest
 
     /// <summary>Make predictions using the model.</summary>
     /// <param name="matrix">New data to infer predictions from.</param>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if input is empty, or model has not been trained, or if trained
+    /// on a different number of columns.
+    /// </exception>
     public double[] Predict(double[,] matrix)
     {
         inputRecordCount = matrix.GetLength(0);
+        if (inputRecordCount == 0)
+            throw new ArgumentException(CsML.Errors.Types.E1);
         if (trees.Count == 0)
             throw new ArgumentException("Forest is untrained");
         if (matrix.GetLength(1) != minColumns)
             throw new ArgumentException(
                 "Forest trained on different number of columns");
-        if (inputRecordCount == 0)
-            throw new ArgumentException("Empty input");
         var result = new double[inputRecordCount];
         Parallel.For(0, inputRecordCount, i =>
         {
@@ -172,6 +179,10 @@ public class RandomForest
     /// Predict labels for new data and return corresponding class probability
     /// estimates.
     /// </summary>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if model has not been trained, or input is empty or the model
+    /// has not been trained.
+    /// </exception>
     public (double, Dictionary<double, double>)[] PredictWithProbabilities(
         double[,] matrix,
         bool skipchecks = false)
@@ -185,7 +196,7 @@ public class RandomForest
                 throw new ArgumentException(
                     "Forest trained on different number of columns");
             if (inputRecordCount == 0)
-                throw new ArgumentException("Empty input");
+                throw new ArgumentException(CsML.Errors.Types.E1);
             if (Mode == "regress")
                 throw new ArgumentException(
                     "Probabilities require treemode to be 'classify'");

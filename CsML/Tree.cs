@@ -149,6 +149,9 @@ public class BinaryTree
     /// Skip input checks if true. Used in random forest to avoid repeated
     /// checking of same input data.
     /// </param>
+    /// /// <exception cref="System.ArgumentException">
+    /// Thrown if inputs aren't the same length.
+    /// </exception>
     public void Train(
         double[,] matrix, double[] target, bool skipchecks = false)
     {
@@ -157,9 +160,9 @@ public class BinaryTree
         if (!skipchecks)
         {
             if (inputRecordCount == 0 | targetLength == 0)
-                throw new ArgumentException("Empty input");
+                throw new ArgumentException(CsML.Errors.Types.E1);
             if (inputRecordCount != targetLength)
-                throw new ArgumentException("Inputs must be the same length");
+                throw new ArgumentException(CsML.Errors.Types.E2);
         }
         nodes = new List<BinaryNode>();
         minColumns = matrix.GetLength(1);
@@ -193,18 +196,23 @@ public class BinaryTree
     /// Skip input checks if true. Used in random forest to avoid repeated
     /// checking of same input data.
     /// </param>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if input is empty, or model has not been trained, or if trained
+    /// on a different number of columns.
+    /// </exception>
     public double[] Predict(double[,] matrix, bool skipchecks = false)
     {
         inputRecordCount = matrix.GetLength(0);
         if (!skipchecks)
         {
+            if (inputRecordCount == 0)
+                throw new ArgumentException(CsML.Errors.Types.E1);
             if (nodes.Count == 0)
                 throw new ArgumentException("Tree is untrained");
             if (matrix.GetLength(1) != minColumns)
                 throw new ArgumentException(
                     "Tree trained on different number of columns");
-            if (inputRecordCount == 0)
-                throw new ArgumentException("Empty input");
+            
         }
         Span2D<double> matrixSpan = matrix;
         var result = new double[inputRecordCount];
@@ -233,6 +241,10 @@ public class BinaryTree
     /// Predict labels for new data and return corresponding class probability
     /// estimates.
     /// </summary>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if input is `, or model has not been trained, or if trained
+    /// on a different number of columns.
+    /// </exception>
     public (double, Dictionary<double, double>)[] PredictWithProbabilities(
         double[,] matrix,
         bool skipchecks = false)
@@ -240,13 +252,13 @@ public class BinaryTree
         inputRecordCount = matrix.GetLength(0);
         if (!skipchecks)
         {
+            if (inputRecordCount == 0)
+                throw new ArgumentException(CsML.Errors.Types.E1);
             if (nodes.Count == 0)
                 throw new ArgumentException("Tree is untrained");
             if (matrix.GetLength(1) != minColumns)
                 throw new ArgumentException(
                     "Tree trained on different number of columns");
-            if (inputRecordCount == 0)
-                throw new ArgumentException("Empty input");
             if (Mode == "regress")
                 throw new ArgumentException(
                     "Probabilities require treemode to be 'classify'");
