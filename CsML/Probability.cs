@@ -203,6 +203,12 @@ public class Counter<T> where T : notnull
         counts = new Dictionary<T, int>();
     }
 
+    /// <summary>Reset the counter to empty.</summary>
+    public void Clear()
+    {
+        counts.Clear();
+    }
+
     /// <summary>Increment target count.</summary>
     public void Increment(T target, int increment = 1)
     {

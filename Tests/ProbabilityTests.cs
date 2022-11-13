@@ -131,6 +131,16 @@ public class Shuffle
 public class Counter
 {
     [Fact]
+    public void Clear()
+    {
+        var counter = new CsML.Probability.Counter<string>();
+        counter.Increment(new string[] { "a", "a", "b" });
+        Assert.False(counter.counts.Count == 0);
+        counter.Clear();
+        Assert.True(counter.counts.Count == 0);
+    }
+
+    [Fact]
     public void Increment_single()
     {
         var counter = new CsML.Probability.Counter<string>();

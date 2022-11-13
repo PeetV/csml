@@ -157,15 +157,14 @@ public class RandomForest
             }
             else
             {
-                var counts = new Dictionary<double, int>();
+                var counts = new CsML.Probability.Counter<double>();
                 double vote;
                 foreach (var tree in trees)
                 {
                     vote = tree.Predict(CsML.Util.Matrix.FromList2D(input))[0];
-                    if (counts.ContainsKey(vote)) counts[vote] += 1;
-                    else counts[vote] = 1;
+                    counts.Increment(vote);
                 }
-                result[i] = counts.MaxBy(kvp => kvp.Value).Key;
+                result[i] = counts.MaxKey();
             }
         });
         return result;
