@@ -208,10 +208,9 @@ public class BinaryTree
             if (inputRecordCount == 0)
                 throw new ArgumentException(CsML.Errors.Types.E1);
             if (nodes.Count == 0)
-                throw new ArgumentException("Tree is untrained");
+                throw new ArgumentException(CsML.Errors.Types.E3);
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException(
-                    "Tree trained on different number of columns");
+                throw new ArgumentException(CsML.Errors.Types.E4);
             
         }
         Span2D<double> matrixSpan = matrix;
@@ -242,7 +241,7 @@ public class BinaryTree
     /// estimates.
     /// </summary>
     /// <exception cref="System.ArgumentException">
-    /// Thrown if input is `, or model has not been trained, or if trained
+    /// Thrown if input is empty, or model has not been trained, or if trained
     /// on a different number of columns.
     /// </exception>
     public (double, Dictionary<double, double>)[] PredictWithProbabilities(
@@ -255,10 +254,9 @@ public class BinaryTree
             if (inputRecordCount == 0)
                 throw new ArgumentException(CsML.Errors.Types.E1);
             if (nodes.Count == 0)
-                throw new ArgumentException("Tree is untrained");
+                throw new ArgumentException(CsML.Errors.Types.E3);
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException(
-                    "Tree trained on different number of columns");
+                throw new ArgumentException(CsML.Errors.Types.E4);
             if (Mode == "regress")
                 throw new ArgumentException(
                     "Probabilities require treemode to be 'classify'");

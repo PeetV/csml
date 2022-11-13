@@ -214,14 +214,17 @@ public class NaiveBayesClassifier<T>
     /// </summary>
     /// <param name="matrix">The features to train the model on.</param>
     /// <param name="target">The target vector to train on.</param>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if inputs aren't the same length or empty.
+    /// </exception> 
     public void Train(double[,] matrix, T[] target)
     {
         int inputRecordCount = matrix.GetLength(0);
         int targetLength = target.Length;
         if (inputRecordCount == 0 | targetLength == 0)
-            throw new ArgumentException("Empty input");
+            throw new ArgumentException(CsML.Errors.Types.E1);
         if (inputRecordCount != targetLength)
-            throw new ArgumentException("Inputs must be the same length");
+            throw new ArgumentException(CsML.Errors.Types.E2);
         classProbabilities = new Dictionary<T, double> { };
         columnMeans = new Dictionary<int, Dictionary<T, (double, double)>> { };
         minColumns = matrix.GetLength(1);
@@ -234,16 +237,19 @@ public class NaiveBayesClassifier<T>
     /// Make predictions using the model.
     /// </summary>
     /// <param name="matrix">New data to infer predictions from.</param>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if input empty, or if the model has not been trained or if it
+    /// has been trained on a different number of columns.
+    /// </exception>
     public T[] Predict(double[,] matrix)
     {
         int inputRecordCount = matrix.GetLength(0);
-        if (classProbabilities.Count == 0)
-            throw new ArgumentException("Classifier not trained");
-        if (matrix.GetLength(1) != minColumns)
-            throw new ArgumentException(
-                "Tree trained on different number of columns");
         if (inputRecordCount == 0)
-            throw new ArgumentException("Empty input");
+            throw new ArgumentException(CsML.Errors.Types.E1);
+        if (classProbabilities.Count == 0)
+            throw new ArgumentException(CsML.Errors.Types.E3);
+        if (matrix.GetLength(1) != minColumns)
+            throw new ArgumentException(CsML.Errors.Types.E4);
         T[] result = new T[inputRecordCount];
         Span2D<double> matrixSpan = matrix;
         Dictionary<T, double> probs;
@@ -651,14 +657,14 @@ public class WeightedIndexSampler<T>
     /// proportions.
     /// </param>
     /// <exception cref="System.ArgumentException">
-    /// Thrown if inputs aren't the same length.
+    /// Thrown if inputs aren't the same length or empty.
     /// </exception>
     public WeightedIndexSampler(T[] target, double[] weights)
     {
+        if (target.Length == 0 | weights.Length == 0)
+            throw new ArgumentException(CsML.Errors.Types.E1);
         if (target.Length != weights.Length)
             throw new ArgumentException(CsML.Errors.Types.E2);
-        if (target.Length == 0)
-            throw new ArgumentException("Empty input");
         this._target = target;
         this._weights = (double[])weights.Clone();
         double weightsSum = weights.Sum();

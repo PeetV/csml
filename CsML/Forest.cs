@@ -140,10 +140,9 @@ public class RandomForest
         if (inputRecordCount == 0)
             throw new ArgumentException(CsML.Errors.Types.E1);
         if (trees.Count == 0)
-            throw new ArgumentException("Forest is untrained");
+            throw new ArgumentException(CsML.Errors.Types.E3);
         if (matrix.GetLength(1) != minColumns)
-            throw new ArgumentException(
-                "Forest trained on different number of columns");
+            throw new ArgumentException(CsML.Errors.Types.E4);
         var result = new double[inputRecordCount];
         Parallel.For(0, inputRecordCount, i =>
         {
@@ -190,13 +189,12 @@ public class RandomForest
         inputRecordCount = matrix.GetLength(0);
         if (!skipchecks)
         {
-            if (trees.Count == 0)
-                throw new ArgumentException("Forest is untrained");
-            if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException(
-                    "Forest trained on different number of columns");
             if (inputRecordCount == 0)
                 throw new ArgumentException(CsML.Errors.Types.E1);
+            if (trees.Count == 0)
+                throw new ArgumentException(CsML.Errors.Types.E3);
+            if (matrix.GetLength(1) != minColumns)
+                throw new ArgumentException(CsML.Errors.Types.E4);
             if (Mode == "regress")
                 throw new ArgumentException(
                     "Probabilities require treemode to be 'classify'");
