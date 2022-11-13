@@ -436,8 +436,6 @@ public class ProbabilityMassFunction<T>
     public ProbabilityMassFunction<double> Add(
         ProbabilityMassFunction<double> pmf)
     {
-        if (typeof(T) != typeof(double))
-            throw new ArithmeticException("Hypotheses type must be double");
         var newPmf = new ProbabilityMassFunction<double>();
         foreach (var key1 in this.table.Keys)
         {
@@ -477,8 +475,6 @@ public class ProbabilityMassFunction<T>
     /// </exception>
     public double Mean()
     {
-        if (typeof(T) != typeof(double))
-            throw new ArithmeticException("Hypotheses type must be double");
         double result = 0.0;
         foreach (var pair in zipped)
             result += Convert.ToDouble(pair.Item1) * pair.Item2;
@@ -560,9 +556,6 @@ public class ProbabilityMassFunction<T>
     /// </param>
     public void Update(Dictionary<T, double> likelihoods)
     {
-        if (!table.Keys.SequenceEqual(likelihoods.Keys))
-            throw new ArgumentException(
-                "Input needs same keys as outcome table");
         foreach (T hypothesis in table.Keys)
             table[hypothesis] *= likelihoods[hypothesis];
     }
@@ -575,13 +568,9 @@ public class ProbabilityMassFunction<T>
     /// </param>
     public void Update(double[] likelihoods)
     {
-        if (likelihoods.Length != table.Count)
-            throw new ArgumentException(
-                "Input does not have same number of values as PMF hypotheses");
         foreach ((T, double) pair in this.hypotheses.Zip(likelihoods))
             table[pair.Item1] *= pair.Item2;
     }
-
 }
 
 /// <summary>

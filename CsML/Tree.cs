@@ -122,8 +122,7 @@ public class BinaryTree
         set
         {
             if (value != "classify" & value != "regress")
-                throw new ArgumentException(
-                    "Mode must be 'classify' or 'regress'");
+                throw new ArgumentException(CsML.Errors.Types.E5);
             _mode = value;
         }
     }
@@ -258,8 +257,7 @@ public class BinaryTree
             if (matrix.GetLength(1) != minColumns)
                 throw new ArgumentException(CsML.Errors.Types.E4);
             if (Mode == "regress")
-                throw new ArgumentException(
-                    "Probabilities require treemode to be 'classify'");
+                throw new ArgumentException(CsML.Errors.Types.E6);
         }
         Span2D<double> matrixSpan = matrix;
         var result = new (double, Dictionary<double, double>)[inputRecordCount];

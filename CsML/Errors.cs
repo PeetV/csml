@@ -15,8 +15,14 @@ public static class Types
     public const string E3 = "Model must be trained first.";
 
     /// <summary>
-    /// Error message if the model has been trained on a different number of
+    /// Error message if the model was trained on a different number of
     /// columns.
     /// </summary>
     public const string E4 = "Same number of columns as trained on needed.";
+
+    /// <summary>Error message if model mode is not recognised.</summary>
+    public const string E5 = "Mode must be 'classify' or 'regress'";
+
+    /// <summary>Error message if method does not apply given mode.</summary>
+    public const string E6 = "Method only valid if method is 'classify'";
 }

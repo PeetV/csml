@@ -64,8 +64,7 @@ public class RandomForest
         set
         {
             if (value != "classify" & value != "regress")
-                throw new ArgumentException(
-                    "Mode must be 'classify' or 'regress'");
+                throw new ArgumentException(CsML.Errors.Types.E5);
             _mode = value;
         }
     }
@@ -88,8 +87,6 @@ public class RandomForest
 
     private int DefaultRandomFeatures(int n)
     {
-        if (n < 0)
-            throw new ArgumentException("Features cannot be less than zero");
         return (int)Math.Sqrt(n);
     }
 
@@ -196,8 +193,7 @@ public class RandomForest
             if (matrix.GetLength(1) != minColumns)
                 throw new ArgumentException(CsML.Errors.Types.E4);
             if (Mode == "regress")
-                throw new ArgumentException(
-                    "Probabilities require treemode to be 'classify'");
+                throw new ArgumentException(CsML.Errors.Types.E6);
         }
         var result = new (double, Dictionary<double, double>)[inputRecordCount];
         Parallel.For(0, inputRecordCount, i =>
