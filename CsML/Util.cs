@@ -228,7 +228,7 @@ public class Features
         var counts = CsML.Util.Array.ElementCounts(target);
         int total = counts.Values.Sum();
         return counts.Keys
-            .Order()
+            .OrderBy(x => x)
             .Select(key =>
                 (key, counts[key], (double)counts[key] / (double)total))
             .ToArray();

@@ -9,7 +9,6 @@ namespace CsML.Probability;
 /// </summary>
 public class Distributions
 {
-
     /// <summary>
     /// Calculate Binomial probabilities for a series of k values. The Binomial
     /// distribution is used to model the probability of a number of successes
@@ -20,7 +19,7 @@ public class Distributions
     /// each with its own Boolean-valued outcome: success (with probability p).
     /// </param>
     /// <param name="ks">
-    /// Arrays of k values representing number of successes.
+    /// Array of k values representing number of successes.
     /// </param>
     /// <param name="p">Probability of experiment success.</param>
     /// <returns>
@@ -123,9 +122,7 @@ public class Functions
     }
 }
 
-/// <summary>
-/// A collection of functions for random sampling.
-/// </summary>
+/// <summary>A collection of functions for random sampling.</summary>
 public class Sample
 {
     /// <summary>
@@ -408,7 +405,8 @@ public class ProbabilityMassFunction<T>
     {
         get
         {
-            return table.Keys.Zip(table.Values)
+            return table.Keys
+                .Zip(table.Values)
                 .OrderBy(x => x.First)
                 .Select(x => x.Second)
                 .ToArray();
@@ -423,7 +421,8 @@ public class ProbabilityMassFunction<T>
     {
         get
         {
-            return table.Keys.Zip(table.Values)
+            return table.Keys
+                .Zip(table.Values)
                 .OrderBy(x => x.First)
                 .ToArray();
         }
@@ -457,7 +456,7 @@ public class ProbabilityMassFunction<T>
     /// each with its own Boolean-valued outcome: success (with probability p).
     /// </param>
     /// <param name="ks">
-    /// Arrays of k values representing number of successes.
+    /// Array of k values representing number of successes.
     /// </param>
     /// <param name="p">Probability of experiment success.</param>
     public static ProbabilityMassFunction<int> FromBinomial(
@@ -665,7 +664,7 @@ public class RandomClassifier<T>
     public void Train(double[,] matrix, T[] target)
     {
         var counts = target.ElementCounts();
-        classes = counts.Keys.Order().ToArray();
+        classes = counts.Keys.OrderBy(x => x).ToArray();
         weights = new double[classes.Length];
         T key;
         for (int i = 0; i < classes.Length; i++)
