@@ -20,10 +20,12 @@ public class Array
     /// A tuple containing the best split value and the gain calculated by the
     /// gain function specified through the purityfn parameter.
     /// </returns>
-    public static (double, double) BestSplit<T>(
+    public static (double, double) 
+    BestSplit<T>(
         double[] vector,
         T[] target,
-        Func<T[], double> purityfn)
+        Func<T[], double> purityfn
+    )
         where T : notnull
     {
         double bestsplit = 0.0, bestgain = 0.0;
@@ -114,8 +116,12 @@ public class Array
     /// <exception cref="System.ArgumentException">
     /// Thrown if inputs aren't the same length.
     /// </exception>
-    public static Dictionary<T, (double, double)> ClassificationMetrics<T>(
-        T[] actuals, T[] predictions) where T : IComparable<T>
+    public static Dictionary<T, (double, double)> 
+    ClassificationMetrics<T>(
+        T[] actuals,
+        T[] predictions
+    ) 
+        where T : IComparable<T>
     {
         int lenActuals = actuals.Length, lenPredictions = predictions.Length;
         if (lenActuals != lenPredictions)
@@ -245,8 +251,11 @@ public class Features
     /// <exception cref="System.ArgumentException">
     /// Thrown if inputs aren't the same length.
     /// </exception>
-    public static (double[,], double[], int[]) Bootstrap(
-        double[,] matrix, double[] target, bool returnOobIdx = false)
+    public static (double[,], double[], int[]) 
+    Bootstrap(
+        double[,] matrix,
+        double[] target,
+        bool returnOobIdx = false)
     {
         int numRows = matrix.GetLength(0), numCols = matrix.GetLength(1);
         if (numRows != target.Length)
@@ -359,11 +368,13 @@ public class Matrix
     /// value and gain calculated by the gain function specified through the
     /// purityfn parameter.
     /// </returns>
-    public static (int, double, double) BestSplit<T>(
+    public static (int, double, double)
+    BestSplit<T>(
         double[,] matrix,
         T[] target,
         Func<T[], double> purityfn,
-        int randomFeatures)
+        int randomFeatures
+    )
         where T : notnull
     {
         Span2D<double> matrixSpan = matrix;
@@ -546,7 +557,11 @@ public class Matrix
     /// <exception cref="System.ArgumentException">
     /// Thrown if inputs aren't the same length.
     /// </exception>
-    public static (double[,], double[,]) Split(double[,] matrix, bool[] filter)
+    public static (double[,], double[,])
+    Split(
+        double[,] matrix,
+        bool[] filter
+    )
     {
         if (matrix.GetLength(0) != filter.Length)
             throw new ArgumentException(CsML.Errors.Messages.E2);
@@ -623,8 +638,12 @@ public class Statistics
     /// Thrown if inputs aren't the same length.
     /// </exception>
     /// <returns>A tuple containing r-squared and adjusted r-squared.</returns>
-    public static (double, double) RSquared(
-        double[] actuals, double[] predictions, int? p)
+    public static (double, double)
+    RSquared(
+        double[] actuals,
+        double[] predictions, 
+        int? p
+    )
     {
         if (actuals.Length != predictions.Length)
             throw new ArgumentException(CsML.Errors.Messages.E2);
