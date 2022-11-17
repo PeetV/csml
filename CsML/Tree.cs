@@ -122,7 +122,7 @@ public class BinaryTree
         set
         {
             if (value != "classify" & value != "regress")
-                throw new ArgumentException(CsML.Errors.Types.E5);
+                throw new ArgumentException(CsML.Errors.Messages.E5);
             _mode = value;
         }
     }
@@ -159,9 +159,9 @@ public class BinaryTree
         if (!skipchecks)
         {
             if (inputRecordCount == 0 | targetLength == 0)
-                throw new ArgumentException(CsML.Errors.Types.E1);
+                throw new ArgumentException(CsML.Errors.Messages.E1);
             if (inputRecordCount != targetLength)
-                throw new ArgumentException(CsML.Errors.Types.E2);
+                throw new ArgumentException(CsML.Errors.Messages.E2);
         }
         nodes = new List<BinaryNode>();
         minColumns = matrix.GetLength(1);
@@ -205,11 +205,11 @@ public class BinaryTree
         if (!skipchecks)
         {
             if (inputRecordCount == 0)
-                throw new ArgumentException(CsML.Errors.Types.E1);
+                throw new ArgumentException(CsML.Errors.Messages.E1);
             if (nodes.Count == 0)
-                throw new ArgumentException(CsML.Errors.Types.E3);
+                throw new ArgumentException(CsML.Errors.Messages.E3);
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException(CsML.Errors.Types.E4);
+                throw new ArgumentException(CsML.Errors.Messages.E4);
             
         }
         Span2D<double> matrixSpan = matrix;
@@ -251,13 +251,13 @@ public class BinaryTree
         if (!skipchecks)
         {
             if (inputRecordCount == 0)
-                throw new ArgumentException(CsML.Errors.Types.E1);
+                throw new ArgumentException(CsML.Errors.Messages.E1);
             if (nodes.Count == 0)
-                throw new ArgumentException(CsML.Errors.Types.E3);
+                throw new ArgumentException(CsML.Errors.Messages.E3);
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException(CsML.Errors.Types.E4);
+                throw new ArgumentException(CsML.Errors.Messages.E4);
             if (Mode == "regress")
-                throw new ArgumentException(CsML.Errors.Types.E6);
+                throw new ArgumentException(CsML.Errors.Messages.E6);
         }
         Span2D<double> matrixSpan = matrix;
         var result = new (double, Dictionary<double, double>)[inputRecordCount];

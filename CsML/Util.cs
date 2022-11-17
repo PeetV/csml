@@ -79,7 +79,7 @@ public class Array
     {
         int lenActuals = actuals.Length, lenPredictions = predictions.Length;
         if (lenActuals != lenPredictions)
-            throw new ArgumentException(CsML.Errors.Types.E2);
+            throw new ArgumentException(CsML.Errors.Messages.E2);
         if (lenActuals == 0) return 0.0;
         double tptn = 0;
         for (int idx = 0; idx < lenActuals; idx++)
@@ -119,7 +119,7 @@ public class Array
     {
         int lenActuals = actuals.Length, lenPredictions = predictions.Length;
         if (lenActuals != lenPredictions)
-            throw new ArgumentException(CsML.Errors.Types.E2);
+            throw new ArgumentException(CsML.Errors.Messages.E2);
         (T, T)[] zipped = actuals.Zip(predictions).ToArray();
         var counts = new Dictionary<T, double[]> { };
         foreach ((T, T) pair in zipped)
@@ -197,7 +197,7 @@ public class Array
         bool[] filter)
     {
         if (input.Length != filter.Length)
-            throw new ArgumentException(CsML.Errors.Types.E2);
+            throw new ArgumentException(CsML.Errors.Messages.E2);
         List<T> lhs = new List<T>(), rhs = new List<T>();
         for (int index = 0; index < input.Length; index++)
         {
@@ -250,7 +250,7 @@ public class Features
     {
         int numRows = matrix.GetLength(0), numCols = matrix.GetLength(1);
         if (numRows != target.Length)
-            throw new ArgumentException(CsML.Errors.Types.E2);
+            throw new ArgumentException(CsML.Errors.Messages.E2);
         var resultmatrix = new double[numRows, numCols];
         var resulttarget = new double[numRows];
         var resultIndex = CsML.Probability
@@ -286,7 +286,7 @@ public class Features
     {
         int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
         if (inputLength != target.Length)
-            throw new ArgumentException(CsML.Errors.Types.E2);
+            throw new ArgumentException(CsML.Errors.Messages.E2);
         int[] startingIndex = Enumerable.Range(0, inputLength).ToArray();
         int[] shuffledIndex = CsML.Probability.Shuffle.Array(
                                 startingIndex, inPlace: false);
@@ -319,7 +319,7 @@ public class Features
             throw new ArgumentException("ratio must be between 0 and 1");
         int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
         if (inputLength != target.Length)
-            throw new ArgumentException(CsML.Errors.Types.E2);
+            throw new ArgumentException(CsML.Errors.Messages.E2);
         int[] index = Enumerable.Range(0, inputLength).ToArray();
         double cutPoint = (inputLength - 1) * ratio;
         bool[] filter = index.Select(x => x <= cutPoint).ToArray();
@@ -549,7 +549,7 @@ public class Matrix
     public static (double[,], double[,]) Split(double[,] matrix, bool[] filter)
     {
         if (matrix.GetLength(0) != filter.Length)
-            throw new ArgumentException(CsML.Errors.Types.E2);
+            throw new ArgumentException(CsML.Errors.Messages.E2);
         List<double[]> lhs = new List<double[]>(), rhs = new List<double[]>();
         Span2D<double> matrixSpan = matrix;
         double[] row;
@@ -627,7 +627,7 @@ public class Statistics
         double[] actuals, double[] predictions, int? p)
     {
         if (actuals.Length != predictions.Length)
-            throw new ArgumentException(CsML.Errors.Types.E2);
+            throw new ArgumentException(CsML.Errors.Messages.E2);
         double mn = actuals.Average();
         double sseVal = SSE(actuals, predictions);
         double sstVal = actuals.Select(x => Math.Pow(x - mn, 2)).Sum();
@@ -647,7 +647,7 @@ public class Statistics
     public static double SSE(double[] actuals, double[] predictions)
     {
         if (actuals.Length != predictions.Length)
-            throw new ArgumentException(CsML.Errors.Types.E2);
+            throw new ArgumentException(CsML.Errors.Messages.E2);
         IEnumerable<(double, double)> zipped = actuals.Zip(predictions);
         return zipped
                 .Select(x => Math.Pow((x.Item1 - x.Item2), 2))

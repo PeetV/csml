@@ -3,7 +3,7 @@
 namespace CsML.Errors;
 
 /// <summary>Error messages.</summary>
-public static class Types
+public static class Messages
 {
     /// <summary>Error message if input is empty.</summary>
     public const string E1 = "Input must not be empty";

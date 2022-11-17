@@ -280,9 +280,9 @@ public class NaiveBayesClassifier<T>
         int inputRecordCount = matrix.GetLength(0);
         int targetLength = target.Length;
         if (inputRecordCount == 0 | targetLength == 0)
-            throw new ArgumentException(CsML.Errors.Types.E1);
+            throw new ArgumentException(CsML.Errors.Messages.E1);
         if (inputRecordCount != targetLength)
-            throw new ArgumentException(CsML.Errors.Types.E2);
+            throw new ArgumentException(CsML.Errors.Messages.E2);
         classProbabilities = new Dictionary<T, double> { };
         columnMeans = new Dictionary<int, Dictionary<T, (double, double)>> { };
         minColumns = matrix.GetLength(1);
@@ -303,11 +303,11 @@ public class NaiveBayesClassifier<T>
     {
         int inputRecordCount = matrix.GetLength(0);
         if (inputRecordCount == 0)
-            throw new ArgumentException(CsML.Errors.Types.E1);
+            throw new ArgumentException(CsML.Errors.Messages.E1);
         if (classProbabilities.Count == 0)
-            throw new ArgumentException(CsML.Errors.Types.E3);
+            throw new ArgumentException(CsML.Errors.Messages.E3);
         if (matrix.GetLength(1) != minColumns)
-            throw new ArgumentException(CsML.Errors.Types.E4);
+            throw new ArgumentException(CsML.Errors.Messages.E4);
         T[] result = new T[inputRecordCount];
         Span2D<double> matrixSpan = matrix;
         Dictionary<T, double> probs;
@@ -709,9 +709,9 @@ public class WeightedIndexSampler<T>
     public WeightedIndexSampler(T[] target, double[] weights)
     {
         if (target.Length == 0 | weights.Length == 0)
-            throw new ArgumentException(CsML.Errors.Types.E1);
+            throw new ArgumentException(CsML.Errors.Messages.E1);
         if (target.Length != weights.Length)
-            throw new ArgumentException(CsML.Errors.Types.E2);
+            throw new ArgumentException(CsML.Errors.Messages.E2);
         this._target = target;
         this._weights = (double[])weights.Clone();
         double weightsSum = weights.Sum();
