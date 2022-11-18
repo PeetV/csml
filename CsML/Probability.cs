@@ -512,6 +512,33 @@ public class ProbabilityMassFunction<T>
         return newPmf;
     }
 
+    /// <summary>Add two PMFs.</summary>
+    /// <returns>A PMF with hypotheses summed.</returns>
+    /// <param name="pmf">A PMF with hypotheses double type.</param>
+    /// <exception cref="System.ArithmeticException">
+    /// Throws an exception if the hypotheses type is not double.
+    /// </exception>
+    public ProbabilityMassFunction<int> Add(
+        ProbabilityMassFunction<int> pmf)
+    {
+        var newPmf = new ProbabilityMassFunction<int>();
+        foreach (var key1 in this.table.Keys)
+        {
+            foreach (var key2 in pmf.table.Keys)
+            {
+                int sumHypos = Convert.ToInt32(key1) +
+                    Convert.ToInt32(key2);
+                if (!newPmf.table.ContainsKey(sumHypos))
+                    newPmf.table[sumHypos] = this.table[key1] * pmf.table[key2];
+                else
+                    newPmf.table[sumHypos] = newPmf.table[sumHypos] +
+                        (this.table[key1] * pmf.table[key2]);
+            }
+        }
+        newPmf.Normalise();
+        return newPmf;
+    }
+
     /// <summary>
     /// Get the hypothesis with the highest probability, together with the
     /// probability value.

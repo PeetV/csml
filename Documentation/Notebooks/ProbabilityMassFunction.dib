@@ -145,3 +145,58 @@ Chart.Line<double, double, string>(
     .WithYAxisStyle<double, double, string>(
         Title: Plotly.NET.Title.init("Probability"))
     .Show();
+
+#!markdown
+
+### Gluten intolerance
+
+See [Think Bayes](http://allendowney.github.io/ThinkBayes2/chap06.html)
+
+#!csharp
+
+var n = 35;
+var num_sensitive = 10;
+var num_insensitive = n - num_sensitive;
+
+#!csharp
+
+var pmf_sens = CsML.Probability
+    .ProbabilityMassFunction<int>
+    .FromBinomial(num_sensitive, Enumerable.Range(1, 35).ToArray(), 0.95);
+Chart.Line<int, double, string>(
+        x: pmf_sens.hypotheses, 
+        y: pmf_sens.probabilities
+    )
+        .WithXAxisStyle<double, double, string>(
+            Title: Plotly.NET.Title.init("Hypotheses"))
+        .WithYAxisStyle<double, double, string>(
+            Title: Plotly.NET.Title.init("Probability"))
+        .Show();
+
+#!csharp
+
+var pmf_insens = CsML.Probability
+    .ProbabilityMassFunction<int>
+    .FromBinomial(num_insensitive, Enumerable.Range(1, 35).ToArray(), 0.4);
+Chart.Line<int, double, string>(
+        x: pmf_insens.hypotheses, 
+        y: pmf_insens.probabilities
+    )
+        .WithXAxisStyle<double, double, string>(
+            Title: Plotly.NET.Title.init("Hypotheses"))
+        .WithYAxisStyle<double, double, string>(
+            Title: Plotly.NET.Title.init("Probability"))
+        .Show();
+
+#!csharp
+
+var pmf_gluten = pmf_sens.Add(pmf_insens);
+Chart.Line<int, double, string>(
+    x: pmf_gluten.hypotheses, 
+    y: pmf_gluten.probabilities
+)
+    .WithXAxisStyle<double, double, string>(
+        Title: Plotly.NET.Title.init("Hypotheses"))
+    .WithYAxisStyle<double, double, string>(
+        Title: Plotly.NET.Title.init("Probability"))
+    .Show();
