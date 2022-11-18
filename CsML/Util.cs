@@ -621,7 +621,7 @@ public class Statistics
 /// Calculate the percentile using linear interpolation.
 /// <see> See <seealso
 /// href="https://stackoverflow.com/questions/8137391/percentile-calculation">
-/// Wikipedia</seealso> Stackoverflow.
+/// Stackoverflow</seealso>.
 /// </see>
 /// </summary>
 public double PercentileLinear(double[] sequence, double excelPercentile)
