@@ -747,3 +747,11 @@ public class KFoldIterator : IEnumerable<bool[]>
         return GetEnumerator();
     }
 }
+
+/// <summary>
+/// Convert columns in a table to z-scores, retaining scaling factors to
+/// apply to new data.
+/// </summary>
+public class ZSCaler
+{
+}
