@@ -9,9 +9,9 @@ public class Distributions
     [Fact]
     public void Binomial()
     {
-        int[] ks = new int[] { 0, 1, 2 };
-        double[] result = CsML.Probability.Distributions.Binomial(2, ks, 0.5);
-        double[] expected = new double[] { 0.25, 0.5, 0.25 };
+        var ks = new int[] { 0, 1, 2 };
+        var result = CsML.Probability.Distributions.Binomial(2, ks, 0.5);
+        var expected = new double[] { 0.25, 0.5, 0.25 };
         Assert.Equal(expected[0], result[0]);
         Assert.True(expected.SequenceEqual(result));
     }
@@ -46,18 +46,18 @@ public class Functions
     [Fact]
     public void And()
     {
-        bool[] a = new bool[] { true, false, false, true, false };
-        bool[] b = new bool[] { true, true, true, false, false };
-        bool[] expected = new bool[] { true, false, false, false, false };
-        bool[] result = CsML.Probability.Functions.And(a, b);
+        var a = new bool[] { true, false, false, true, false };
+        var b = new bool[] { true, true, true, false, false };
+        var expected = new bool[] { true, false, false, false, false };
+        var result = CsML.Probability.Functions.And(a, b);
         Assert.True(expected.SequenceEqual(result));
     }
 
     [Fact]
     public void Conditional()
     {
-        bool[] a = new bool[] { true, false, false, true, false };
-        bool[] b = new bool[] { true, true, true, false, false };
+        var a = new bool[] { true, false, false, true, false };
+        var b = new bool[] { true, true, true, false, false };
         Assert.Equal(1.0 / 3.0, CsML.Probability.Functions.Conditional(a, b));
     }
 
@@ -75,17 +75,17 @@ public class Functions
     [Fact]
     public void Or()
     {
-        bool[] a = new bool[] { true, false, false, true, false };
-        bool[] b = new bool[] { true, true, true, false, false };
-        bool[] expected = new bool[] { true, true, true, true, false };
-        bool[] result = CsML.Probability.Functions.Or(a, b);
+        var a = new bool[] { true, false, false, true, false };
+        var b = new bool[] { true, true, true, false, false };
+        var expected = new bool[] { true, true, true, true, false };
+        var result = CsML.Probability.Functions.Or(a, b);
         Assert.True(expected.SequenceEqual(result));
     }
 
     [Fact]
     public void Probability()
     {
-        bool[] a = new bool[] { true, false, false };
+        var a = new bool[] { true, false, false };
         Assert.Equal(1.0 / 3.0, CsML.Probability.Functions.Probability(a));
     }
 }
@@ -95,7 +95,7 @@ public class Sample
     [Fact]
     public void ArrayWithoutReplacement()
     {
-        string[] input = new string[] { "a", "b", "c" };
+        var input = new string[] { "a", "b", "c" };
         var result = CsML.Probability.Sample.ArrayWithoutReplacement(input, 2);
         Assert.Equal(2, result.Length);
         Assert.True(result.All(x => input.Contains(x)));
@@ -117,7 +117,7 @@ public class Shuffle
     [Fact]
     public void Array()
     {
-        string[] input = new string[] { "a", "b", "c" };
+        var input = new string[] { "a", "b", "c" };
         var result = CsML.Probability.Shuffle.Array(input, inPlace: false);
         Assert.Equal(3, result.Length);
         Assert.True(result.All(x => input.Contains(x)));
