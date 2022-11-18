@@ -122,9 +122,9 @@ public class Array
     [Fact]
     public void ClassificationMetrics()
     {
-        string[] actuals = new string[] { "A", "A", "B", "A", "A", "C", "C",
+        var actuals = new string[] { "A", "A", "B", "A", "A", "C", "C",
                                           "C", "B" };
-        string[] predicted = new string[] { "A", "B", "B", "A", "C", "C", "C",
+        var predicted = new string[] { "A", "B", "B", "A", "C", "C", "C",
                                             "A", "B" };
         var result = CsML.Util.Array.ClassificationMetrics(actuals, predicted);
         Assert.Equal(0.6666666666666666, result["A"].Item1);
@@ -146,9 +146,9 @@ public class Array
     [Fact]
     public void Split()
     {
-        double[] vector = new double[] { 1, 1, 1, 2, 2 };
-        bool[] filter = new bool[] { true, true, true, false, false };
-        double[] lhs, rhs;
+        var vector = new double[] { 1, 1, 1, 2, 2 };
+        var filter = new bool[] { true, true, true, false, false };
+        var lhs, rhs;
         (lhs, rhs) = CsML.Util.Array.Split(vector, filter);
         Assert.Equal(3, lhs.Sum());
         Assert.Equal(4, rhs.Sum());
@@ -157,7 +157,7 @@ public class Array
     [Fact]
     public void ToElementCounts()
     {
-        double[] vector = new double[] { 1, 1, 1, 2, 2 };
+        var vector = new double[] { 1, 1, 1, 2, 2 };
         var result = CsML.Util.Array.ElementCounts(vector);
         Assert.Equal(3, result[1]);
         Assert.Equal(2, result[2]);
@@ -182,7 +182,7 @@ public class Features
     [Fact]
     public void Bootstrap()
     {
-        double[,] matrix = new double[,]
+        var matrix = new double[,]
         {
             {1, 1, 1},
             {2, 2, 2},
@@ -190,7 +190,7 @@ public class Features
             {4, 4, 4},
             {5, 5, 5}
         };
-        double[] target = new double[] { 1, 2, 3, 4, 5 };
+        var target = new double[] { 1, 2, 3, 4, 5 };
         (double[,] newm, double[] newt, int[] oobidx) = CsML
                             .Util.Features.Bootstrap(matrix, target);
         Assert.Equal(5, newm.GetLength(0));
@@ -211,7 +211,7 @@ public class Features
     [Fact]
     public void Shuffle()
     {
-        double[,] matrix = new double[,]
+        var matrix = new double[,]
         {
             {1, 1, 1},
             {2, 2, 2},
@@ -219,7 +219,7 @@ public class Features
             {4, 4, 4},
             {5, 5, 5}
         };
-        double[] target = new double[] { 1, 2, 3, 4, 5 };
+        var target = new double[] { 1, 2, 3, 4, 5 };
         (double[,] newmatrix, double[] newtarget) = CsML.Util
                                     .Features.Shuffle(matrix, target);
         Assert.Equal(5, newmatrix.GetLength(0));
@@ -232,7 +232,7 @@ public class Features
     [Fact]
     public void Split()
     {
-        double[,] matrix = new double[,]
+        var matrix = new double[,]
          {
             {1, 1, 1},
             {2, 2, 2},
@@ -240,7 +240,7 @@ public class Features
             {4, 4, 4},
             {5, 5, 5}
          };
-        double[] target = new double[] { 1, 2, 3, 4, 5 };
+        var target = new double[] { 1, 2, 3, 4, 5 };
         double[,] mlhs, mrhs;
         double[] tlhs, trhs;
         ((mlhs, tlhs), (mrhs, trhs)) = CsML.Util.Features.Split(
@@ -259,7 +259,7 @@ public class Matrix
     [Fact]
     public void BestSplit()
     {
-        double[,] matrix = new double[,] {
+        var matrix = new double[,] {
             {0, 1.0},
             {0, 1.0},
             {0, 1.0},
@@ -286,10 +286,10 @@ public class Matrix
     [Fact]
     public void Equal()
     {
-        double[,] matrix1 = new double[,] { { 1, 1 }, { 2, 2 } };
-        double[,] matrix2 = new double[,] { { 1, 1 }, { 2, 2 } };
-        double[,] matrix3 = new double[,] { { 1, 1 }, { 3, 3 } };
-        double[,] matrix4 = new double[,] { { 1, 1 } };
+        var matrix1 = new double[,] { { 1, 1 }, { 2, 2 } };
+        var matrix2 = new double[,] { { 1, 1 }, { 2, 2 } };
+        var matrix3 = new double[,] { { 1, 1 }, { 3, 3 } };
+        var matrix4 = new double[,] { { 1, 1 } };
         Assert.True(CsML.Util.Matrix.Equal(matrix1, matrix2));
         Assert.False(CsML.Util.Matrix.Equal(matrix1, matrix3));
         Assert.False(CsML.Util.Matrix.Equal(matrix1, matrix4));
@@ -327,7 +327,7 @@ public class Matrix
     [Fact]
     public void Split_splitpoint()
     {
-        double[,] matrix = new double[,]{
+        var matrix = new double[,]{
             {0, 1.0, 0},
             {1, 1.0, 0},
             {2, 1.0, 0},
@@ -378,8 +378,8 @@ public class Matrix
     [Fact]
     public void Split_filter()
     {
-        double[,] matrix = new double[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
-        bool[] filter = new bool[] { true, false, false };
+        var matrix = new double[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
+        var filter = new bool[] { true, false, false };
         double[,] lhs, rhs;
         (lhs, rhs) = CsML.Util.Matrix.Split(matrix, filter);
         Assert.Equal(1, lhs.GetLength(0));
@@ -429,8 +429,8 @@ public class Statistics
     [Fact]
     public void RSquared_unadjusted()
     {
-        double[] acts = new double[] { 2.0, 2.0, 4.0 };
-        double[] preds = new double[] { 1.0, 2.0, 3.0 };
+        var acts = new double[] { 2.0, 2.0, 4.0 };
+        var preds = new double[] { 1.0, 2.0, 3.0 };
         var result = CsML.Util.Statistics.RSquared(acts, preds, null);
         Assert.Equal((0.25, 00), result);
     }
@@ -438,8 +438,8 @@ public class Statistics
     [Fact]
     public void RSquared_adjusted()
     {
-        double[] acts = new double[] { 2.0, 2.0, 4.0 };
-        double[] preds = new double[] { 1.0, 2.0, 3.0 };
+        var acts = new double[] { 2.0, 2.0, 4.0 };
+        var preds = new double[] { 1.0, 2.0, 3.0 };
         var result = CsML.Util.Statistics.RSquared(acts, preds, 1);
         var n = acts.Length;
         var adjusted = 1.0 - (1.0 - 0.25) * ((n - 1.0) / (n - 1 - 1));
