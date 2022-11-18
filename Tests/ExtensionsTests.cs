@@ -9,19 +9,28 @@ public class IEnumerable
     [Fact]
     public void CumulativeSum()
     {
-        double[] input = new double[] { 1, 2, 3 };
-        double[] expected = new double[] { 1, 3, 6 };
+        var input = new double[] { 1, 2, 3 };
+        var expected = new double[] { 1, 3, 6 };
         double[] result = input.Cumulative().ToArray();
         Assert.True(expected.SequenceEqual(result));
     }
 
     [Fact]
-    public void ElementCounts()
+    public void ElementCounts_int()
     {
-        double[] vector = new double[] { 1, 1, 1, 2, 2 };
+        var vector = new double[] { 1, 1, 1, 2, 2 };
         var result = vector.ElementCounts();
         Assert.Equal(3, result[1]);
         Assert.Equal(2, result[2]);
+    }
+
+    [Fact]
+    public void ElementCounts_string()
+    {
+        var vector = new string[] { "1", "1", "1", "2", "2" };
+        var result = vector.ElementCounts();
+        Assert.Equal(3, result["1"]);
+        Assert.Equal(2, result["2"]);
     }
 
 }
