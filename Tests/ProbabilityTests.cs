@@ -184,11 +184,11 @@ public class NaiveBayesClassifier
     [Fact]
     public void Train_columnMeans()
     {
-        double[,] matrix = new double[,]
+        var matrix = new double[,]
         {
             {1, 3}, {2, 4}, {3, 5}, {4, 6}, {5, 7}
         };
-        double[] target = new double[] { 0, 0, 0, 1, 1 };
+        var target = new double[] { 0, 0, 0, 1, 1 };
         var nbc = new CsML.Probability.NaiveBayesClassifier<double>();
         nbc.Train(matrix, target);
         var col0 = nbc.columnMeans[0];
@@ -217,7 +217,7 @@ public class NaiveBayesClassifier
     [Fact]
     public void Train_classProbabilities()
     {
-        double[,] matrix = new double[,]
+        var matrix = new double[,]
         {
             {1, 3}, {2, 4}, {3, 5}, {4, 6}, {5, 7}
         };
@@ -272,7 +272,7 @@ public class ProbabilityMassFunction
     [Fact]
     public void BracketOperator()
     {
-        string[] outcomes = new string[] { "heads", "tails" };
+        var outcomes = new string[] { "heads", "tails" };
         var coin = new CsML.Probability
                            .ProbabilityMassFunction<string>(outcomes);
         Assert.Equal(0.5, coin["heads"]);
@@ -282,7 +282,7 @@ public class ProbabilityMassFunction
     [Fact]
     public void Get_hypotheses()
     {
-        string[] outcomes = new string[] { "b", "a", "c" };
+        var outcomes = new string[] { "b", "a", "c" };
         var pmf = new CsML.Probability
                           .ProbabilityMassFunction<string>(outcomes);
         Assert.True(pmf.hypotheses.SequenceEqual(
@@ -292,7 +292,7 @@ public class ProbabilityMassFunction
     [Fact]
     public void Get_probabilities()
     {
-        string[] outcomes = new string[] { "b", "a", "c" };
+        var outcomes = new string[] { "b", "a", "c" };
         var pmf = new CsML.Probability
                           .ProbabilityMassFunction<string>(outcomes);
         pmf["a"] = 0.1;
@@ -305,7 +305,7 @@ public class ProbabilityMassFunction
     [Fact]
     public void Get_zipped()
     {
-        string[] outcomes = new string[] { "b", "a", "c" };
+        var outcomes = new string[] { "b", "a", "c" };
         var pmf = new CsML.Probability
                           .ProbabilityMassFunction<string>(outcomes);
         var expected = new (string, double)[] {
@@ -369,7 +369,7 @@ public class ProbabilityMassFunction
     [Fact]
     public void Max()
     {
-        string[] outcomes = new string[] { "b", "a", "c" };
+        var outcomes = new string[] { "b", "a", "c" };
         var pmf = new CsML.Probability
                           .ProbabilityMassFunction<string>(outcomes);
         pmf["a"] = 0.1;
@@ -381,7 +381,7 @@ public class ProbabilityMassFunction
     [Fact]
     public void Mean()
     {
-        double[] hypos = new double[] { 10, 20, 30 };
+        var hypos = new double[] { 10, 20, 30 };
         var pmf = new CsML.Probability.ProbabilityMassFunction<double>(hypos);
         pmf[10] = 0.5;
         pmf[20] = 0.25;
@@ -392,7 +392,7 @@ public class ProbabilityMassFunction
     [Fact]
     public void Normalise()
     {
-        string[] outcomes = new string[] { "heads", "tails" };
+        var outcomes = new string[] { "heads", "tails" };
         var coin = new CsML.Probability
                             .ProbabilityMassFunction<string>(outcomes);
         Assert.Equal(0.5, coin.table["heads"]);
@@ -402,8 +402,8 @@ public class ProbabilityMassFunction
     [Fact]
     public void SumProbabilities_lowerOnly()
     {
-        string[] target = new string[] { "a", "b", "c", "d", "e" };
-        double[] weights = new double[] { 50, 30, 10, 5, 5 };
+        var target = new string[] { "a", "b", "c", "d", "e" };
+        var weights = new double[] { 50, 30, 10, 5, 5 };
         var pmf = new CsML.Probability.ProbabilityMassFunction<string>();
         foreach ((string, double) pair in target.Zip(weights))
             pmf[pair.Item1] = pair.Item2;
@@ -416,8 +416,8 @@ public class ProbabilityMassFunction
     [Fact]
     public void SumProbabilities_upperOnly()
     {
-        string[] target = new string[] { "a", "b", "c", "d", "e" };
-        double[] weights = new double[] { 50, 30, 10, 5, 5 };
+        var target = new string[] { "a", "b", "c", "d", "e" };
+        var weights = new double[] { 50, 30, 10, 5, 5 };
         var pmf = new CsML.Probability.ProbabilityMassFunction<string>();
         foreach ((string, double) pair in target.Zip(weights))
             pmf[pair.Item1] = pair.Item2;
@@ -429,8 +429,8 @@ public class ProbabilityMassFunction
     [Fact]
     public void SumProbabilities_bothUpperandLower()
     {
-        string[] target = new string[] { "a", "b", "c", "d", "e" };
-        double[] weights = new double[] { 50, 30, 10, 5, 5 };
+        var target = new string[] { "a", "b", "c", "d", "e" };
+        var weights = new double[] { 50, 30, 10, 5, 5 };
         var pmf = new CsML.Probability.ProbabilityMassFunction<string>();
         foreach ((string, double) pair in target.Zip(weights))
             pmf[pair.Item1] = pair.Item2;
@@ -444,8 +444,8 @@ public class ProbabilityMassFunction
     [Fact]
     public void ToSampler()
     {
-        string[] target = new string[] { "a", "b", "c", "d", "e" };
-        double[] weights = new double[] { 50, 30, 10, 5, 5 };
+        var target = new string[] { "a", "b", "c", "d", "e" };
+        var weights = new double[] { 50, 30, 10, 5, 5 };
         var pmf = new CsML.Probability.ProbabilityMassFunction<string>();
         foreach ((string, double) pair in target.Zip(weights))
             pmf[pair.Item1] = pair.Item2;
@@ -462,7 +462,7 @@ public class ProbabilityMassFunction
     [Fact]
     public void Update_dictionary()
     {
-        string[] outcomes = new string[] { "heads", "tails" };
+        var outcomes = new string[] { "heads", "tails" };
         var coin = new CsML.Probability
                            .ProbabilityMassFunction<string>(outcomes);
         coin.Update(new Dictionary<string, double> { { "heads", 0.75 },
@@ -477,7 +477,7 @@ public class ProbabilityMassFunction
     [Fact]
     public void Update_array()
     {
-        string[] outcomes = new string[] { "heads", "tails" };
+        var outcomes = new string[] { "heads", "tails" };
         var coin = new CsML.Probability
                            .ProbabilityMassFunction<string>(outcomes);
         coin.Update(new double[] { 0.75, 0.5 });
@@ -519,8 +519,8 @@ public class WeightedIndexSampler
     [Fact]
     public void SampleIndex()
     {
-        string[] target = new string[] { "a", "b", "c", "d", "e" };
-        double[] weights = new double[] { 50, 30, 10, 5, 5 };
+        var target = new string[] { "a", "b", "c", "d", "e" };
+        var weights = new double[] { 50, 30, 10, 5, 5 };
         var wis = new CsML.Probability
                           .WeightedIndexSampler<string>(target, weights);
         int[] result = wis.SampleIndex(1000);
@@ -537,8 +537,8 @@ public class WeightedIndexSampler
     [Fact]
     public void SampleTarget()
     {
-        string[] target = new string[] { "a", "b", "c", "d", "e" };
-        double[] weights = new double[] { 50, 30, 10, 5, 5 };
+        var target = new string[] { "a", "b", "c", "d", "e" };
+        var weights = new double[] { 50, 30, 10, 5, 5 };
         var wis = new CsML.Probability
                           .WeightedIndexSampler<string>(target, weights);
         string[] result = wis.SampleTarget(1000);
