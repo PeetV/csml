@@ -15,4 +15,13 @@ public class IEnumerable
         Assert.True(expected.SequenceEqual(result));
     }
 
+    [Fact]
+    public void ElementCounts()
+    {
+        double[] vector = new double[] { 1, 1, 1, 2, 2 };
+        var result = vector.ElementCounts();
+        Assert.Equal(3, result[1]);
+        Assert.Equal(2, result[2]);
+    }
+
 }
