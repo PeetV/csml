@@ -403,6 +403,8 @@ public class Features
         /// <summary>Get indeces of columns that have outliers.</summary>
         public int[] ColumnsWithOutliers(double[,] matrix)
         {
+            if (matrix.GetLength(1) != minColumns)
+                throw new ArgumentException(CsML.Errors.Messages.E4);
             var result = new List<int>();
             Span2D<double> matrixSpan = matrix;
             for (int columnIndex = 0; columnIndex < minColumns; columnIndex++)
@@ -419,6 +421,8 @@ public class Features
         /// </summary>
         public bool NoOutliers(double[,] matrix)
         {
+            if (matrix.GetLength(1) != minColumns)
+                throw new ArgumentException(CsML.Errors.Messages.E4);
             Span2D<double> matrixSpan = matrix;
             for (int columnIndex = 0; columnIndex < minColumns; columnIndex++)
             {
