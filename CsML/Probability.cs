@@ -791,7 +791,6 @@ public class WeightedIndexSampler<T>
         {
             if (randNum <= _weights[i])
                 return i;
-
         }
         return _weights.Length - 1;
     }
