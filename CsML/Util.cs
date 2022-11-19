@@ -615,29 +615,28 @@ public class Statistics
         return result;
     }
 
-
-// TODO: finish work in progress below
-/// <summary>
-/// Calculate the percentile using linear interpolation.
-/// <see> See <seealso
-/// href="https://stackoverflow.com/questions/8137391/percentile-calculation">
-/// Stackoverflow</seealso>.
-/// </see>
-/// </summary>
-public double PercentileLinear(double[] sequence, double excelPercentile)
-{
-    Array.Sort(sequence);
-    int N = sequence.Length;
-    double n = (N - 1) * excelPercentile + 1;
-    if (n == 1d) return sequence[0];
-    else if (n == N) return sequence[N - 1];
-    else
+    /// <summary>
+    /// Calculate a percentile using linear interpolation.
+    /// <see> See <seealso
+    /// href="https://stackoverflow.com/questions/8137391/percentile-calculation">
+    /// Stackoverflow</seealso>.
+    /// </see>
+    /// </summary>
+    public static double PercentileLinear(double[] input, double percentile)
     {
-         int k = (int)n;
-         double d = n - k;
-         return sequence[k - 1] + d * (sequence[k] - sequence[k - 1]);
+        double[] sequence = input.OrderBy(x => x).ToArray();
+        int N = sequence.Length;
+        if (N == 0) return 0;
+        double n = (N - 1) * percentile + 1;
+        if (n == 1d) return sequence[0];
+        else if (n == N) return sequence[N - 1];
+        else
+        {
+             int k = (int)n;
+             double d = n - k;
+             return sequence[k - 1] + d * (sequence[k] - sequence[k - 1]);
+        }
     }
-}
 
     /// <summary>
     /// Calculate the r-squared and adjusted r-squared of an actuals array vs

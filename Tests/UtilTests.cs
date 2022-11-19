@@ -60,7 +60,8 @@ public class Array
     public void ClassificationAccuracy_empty()
     {
         double result = CsML.Util.Array.ClassificationAccuracy(
-                            new double[] { }, new double[] { });
+                            System.Array.Empty<double>(),
+                            System.Array.Empty<double>());
         Assert.Equal(0.0, result);
     }
 
@@ -97,7 +98,8 @@ public class Array
     {
 
         var result = CsML.Util.Array.ClassificationAccuracy(
-                            new double[] { }, new double[] { });
+                            System.Array.Empty<double>(),
+                            System.Array.Empty<double>());
         Assert.Equal(0.0, result);
     }
 
@@ -123,9 +125,9 @@ public class Array
     public void ClassificationMetrics()
     {
         var actuals = new string[] { "A", "A", "B", "A", "A", "C", "C",
-                                          "C", "B" };
+                                     "C", "B" };
         var predicted = new string[] { "A", "B", "B", "A", "C", "C", "C",
-                                            "A", "B" };
+                                       "A", "B" };
         var result = CsML.Util.Array.ClassificationMetrics(actuals, predicted);
         Assert.Equal(0.6666666666666666, result["A"].Item1);
         Assert.Equal(0.6666666666666666, result["B"].Item1);
@@ -148,7 +150,7 @@ public class Array
     {
         var vector = new double[] { 1, 1, 1, 2, 2 };
         var filter = new bool[] { true, true, true, false, false };
-        var lhs, rhs;
+        double[] lhs, rhs;
         (lhs, rhs) = CsML.Util.Array.Split(vector, filter);
         Assert.Equal(3, lhs.Sum());
         Assert.Equal(4, rhs.Sum());
@@ -424,6 +426,36 @@ public class Statistics
         int[] emptyvals = new int[] { 1, 2, 3 };
         double result = CsML.Util.Statistics.Gini(emptyvals);
         Assert.Equal(0.6666666666666665, result);
+    }
+
+    [Fact]
+    public void PercentileLinear_empty()
+    {
+        double result = CsML.Util.Statistics
+                .PercentileLinear(System.Array.Empty<double>(), 0.5);
+        Assert.Equal(0, result);
+    }
+
+    [Fact]
+    public void PercentileLinear_same()
+    {
+        double[] input = { 1, 1, 1, 1, 1, };
+        double result = CsML.Util.Statistics.PercentileLinear(input, 0.5);
+        Assert.Equal(1, result);
+        result = CsML.Util.Statistics.PercentileLinear(input, 0.25);
+        Assert.Equal(1, result);
+    }
+
+    [Fact]
+    public void PercentileLinear_precalculated()
+    {
+        double[] input = { 2, 6, 4, 8, 13, 22, 16, 40, 35, 48, 42 };
+        double result = CsML.Util.Statistics.PercentileLinear(input, 0.5);
+        Assert.Equal(16, result);
+        result = CsML.Util.Statistics.PercentileLinear(input, 0.75);
+        Assert.Equal(37.5, result);
+        result = CsML.Util.Statistics.PercentileLinear(input, 0.25);
+        Assert.Equal(7, result);
     }
 
     [Fact]

@@ -2,7 +2,7 @@ using Microsoft.Toolkit.HighPerformance;
 using Xunit;
 using CsML.Extensions;
 
-namespace Csml.Tests.Probability;
+namespace CsML.Tests.Probability;
 
 public class Distributions
 {
