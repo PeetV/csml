@@ -187,9 +187,7 @@ public class BinaryTree
         Grow(inputm, inputt, 0);
     }
 
-    /// <summary>
-    /// Make predictions using the model.
-    /// </summary>
+    /// <summary>Make predictions using the model.</summary>
     /// <param name="matrix">New data to infer predictions from.</param>
     /// <param name="skipchecks">
     /// Skip input checks if true. Used in random forest to avoid repeated
