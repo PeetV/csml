@@ -215,7 +215,6 @@ public class Array
         }
         return (lhs.ToArray(), rhs.ToArray());
     }
-
 }
 
 /// <summary>
@@ -401,6 +400,20 @@ public class Features
             targetData = new ColumnProfile(target);
         }
 
+        /// <summary>Get indeces of columns that have outliers.</summary>
+        public int[] ColumnsWithOutliers(double[,] matrix)
+        {
+            var result = new List<int>();
+            Span2D<double> matrixSpan = matrix;
+            for (int columnIndex = 0; columnIndex < minColumns; columnIndex++)
+            {
+                double[] col = matrixSpan.GetColumn(columnIndex).ToArray();
+                if (!NoOutliers(col, columnIndex))
+                    result.Add(columnIndex);
+            }
+            return result.ToArray();
+        }
+
         /// <summary>
         /// Test if all columns are within outlier boundaries.
         /// </summary>
@@ -416,9 +429,7 @@ public class Features
             return true;
         }
 
-        /// <summary>
-        /// Test if column values within outlier boundaries.
-        /// </summary>
+        /// <summary>Test if column values within outlier boundaries.</summary>
         public bool NoOutliers(double[] column, int columnIndex)
         {
             return column.All(x =>

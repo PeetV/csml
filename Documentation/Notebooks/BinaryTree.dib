@@ -4,8 +4,8 @@
 
 #!csharp
 
-//#i "nuget:/Users/peet/Sources/csml/CsML/bin/Release"
-#i "nuget:C:\Users\peet.vermeulen\source\repos\csml\CsML\bin\Release"
+#i "nuget:/Users/peet/Sources/csml/CsML/bin/Release"
+// #i "nuget:C:\Users\peet.vermeulen\source\repos\csml\CsML\bin\Release"
 #r "nuget:CsML,*-*"
 using CsML;
 
@@ -24,8 +24,8 @@ mapping[4] = new Dictionary<string, double>
 {
     { "versicolor", 0 }, {"virginica", 1 }, {"setosa", 2}
 };
-//string inputPath = "/Users/peet/Sources/csml/Tests/Data/iris.csv";
-string inputPath = @"C:\Users\peet.vermeulen\source\repos\csml\Tests\Data\iris.csv";
+string inputPath = "/Users/peet/Sources/csml/Tests/Data/iris.csv";
+// string inputPath = @"C:\Users\peet.vermeulen\source\repos\csml\Tests\Data\iris.csv";
 double[,] data = CsML.Util.Matrix.FromCSV(inputPath, mapping, loadFromRow: 1);
 
 #!markdown
@@ -49,6 +49,11 @@ for (int r=0; r < data.GetLength(0); r++)
 #!csharp
 
 CsML.Util.Features.ClassProportions<double>(target)
+
+#!csharp
+
+var profiler = new CsML.Util.Features.Profiler(features, target);
+profiler.NoOutliers(features)
 
 #!markdown
 
@@ -144,8 +149,8 @@ Console.WriteLine($"Average {mean}");
 
 #!csharp
 
-//inputPath = "/Users/peet/Sources/csml/Tests/Data/led7.csv";
-inputPath = @"C:\Users\peet.vermeulen\source\repos\csml\Tests\Data\led7.csv";
+inputPath = "/Users/peet/Sources/csml/Tests/Data/led7.csv";
+// inputPath = @"C:\Users\peet.vermeulen\source\repos\csml\Tests\Data\led7.csv";
 data = CsML.Util.Matrix.FromCSV(inputPath, null, loadFromRow: 1);
 
 #!csharp
@@ -161,6 +166,11 @@ for (int r=0; r < data.GetLength(0); r++)
     }
     target[r] = data[r, 7];
 }
+
+#!csharp
+
+profiler = new CsML.Util.Features.Profiler(features, target);
+profiler.NoOutliers(features)
 
 #!csharp
 
@@ -221,8 +231,8 @@ Console.WriteLine($"Average {mean}");
 
 mapping = new Dictionary<int, Dictionary<string, double>>();
 mapping[60] = new Dictionary<string, double>{ { "R", 0 }, {"M", 1 }};
-//inputPath = "/Users/peet/Sources/csml/Tests/Data/sonar.csv";
-inputPath = @"C:\Users\peet.vermeulen\source\repos\csml\Tests\Data\sonar.csv";
+inputPath = "/Users/peet/Sources/csml/Tests/Data/sonar.csv";
+// inputPath = @"C:\Users\peet.vermeulen\source\repos\csml\Tests\Data\sonar.csv";
 data = CsML.Util.Matrix.FromCSV(inputPath, mapping, loadFromRow: 0);
 
 #!csharp
@@ -238,6 +248,11 @@ for (int r=0; r < data.GetLength(0); r++)
     }
     target[r] = data[r, 60];
 }
+
+#!csharp
+
+profiler = new CsML.Util.Features.Profiler(features, target);
+profiler.NoOutliers(features)
 
 #!csharp
 

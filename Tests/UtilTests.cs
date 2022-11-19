@@ -277,7 +277,40 @@ public class Features
     }
 
     [Fact]
-    public void Profiler_noOutliers()
+    public void Profiler_ColumnsWithOutliers_noOutliers()
+    {
+        var matrix = new double[,]
+       {
+            {1, 10, 100},
+            {2, 20, 200},
+            {3, 30, 300},
+            {4, 40, 400}
+       };
+        var target = new double[] { 1, 2, 3, 4 };
+        var profiler = new CsML.Util.Features.Profiler(matrix, target);
+        Assert.Empty(profiler.ColumnsWithOutliers(matrix));
+    }
+
+    [Fact]
+    public void Profiler_ColumnsWithOutliers_outliers()
+    {
+        var matrix = new double[,]
+       {
+            {1, 10, 100},
+            {2, 20, 200},
+            {3, 30, 300},
+            {100, 30, -1000},
+       };
+        var target = new double[] { 1, 2, 3, 4 };
+        var profiler = new CsML.Util.Features.Profiler(matrix, target);
+        var result = profiler.ColumnsWithOutliers(matrix);
+        Assert.Equal(2, result.Length);
+        Assert.Equal(0, result[0]);
+        Assert.Equal(2, result[1]);
+    }
+
+    [Fact]
+    public void Profiler_NoOutliers_true()
     {
         var matrix = new double[,]
        {
@@ -292,7 +325,7 @@ public class Features
     }
 
     [Fact]
-    public void Profiler_outliers()
+    public void Profiler_NoOutliers_false()
     {
         var matrix = new double[,]
        {
