@@ -4,6 +4,9 @@ using CsML.Extensions;
 
 namespace CsML.Probability;
 
+// TODO: Adopt math generics when moving to .net7.
+// https://learn.microsoft.com/en-au/dotnet/standard/generics/math
+
 /// <summary>
 /// A collection of functions dealing with or to generate distributions.
 /// </summary>
