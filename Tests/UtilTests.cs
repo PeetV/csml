@@ -327,6 +327,32 @@ public class Matrix
     }
 
     [Fact]
+    public void GetColumn()
+    {
+        var matrix = new double[,]{
+            {0, 3, 6},
+            {1, 4, 7},
+            {2, 5, 8},
+        };
+        var result = CsML.Util.Matrix.GetColumn(matrix, 1);
+        double[] expected = { 3, 4, 5 };
+        Assert.True(result.SequenceEqual(expected));
+    }
+
+    [Fact]
+    public void GetRow()
+    {
+        var matrix = new double[,]{
+            {0, 3, 6},
+            {1, 4, 7},
+            {2, 5, 8},
+        };
+        var result = CsML.Util.Matrix.GetRow(matrix, 1);
+        double[] expected = { 1, 4, 7 };
+        Assert.True(result.SequenceEqual(expected));
+    }
+
+    [Fact]
     public void Split_splitpoint()
     {
         var matrix = new double[,]{

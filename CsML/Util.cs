@@ -485,6 +485,30 @@ public class Matrix
     }
 
     /// <summary>
+    /// Extract a column from a 2D array.
+    /// </summary>
+    /// <param name="matrix">The matrix to extract a column from.</param>
+    /// <param name="index">The column number to extract.</param>
+    /// <param name="useSpan">
+    /// Use Span2D to extract the row if true e.g. set to false in 
+    /// parallel code if it doesn't accept Span2D.
+    /// </param> 
+    public static double[] GetColumn(
+        double[,] matrix, int index, bool useSpan = true)
+    {
+        if (useSpan)
+        {
+            Span2D<double> matrixSpan = matrix;
+            return matrixSpan.GetColumn(index).ToArray();
+        }
+        int length = matrix.GetLength(0);
+        var result = new double[length];
+        for (int ridx = 0; ridx < length; ridx++)
+            result[ridx] = matrix[ridx, index];
+        return result;
+    }
+
+    /// <summary>
     /// Extract a row from a 2D array.
     /// </summary>
     /// <param name="matrix">The matrix to extract a row from.</param>
