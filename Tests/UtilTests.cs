@@ -254,6 +254,20 @@ public class Features
         Assert.Equal(3, mlhs[2, 2]);
         Assert.Equal(5, mrhs[1, 2]);
     }
+
+    [Fact]
+    public void Profiler()
+    {
+        var matrix = new double[,]
+        {
+            {1, 10, 100},
+            {2, 20, 200},
+            {3, 30, 300},
+        };
+        var target = new double[] { 1, 2, 3 };
+        var profiler = new CsML.Util.Features.Profiler(matrix, target);
+        Assert.Equal(0, profiler.columnData[0].q25);
+    }
 }
 
 public class Matrix

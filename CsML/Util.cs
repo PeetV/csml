@@ -342,13 +342,64 @@ public class Features
         return ((mlhs, tlhs), (mrhs, trhs));
     }
 
-    // TODO: finish work in progress below
+    /// <summary>Profile a column.</summary>
+    public class ColumnProfile
+    {
+        /// <summary>The 25th percentile value.</summary>
+        public double q25;
+        /// <summary>The 50th percentile value.</summary>
+        public double q50;
+        /// <summary>The 75th percentile value.</summary>
+        public double q75;
+        /// <summary>The maximum value in the column.</summary>
+        public double max;
+        /// <summary>The average value in the column.</summary>
+        public double mean;
+        /// <summary>The minimum value in the column.</summary>
+        public double min;
+        /// <summary>The upper outlier boundary.</summary>
+        public double outlierUpper;
+        /// <summary>The lower outlier boundary.</summary>
+        public double outlierLower;
+
+        /// <summary>Create a new column profile from column data.</summary>
+        public ColumnProfile(double[] columnData)
+        {
+            q25 = Statistics.PercentileLinear(columnData, 0.25);
+            q50 = Statistics.PercentileLinear(columnData, 0.5);
+            q75 = Statistics.PercentileLinear(columnData, 0.75);
+            max = columnData.Max();
+            mean = columnData.Average();
+            min = columnData.Min();
+            (outlierLower, outlierUpper) = Statistics.OutlierBounds(columnData);
+        }
+    }
+
     /// <summary>
     /// Profile model training data, to monitor for data drift and retain
     /// scaling factors to apply to new data.
     /// </summary>
     public class Profiler
     {
+        /// <summary>Column meta data.</summary>
+        public List<ColumnProfile> columnData;
+        /// <summary>Target column meta data.</summary>
+        public ColumnProfile targetData;
+
+        /// <summary>Create a new profiler.</summary>
+        public Profiler(double[,] matrix, double[] target)
+        {
+            columnData = new List<ColumnProfile>();
+            Span2D<double> matrixSpan = matrix;
+            var columnIndeces = Enumerable.Range(0, matrix.GetLength(1))
+                                          .ToArray();
+            foreach (int columnIndex in columnIndeces)
+            {
+                double[] col = matrixSpan.GetColumn(columnIndex).ToArray();
+                columnData.Add(new ColumnProfile(col));
+            }
+            targetData = new ColumnProfile(target);
+        }
     }
 }
 
