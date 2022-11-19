@@ -175,9 +175,7 @@ public class Array
         return result;
     }
 
-    /// <summary>
-    /// Count of ocurrences of each array element.
-    /// </summary>
+    /// <summary>Count of ocurrences of each array element.</summary>
     /// <returns>
     /// A dictionary containing array elements as keys and element counts as
     /// values.
@@ -467,9 +465,7 @@ public class Matrix
         return (bestColumnIndex, bestsplit, bestgain);
     }
 
-    /// <summary>
-    /// Compare two matrixes for equality.
-    /// </summary>
+    /// <summary>Compare two matrixes for equality.</summary>
     public static bool Equal(double[,] a, double[,] b)
     {
         return
@@ -532,9 +528,7 @@ public class Matrix
         return result;
     }
 
-    /// <summary>
-    /// Create a two dimensional array from a List.
-    /// </summary>
+    /// <summary>Create a two dimensional array from a List.</summary>
     public static T[,] FromList2D<T>(List<T[]> matrix)
     {
         int rows = matrix.Count, cols = matrix[0].Length;
@@ -547,9 +541,7 @@ public class Matrix
         return result;
     }
 
-    /// <summary>
-    /// Extract a column from a 2D array.
-    /// </summary>
+    /// <summary>Extract a column from a 2D array.</summary>
     /// <param name="matrix">The matrix to extract a column from.</param>
     /// <param name="index">The column number to extract.</param>
     /// <param name="useSpan">
@@ -571,9 +563,7 @@ public class Matrix
         return result;
     }
 
-    /// <summary>
-    /// Extract a row from a 2D array.
-    /// </summary>
+    /// <summary>Extract a row from a 2D array.</summary>
     /// <param name="matrix">The matrix to extract a row from.</param>
     /// <param name="index">The row number to extract.</param>
     /// <param name="useSpan">
@@ -638,9 +628,7 @@ public class Matrix
         return (dlhs, drhs, filter);
     }
 
-    /// <summary>
-    /// Split a matrix using a boolean filer matrix.
-    /// </summary>
+    /// <summary>Split a matrix using a boolean filer matrix.</summary>
     /// <exception cref="System.ArgumentException">
     /// Thrown if inputs aren't the same length.
     /// </exception>
