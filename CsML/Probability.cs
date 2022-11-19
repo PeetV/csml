@@ -37,9 +37,7 @@ public class Distributions
         return result;
     }
 
-    /// <summary>
-    /// Calculate a Binomial probability.
-    /// </summary>
+    /// <summary>Calculate a Binomial probability.</summary>
     /// <param name="n">
     /// Number of independent experiments, each asking a yes–no question, and 
     /// each with its own Boolean-valued outcome: success (with probability p).
@@ -79,9 +77,7 @@ public class Functions
         return a.Zip(b).Select(x => x.First & x.Second).ToArray();
     }
 
-    /// <summary>
-    /// Compute probability of a, conditioned on b.
-    /// </summary>
+    /// <summary>Compute probability of a, conditioned on b.</summary>
     public static double Conditional(bool[] a, bool[] b)
     {
         bool[] cond = a.Zip(b)
@@ -91,9 +87,7 @@ public class Functions
         return CsML.Probability.Functions.Probability(cond);
     }
 
-    /// <summary>
-    /// Calculate the Binomial Coefficient.
-    /// </summary>
+    /// <summary>Calculate the Binomial Coefficient.</summary>
     /// From https://stackoverflow.com/a/12983878/4285191.
     public static double NChooseK(int n, int k)
     {
@@ -128,9 +122,7 @@ public class Functions
 /// <summary>A collection of functions for random sampling.</summary>
 public class Sample
 {
-    /// <summary>
-    /// Sample an array without replacement.
-    /// </summary>
+    /// <summary>Sample an array without replacement.</summary>
     /// <param name="input">The array to sample from.</param>
     /// <param name="count">The number of sample items.</param>
     public static T[] ArrayWithoutReplacement<T>(T[] input, int count)
@@ -270,9 +262,7 @@ public class NaiveBayesClassifier<T>
         columnMeans = new Dictionary<int, Dictionary<T, (double, double)>> { };
     }
 
-    /// <summary>
-    /// Train the model.
-    /// </summary>
+    /// <summary>Train the model.</summary>
     /// <param name="matrix">The features to train the model on.</param>
     /// <param name="target">The target vector to train on.</param>
     /// <exception cref="System.ArgumentException">
@@ -294,9 +284,7 @@ public class NaiveBayesClassifier<T>
             CalculateColumnMeans(matrix, target, colidx);
     }
 
-    /// <summary>
-    /// Make predictions using the model.
-    /// </summary>
+    /// <summary>Make predictions using the model.</summary>
     /// <param name="matrix">New data to infer predictions from.</param>
     /// <exception cref="System.ArgumentException">
     /// Thrown if input empty, or if the model has not been trained or if it
@@ -555,9 +543,7 @@ public class ProbabilityMassFunction<T>
         return (mostProbablyHypothesis, table[mostProbablyHypothesis]);
     }
 
-    /// <summary>
-    /// Calculate the mean of the PMF.
-    /// </summary>
+    /// <summary>Calculate the mean of the PMF.</summary>
     /// <exception cref="System.ArithmeticException">
     /// Throws an exception if the hypotheses type is not double.
     /// </exception>
@@ -686,9 +672,7 @@ public class RandomClassifier<T>
         weights = new double[] { };
     }
 
-    /// <summary>
-    /// Train the model.
-    /// </summary>
+    /// <summary>Train the model.</summary>
     /// <param name="matrix">The features to train the model on.</param>
     /// <param name="target">The target vector to train on.</param>
     public void Train(double[,] matrix, T[] target)
@@ -704,9 +688,7 @@ public class RandomClassifier<T>
         }
     }
 
-    /// <summary>
-    /// Make predictions using the model.
-    /// </summary>
+    /// <summary>Make predictions using the model.</summary>
     /// <param name="matrix">New data to infer predictions from.</param>
     public T[] Predict(double[,] matrix)
     {
@@ -724,9 +706,7 @@ public class WeightedIndexSampler<T>
     private readonly double[] _weights;
     private readonly Random _random;
 
-    /// <summary>
-    /// Create a new sampler.
-    /// </summary>
+    /// <summary>Create a new sampler.</summary>
     /// <param name="target">The array to draw samples from.</param>
     /// <param name="weights">
     /// The corresponding weights to apply when sampling. As the size of the
