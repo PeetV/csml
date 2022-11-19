@@ -20,7 +20,7 @@ public class Array
     /// A tuple containing the best split value and the gain calculated by the
     /// gain function specified through the purityfn parameter.
     /// </returns>
-    public static (double, double) 
+    public static (double, double)
     BestSplit<T>(
         double[] vector,
         T[] target,
@@ -116,11 +116,11 @@ public class Array
     /// <exception cref="System.ArgumentException">
     /// Thrown if inputs aren't the same length.
     /// </exception>
-    public static Dictionary<T, (double, double)> 
+    public static Dictionary<T, (double, double)>
     ClassificationMetrics<T>(
         T[] actuals,
         T[] predictions
-    ) 
+    )
         where T : IComparable<T>
     {
         int lenActuals = actuals.Length, lenPredictions = predictions.Length;
@@ -251,7 +251,7 @@ public class Features
     /// <exception cref="System.ArgumentException">
     /// Thrown if inputs aren't the same length.
     /// </exception>
-    public static (double[,], double[], int[]) 
+    public static (double[,], double[], int[])
     Bootstrap(
         double[,] matrix,
         double[] target,
@@ -616,6 +616,19 @@ public class Statistics
     }
 
     /// <summary>
+    /// Calculate the upper and lower bounds for outliers with upper bound
+    /// being 1.5 times Inter Quartile Range (IQR) plus 75th percentile and
+    /// lower bound being 25th percentile les 1.5 times IQR.
+    /// </summary>
+    public static (double, double) OutlierBounds(double[] input)
+    {
+        double q25 = PercentileLinear(input, 0.25);
+        double q75 = PercentileLinear(input, 0.75);
+        double iqr = q75 - q25;
+        return (q25 - iqr * 1.5, q75 + iqr * 1.5);
+    }
+
+    /// <summary>
     /// Calculate a percentile using linear interpolation.
     /// <see> See <seealso
     /// href="https://stackoverflow.com/questions/8137391/percentile-calculation">
@@ -632,9 +645,9 @@ public class Statistics
         else if (n == N) return sequence[N - 1];
         else
         {
-             int k = (int)n;
-             double d = n - k;
-             return sequence[k - 1] + d * (sequence[k] - sequence[k - 1]);
+            int k = (int)n;
+            double d = n - k;
+            return sequence[k - 1] + d * (sequence[k] - sequence[k - 1]);
         }
     }
 
@@ -664,7 +677,7 @@ public class Statistics
     public static (double, double)
     RSquared(
         double[] actuals,
-        double[] predictions, 
+        double[] predictions,
         int? p
     )
     {

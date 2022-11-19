@@ -429,6 +429,30 @@ public class Statistics
     }
 
     [Fact]
+    public void OutlierBounds_upperskew()
+    {
+        double[] input = { 1, 2, 4, 2, 1, 100 };
+        var result = CsML.Util.Statistics.OutlierBounds(input);
+        Assert.Equal((-2.125, 6.875), result);
+    }
+
+    [Fact]
+    public void OutlierBounds_lowerskew()
+    {
+        double[] input = { -100, 2, 4, 2, 1, 1 };
+        var result = CsML.Util.Statistics.OutlierBounds(input);
+        Assert.Equal((-0.5, 3.5), result);
+    }
+
+    [Fact]
+    public void OutlierBounds_upperandlowerskew()
+    {
+        double[] input = { -100, 2, 4, 2, 1, 100 };
+        var result = CsML.Util.Statistics.OutlierBounds(input);
+        Assert.Equal((-2.125, 6.875), result);
+    }
+
+    [Fact]
     public void PercentileLinear_empty()
     {
         double result = CsML.Util.Statistics
