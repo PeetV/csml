@@ -338,6 +338,15 @@ public class Features
         (tlhs, trhs) = CsML.Util.Array.Split(target, filter);
         return ((mlhs, tlhs), (mrhs, trhs));
     }
+
+    // TODO: finish work in progress below
+    /// <summary>
+    /// Profile model training data, to monitor for data drift and retain
+    /// scaling factors to apply to new data.
+    /// </summary>
+    public class Profiler
+    {
+    }
 }
 
 /// <summary>
@@ -806,13 +815,4 @@ public class KFoldIterator : IEnumerable<bool[]>
     {
         return GetEnumerator();
     }
-}
-
-// TODO: finish work in progress below
-/// <summary>
-/// Convert columns in a table to z-scores, retaining scaling factors to
-/// apply to new data.
-/// </summary>
-public class ZSCaler
-{
 }
