@@ -2,6 +2,9 @@
 
 namespace CsML.Util;
 
+// TODO: Adopt math generics when moving to .net7.
+// https://learn.microsoft.com/en-au/dotnet/standard/generics/math
+
 /// <summary>A collection of array utility functions.</summary>
 public class Array
 {
