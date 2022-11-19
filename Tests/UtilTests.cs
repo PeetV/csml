@@ -256,7 +256,7 @@ public class Features
     }
 
     [Fact]
-    public void Profiler()
+    public void Profiler_metrics()
     {
         var matrix = new double[,]
         {
@@ -266,7 +266,44 @@ public class Features
         };
         var target = new double[] { 1, 2, 3 };
         var profiler = new CsML.Util.Features.Profiler(matrix, target);
-        Assert.Equal(0, profiler.columnData[0].q25);
+        Assert.Equal(1.5, profiler.columnData[0].q25);
+        Assert.Equal(20, profiler.columnData[1].q50);
+        Assert.Equal(250, profiler.columnData[2].q75);
+        Assert.Equal(3, profiler.columnData[0].max);
+        Assert.Equal(10, profiler.columnData[1].min);
+        Assert.Equal(200, profiler.columnData[2].mean);
+        Assert.Equal(0, profiler.columnData[2].outlierLower);
+        Assert.Equal(400, profiler.columnData[2].outlierUpper);
+    }
+
+    [Fact]
+    public void Profiler_noOutliers()
+    {
+        var matrix = new double[,]
+       {
+            {1, 10, 100},
+            {2, 20, 200},
+            {3, 30, 300},
+            {4, 40, 400}
+       };
+        var target = new double[] { 1, 2, 3, 4 };
+        var profiler = new CsML.Util.Features.Profiler(matrix, target);
+        Assert.True(profiler.NoOutliers(matrix));
+    }
+
+    [Fact]
+    public void Profiler_outliers()
+    {
+        var matrix = new double[,]
+       {
+            {1, 10, 100},
+            {2, 20, 200},
+            {3, 30, 300},
+            {100, 30, 3},
+       };
+        var target = new double[] { 1, 2, 3, 4 };
+        var profiler = new CsML.Util.Features.Profiler(matrix, target);
+        Assert.False(profiler.NoOutliers(matrix));
     }
 }
 

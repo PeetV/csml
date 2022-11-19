@@ -383,20 +383,49 @@ public class Features
         public List<ColumnProfile> columnData;
         /// <summary>Target column meta data.</summary>
         public ColumnProfile targetData;
+        /// <summary>The number of columns profiled.</summary>
+        public int minColumns;
 
         /// <summary>Create a new profiler.</summary>
         public Profiler(double[,] matrix, double[] target)
         {
+            minColumns = matrix.GetLength(1);
             columnData = new List<ColumnProfile>();
             Span2D<double> matrixSpan = matrix;
-            var columnIndeces = Enumerable.Range(0, matrix.GetLength(1))
-                                          .ToArray();
+            var columnIndeces = Enumerable.Range(0, minColumns).ToArray();
             foreach (int columnIndex in columnIndeces)
             {
                 double[] col = matrixSpan.GetColumn(columnIndex).ToArray();
                 columnData.Add(new ColumnProfile(col));
             }
             targetData = new ColumnProfile(target);
+        }
+
+        /// <summary>
+        /// Test if all columns are within outlier boundaries.
+        /// </summary>
+        public bool NoOutliers(double[,] matrix)
+        {
+            Span2D<double> matrixSpan = matrix;
+            for (int columnIndex = 0; columnIndex < minColumns; columnIndex++)
+            {
+                double[] col = matrixSpan.GetColumn(columnIndex).ToArray();
+                if (!NoOutliers(col, columnIndex))
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Test if column values within outlier boundaries.
+        /// </summary>
+        public bool NoOutliers(double[] column, int columnIndex)
+        {
+            return column.All(x =>
+            {
+                return x > columnData[columnIndex].outlierLower &
+                       x < columnData[columnIndex].outlierUpper;
+            });
         }
     }
 }
