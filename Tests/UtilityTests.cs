@@ -343,13 +343,31 @@ public class Features
         }
 
         [Fact]
+        public void OutlierIndex_hasoutliers()
+        {
+            var matrix = new double[,]
+            {
+                {1, 10, 100},
+                {2, 20, 200},
+                {3, 30, 300},
+                {100, 30, 3},
+            };
+            var target = new double[] { 1, 2, 3, 4 };
+            var profiler = new CsML.Utility.Features.Profiler(matrix, target);
+            var col = CsML.Utility.Matrix.GetColumn(matrix, 0);
+            Assert.True(col.SequenceEqual(new double[] { 1, 2, 3, 100 }));
+            var result = String.Join(",", profiler.OutlierIndex(col, 0));
+            Assert.Equal("", result);
+        }
+
+        [Fact]
         public void ScaleZScore()
         {
             var matrix = new double[,]
             {
-            {1, 10, 100},
-            {2, 20, 200},
-            {3, 30, 300}
+                {1, 10, 100},
+                {2, 20, 200},
+                {3, 30, 300}
             };
             var target = new double[] { 1, 2, 3 };
             var profiler = new CsML.Utility.Features.Profiler(matrix, target);

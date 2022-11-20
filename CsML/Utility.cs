@@ -479,6 +479,23 @@ public static class Features
             });
         }
 
+        /// <summary>Get the index of outlier values in a column.</summary>
+        public int[] OutlierIndex(double[] column, int columnIndex)
+        {
+            if (column.Length == 0) return new int[] { };
+            var upper = columnData[columnIndex].outlierLower;
+            var lower = columnData[columnIndex].outlierUpper;
+            var result = new List<int>();
+            double rowval;
+            for (int ri = 0; ri < column.Length; ri++)
+            {
+                rowval = column[ri];
+                if ((rowval < lower) | (rowval > upper))
+                    result.Add(ri);
+            }
+            return result.ToArray();
+        }
+
         /// <summary>
         /// Scale matrix columns to z-scores using column metrics captured at
         /// instantiation.
