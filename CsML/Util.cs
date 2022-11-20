@@ -290,8 +290,11 @@ public class Features
     /// <exception cref="System.ArgumentException">
     /// Thrown if inputs aren't the same length.
     /// </exception>
-    public static (double[,], double[]) Shuffle(
-        double[,] matrix, double[] target)
+    public static (double[,], double[])
+    Shuffle(
+        double[,] matrix,
+        double[] target
+    )
     {
         int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
         if (inputLength != target.Length)
@@ -320,8 +323,11 @@ public class Features
     /// Thrown if inputs aren't the same length or if ratio parameter is
     /// not between 0 and 1.
     /// </exception>
-    public static ((double[,], double[]), (double[,], double[])) Split(
-        double[,] matrix, double[] target, double ratio
+    public static ((double[,], double[]), (double[,], double[]))
+    Split(
+        double[,] matrix,
+        double[] target,
+        double ratio
     )
     {
         if (ratio <= 0 | ratio >= 1)
