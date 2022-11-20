@@ -360,6 +360,8 @@ public class Features
         public double mean;
         /// <summary>The minimum value in the column.</summary>
         public double min;
+        /// <summary>The standard deviation.</summary>
+        public double stdevp;
         /// <summary>The upper outlier boundary.</summary>
         public double outlierUpper;
         /// <summary>The lower outlier boundary.</summary>
@@ -373,6 +375,7 @@ public class Features
             q75 = Statistics.PercentileLinear(columnData, 0.75);
             max = columnData.Max();
             mean = columnData.Average();
+            stdevp = Statistics.StdevP(columnData);
             min = columnData.Min();
             (outlierLower, outlierUpper) = Statistics.OutlierBounds(columnData);
         }
@@ -448,6 +451,11 @@ public class Features
                        x < columnData[columnIndex].outlierUpper;
             });
         }
+
+        /// <summary>
+        /// Scale columns to z-scores using column metrics captured
+        /// at instantiation.
+        /// </summary>
     }
 }
 
