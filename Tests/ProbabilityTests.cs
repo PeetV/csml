@@ -90,13 +90,13 @@ public class Functions
     }
 }
 
-public class Sample
+public class Sampling
 {
     [Fact]
     public void ArrayWithoutReplacement()
     {
         var input = new string[] { "a", "b", "c" };
-        var result = CsML.Probability.Sample.ArrayWithoutReplacement(input, 2);
+        var result = CsML.Probability.Sampling.ArrayWithoutReplacement(input, 2);
         Assert.Equal(2, result.Length);
         Assert.True(result.All(x => input.Contains(x)));
         Assert.Equal(2, result.Distinct().ToArray().Length);
@@ -105,24 +105,24 @@ public class Sample
     [Fact]
     public void RangeWithReplacement()
     {
-        int[] result = CsML.Probability.Sample.RangeWithReplacement(0, 10, 3);
+        int[] result = CsML.Probability.Sampling.RangeWithReplacement(0, 10, 3);
         Assert.Equal(3, result.Length);
         int[] possibleVals = Enumerable.Range(0, 10).ToArray();
         Assert.True(result.All(x => possibleVals.Contains(x)));
     }
 }
 
-public class Shuffle
+public class Shuffling
 {
     [Fact]
     public void Array()
     {
         var input = new string[] { "a", "b", "c" };
-        var result = CsML.Probability.Shuffle.Array(input, inPlace: false);
+        var result = CsML.Probability.Shuffling.Array(input, inPlace: false);
         Assert.Equal(3, result.Length);
         Assert.True(result.All(x => input.Contains(x)));
         input = new string[] { "a", "b", "c" };
-        result = CsML.Probability.Shuffle.Array(input, inPlace: true);
+        result = CsML.Probability.Shuffling.Array(input, inPlace: true);
         Assert.Equal(3, result.Length);
         Assert.True(result.All(x => input.Contains(x)));
     }

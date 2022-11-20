@@ -10,7 +10,7 @@ namespace CsML.Probability;
 /// <summary>
 /// A collection of functions dealing with or to generate distributions.
 /// </summary>
-public class Distributions
+public static class Distributions
 {
     /// <summary>
     /// Calculate Binomial probabilities for a series of k values. The Binomial
@@ -67,7 +67,7 @@ public class Distributions
 /// <summary>
 /// A general collection of functions for probability calculations.
 /// </summary>
-public class Functions
+public static class Functions
 {
     /// <summary>
     /// Merge two boolean arrays using an And operator on elements.
@@ -120,14 +120,14 @@ public class Functions
 }
 
 /// <summary>A collection of functions for random sampling.</summary>
-public class Sample
+public static class Sampling
 {
     /// <summary>Sample an array without replacement.</summary>
     /// <param name="input">The array to sample from.</param>
     /// <param name="count">The number of sample items.</param>
     public static T[] ArrayWithoutReplacement<T>(T[] input, int count)
     {
-        T[] working = CsML.Probability.Shuffle.Array(input, inPlace: false);
+        T[] working = CsML.Probability.Shuffling.Array(input, inPlace: false);
         return working[0..count];
     }
 
@@ -152,7 +152,7 @@ public class Sample
 /// <summary>
 /// A collection of functions for shuffling things randomly.
 /// </summary>
-public class Shuffle
+public static class Shuffling
 {
     /// <summary>
     /// Shuffle an array into a random order.
@@ -273,9 +273,9 @@ public class NaiveBayesClassifier<T>
         int inputRecordCount = matrix.GetLength(0);
         int targetLength = target.Length;
         if (inputRecordCount == 0 | targetLength == 0)
-            throw new ArgumentException(CsML.Errors.Messages.E1);
+            throw new ArgumentException(CsML.Util.ErrorMessages.E1);
         if (inputRecordCount != targetLength)
-            throw new ArgumentException(CsML.Errors.Messages.E2);
+            throw new ArgumentException(CsML.Util.ErrorMessages.E2);
         classProbabilities = new Dictionary<T, double> { };
         columnMeans = new Dictionary<int, Dictionary<T, (double, double)>> { };
         minColumns = matrix.GetLength(1);
@@ -294,11 +294,11 @@ public class NaiveBayesClassifier<T>
     {
         int inputRecordCount = matrix.GetLength(0);
         if (inputRecordCount == 0)
-            throw new ArgumentException(CsML.Errors.Messages.E1);
+            throw new ArgumentException(CsML.Util.ErrorMessages.E1);
         if (classProbabilities.Count == 0)
-            throw new ArgumentException(CsML.Errors.Messages.E3);
+            throw new ArgumentException(CsML.Util.ErrorMessages.E3);
         if (matrix.GetLength(1) != minColumns)
-            throw new ArgumentException(CsML.Errors.Messages.E4);
+            throw new ArgumentException(CsML.Util.ErrorMessages.E4);
         T[] result = new T[inputRecordCount];
         Span2D<double> matrixSpan = matrix;
         Dictionary<T, double> probs;
@@ -719,9 +719,9 @@ public class WeightedIndexSampler<T>
     public WeightedIndexSampler(T[] target, double[] weights)
     {
         if (target.Length == 0 | weights.Length == 0)
-            throw new ArgumentException(CsML.Errors.Messages.E1);
+            throw new ArgumentException(CsML.Util.ErrorMessages.E1);
         if (target.Length != weights.Length)
-            throw new ArgumentException(CsML.Errors.Messages.E2);
+            throw new ArgumentException(CsML.Util.ErrorMessages.E2);
         this._target = target;
         this._weights = (double[])weights.Clone();
         double weightsSum = weights.Sum();

@@ -6,7 +6,7 @@ namespace CsML.Util;
 // https://learn.microsoft.com/en-au/dotnet/standard/generics/math
 
 /// <summary>A collection of array utility functions.</summary>
-public class Array
+public static class Array
 {
     /// <summary>
     /// Determine which value to split an array on to maximise the weighted gain 
@@ -84,7 +84,7 @@ public class Array
     {
         int lenActuals = actuals.Length, lenPredictions = predictions.Length;
         if (lenActuals != lenPredictions)
-            throw new ArgumentException(CsML.Errors.Messages.E2);
+            throw new ArgumentException(ErrorMessages.E2);
         if (lenActuals == 0) return 0.0;
         double tptn = 0;
         for (int idx = 0; idx < lenActuals; idx++)
@@ -128,7 +128,7 @@ public class Array
     {
         int lenActuals = actuals.Length, lenPredictions = predictions.Length;
         if (lenActuals != lenPredictions)
-            throw new ArgumentException(CsML.Errors.Messages.E2);
+            throw new ArgumentException(ErrorMessages.E2);
         (T, T)[] zipped = actuals.Zip(predictions).ToArray();
         var counts = new Dictionary<T, double[]> { };
         foreach ((T, T) pair in zipped)
@@ -204,7 +204,7 @@ public class Array
         bool[] filter)
     {
         if (input.Length != filter.Length)
-            throw new ArgumentException(CsML.Errors.Messages.E2);
+            throw new ArgumentException(ErrorMessages.E2);
         List<T> lhs = new List<T>(), rhs = new List<T>();
         for (int index = 0; index < input.Length; index++)
         {
@@ -217,11 +217,36 @@ public class Array
     }
 }
 
+/// <summary>Error message descriptions.</summary>
+public static class ErrorMessages
+{
+    /// <summary>Error message if input is empty.</summary>
+    public const string E1 = "Input must not be empty";
+
+    /// <summary>Error message if input lengths differ.</summary>
+    public const string E2 = "Inputs must be same length";
+
+    /// <summary>Error message if model has not been trained.</summary>
+    public const string E3 = "Model must be trained first.";
+
+    /// <summary>
+    /// Error message if the model was trained on a different number of
+    /// columns.
+    /// </summary>
+    public const string E4 = "Same number of columns as trained on needed.";
+
+    /// <summary>Error message if model mode is not recognised.</summary>
+    public const string E5 = "Mode must be 'classify' or 'regress'";
+
+    /// <summary>Error message if method does not apply given mode.</summary>
+    public const string E6 = "Method only valid if method is 'classify'";
+}
+
 /// <summary>
 /// A collection of functions that do work on model training inputs, comprising
 /// a matrix of features and a target variable array.
 /// </summary>
-public class Features
+public static class Features
 {
     /// <summary>Calculate class proportions in a target array.</summary>
     /// <param name="target">The target input array.</param>
@@ -259,11 +284,11 @@ public class Features
     {
         int numRows = matrix.GetLength(0), numCols = matrix.GetLength(1);
         if (numRows != target.Length)
-            throw new ArgumentException(CsML.Errors.Messages.E2);
+            throw new ArgumentException(ErrorMessages.E2);
         var resultmatrix = new double[numRows, numCols];
         var resulttarget = new double[numRows];
         var resultIndex = CsML.Probability
-                            .Sample.RangeWithReplacement(0, numRows, numRows);
+                            .Sampling.RangeWithReplacement(0, numRows, numRows);
         int[] oobidx;
         if (returnOobIdx)
             oobidx = Enumerable
@@ -298,9 +323,9 @@ public class Features
     {
         int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
         if (inputLength != target.Length)
-            throw new ArgumentException(CsML.Errors.Messages.E2);
+            throw new ArgumentException(ErrorMessages.E2);
         int[] startingIndex = Enumerable.Range(0, inputLength).ToArray();
-        int[] shuffledIndex = CsML.Probability.Shuffle.Array(
+        int[] shuffledIndex = CsML.Probability.Shuffling.Array(
                                 startingIndex, inPlace: false);
         var fromtoIndex = startingIndex.Zip(shuffledIndex);
         var newmatrix = new double[inputLength, inputWidth];
@@ -334,7 +359,7 @@ public class Features
             throw new ArgumentException("ratio must be between 0 and 1");
         int inputLength = matrix.GetLength(0), inputWidth = matrix.GetLength(1);
         if (inputLength != target.Length)
-            throw new ArgumentException(CsML.Errors.Messages.E2);
+            throw new ArgumentException(ErrorMessages.E2);
         int[] index = Enumerable.Range(0, inputLength).ToArray();
         double cutPoint = (inputLength - 1) * ratio;
         bool[] filter = index.Select(x => x <= cutPoint).ToArray();
@@ -413,7 +438,7 @@ public class Features
         public int[] ColumnsWithOutliers(double[,] matrix)
         {
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException(CsML.Errors.Messages.E4);
+                throw new ArgumentException(ErrorMessages.E4);
             var result = new List<int>();
             Span2D<double> matrixSpan = matrix;
             for (int columnIndex = 0; columnIndex < minColumns; columnIndex++)
@@ -431,7 +456,7 @@ public class Features
         public bool NoOutliers(double[,] matrix)
         {
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException(CsML.Errors.Messages.E4);
+                throw new ArgumentException(ErrorMessages.E4);
             Span2D<double> matrixSpan = matrix;
             for (int columnIndex = 0; columnIndex < minColumns; columnIndex++)
             {
@@ -466,7 +491,7 @@ public class Features
         public double[,] ScaleZScore(double[,] matrix, int[]? columns = null)
         {
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException(CsML.Errors.Messages.E4);
+                throw new ArgumentException(ErrorMessages.E4);
             var result = new List<double[]>();
             int[] cols = columns == null ?
                         Enumerable.Range(0, minColumns).ToArray() :
@@ -494,7 +519,7 @@ public class Features
 /// <summary>
 /// A collection of matrix utility functions, using 2D arrays.
 /// </summary>
-public class Matrix
+public static class Matrix
 {
     /// <summary>
     /// Determine which value to split a matrix (two dimensional array) on to
@@ -534,7 +559,7 @@ public class Matrix
         columnIndeces = Enumerable.Range(0, columnCount).ToArray();
         if (randomFeatures > 0 & randomFeatures < columnCount)
             columnIndeces = CsML.Probability
-                .Sample.ArrayWithoutReplacement(columnIndeces, randomFeatures);
+                .Sampling.ArrayWithoutReplacement(columnIndeces, randomFeatures);
         double bestsplit = 0.0, bestgain = 0.0;
         int bestColumnIndex = 0;
         double split, gain;
@@ -746,7 +771,7 @@ public class Matrix
     )
     {
         if (matrix.GetLength(0) != filter.Length)
-            throw new ArgumentException(CsML.Errors.Messages.E2);
+            throw new ArgumentException(ErrorMessages.E2);
         List<double[]> lhs = new List<double[]>(), rhs = new List<double[]>();
         Span2D<double> matrixSpan = matrix;
         double[] row;
@@ -768,7 +793,7 @@ public class Matrix
 }
 
 /// <summary>A collection of statistics utility functions.</summary>
-public class Statistics
+public static class Statistics
 {
     /// <summary>
     /// Calculate the Gini index of a set of discrete values.
@@ -864,7 +889,7 @@ public class Statistics
     )
     {
         if (actuals.Length != predictions.Length)
-            throw new ArgumentException(CsML.Errors.Messages.E2);
+            throw new ArgumentException(ErrorMessages.E2);
         double mn = actuals.Average();
         double sseVal = SSE(actuals, predictions);
         double sstVal = actuals.Select(x => Math.Pow(x - mn, 2)).Sum();
@@ -884,7 +909,7 @@ public class Statistics
     public static double SSE(double[] actuals, double[] predictions)
     {
         if (actuals.Length != predictions.Length)
-            throw new ArgumentException(CsML.Errors.Messages.E2);
+            throw new ArgumentException(ErrorMessages.E2);
         IEnumerable<(double, double)> zipped = actuals.Zip(predictions);
         return zipped
                 .Select(x => Math.Pow((x.Item1 - x.Item2), 2))

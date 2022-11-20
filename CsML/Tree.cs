@@ -122,7 +122,7 @@ public class BinaryTree
         set
         {
             if (value != "classify" & value != "regress")
-                throw new ArgumentException(CsML.Errors.Messages.E5);
+                throw new ArgumentException(CsML.Util.ErrorMessages.E5);
             _mode = value;
         }
     }
@@ -159,9 +159,9 @@ public class BinaryTree
         if (!skipchecks)
         {
             if (inputRecordCount == 0 | targetLength == 0)
-                throw new ArgumentException(CsML.Errors.Messages.E1);
+                throw new ArgumentException(CsML.Util.ErrorMessages.E1);
             if (inputRecordCount != targetLength)
-                throw new ArgumentException(CsML.Errors.Messages.E2);
+                throw new ArgumentException(CsML.Util.ErrorMessages.E2);
         }
         nodes = new List<BinaryNode>();
         minColumns = matrix.GetLength(1);
@@ -203,11 +203,11 @@ public class BinaryTree
         if (!skipchecks)
         {
             if (inputRecordCount == 0)
-                throw new ArgumentException(CsML.Errors.Messages.E1);
+                throw new ArgumentException(CsML.Util.ErrorMessages.E1);
             if (nodes.Count == 0)
-                throw new ArgumentException(CsML.Errors.Messages.E3);
+                throw new ArgumentException(CsML.Util.ErrorMessages.E3);
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException(CsML.Errors.Messages.E4);
+                throw new ArgumentException(CsML.Util.ErrorMessages.E4);
 
         }
         Span2D<double> matrixSpan = matrix;
@@ -249,13 +249,13 @@ public class BinaryTree
         if (!skipchecks)
         {
             if (inputRecordCount == 0)
-                throw new ArgumentException(CsML.Errors.Messages.E1);
+                throw new ArgumentException(CsML.Util.ErrorMessages.E1);
             if (nodes.Count == 0)
-                throw new ArgumentException(CsML.Errors.Messages.E3);
+                throw new ArgumentException(CsML.Util.ErrorMessages.E3);
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException(CsML.Errors.Messages.E4);
+                throw new ArgumentException(CsML.Util.ErrorMessages.E4);
             if (Mode == "regress")
-                throw new ArgumentException(CsML.Errors.Messages.E6);
+                throw new ArgumentException(CsML.Util.ErrorMessages.E6);
         }
         Span2D<double> matrixSpan = matrix;
         var result = new (double, Dictionary<double, double>)[inputRecordCount];
@@ -443,7 +443,7 @@ public class RandomForest
         set
         {
             if (value != "classify" & value != "regress")
-                throw new ArgumentException(CsML.Errors.Messages.E5);
+                throw new ArgumentException(CsML.Util.ErrorMessages.E5);
             _mode = value;
         }
     }
@@ -480,9 +480,9 @@ public class RandomForest
         inputRecordCount = matrix.GetLength(0);
         int targetLength = target.Length;
         if (inputRecordCount == 0 | targetLength == 0)
-            throw new ArgumentException(CsML.Errors.Messages.E1);
+            throw new ArgumentException(CsML.Util.ErrorMessages.E1);
         if (inputRecordCount != targetLength)
-            throw new ArgumentException(CsML.Errors.Messages.E2);
+            throw new ArgumentException(CsML.Util.ErrorMessages.E2);
         trees = new List<BinaryTree>();
         minColumns = matrix.GetLength(1);
         if (_mode == "classify")
@@ -514,11 +514,11 @@ public class RandomForest
     {
         inputRecordCount = matrix.GetLength(0);
         if (inputRecordCount == 0)
-            throw new ArgumentException(CsML.Errors.Messages.E1);
+            throw new ArgumentException(CsML.Util.ErrorMessages.E1);
         if (trees.Count == 0)
-            throw new ArgumentException(CsML.Errors.Messages.E3);
+            throw new ArgumentException(CsML.Util.ErrorMessages.E3);
         if (matrix.GetLength(1) != minColumns)
-            throw new ArgumentException(CsML.Errors.Messages.E4);
+            throw new ArgumentException(CsML.Util.ErrorMessages.E4);
         var result = new double[inputRecordCount];
         Parallel.For(0, inputRecordCount, i =>
         {
@@ -565,13 +565,13 @@ public class RandomForest
         if (!skipchecks)
         {
             if (inputRecordCount == 0)
-                throw new ArgumentException(CsML.Errors.Messages.E1);
+                throw new ArgumentException(CsML.Util.ErrorMessages.E1);
             if (trees.Count == 0)
-                throw new ArgumentException(CsML.Errors.Messages.E3);
+                throw new ArgumentException(CsML.Util.ErrorMessages.E3);
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException(CsML.Errors.Messages.E4);
+                throw new ArgumentException(CsML.Util.ErrorMessages.E4);
             if (Mode == "regress")
-                throw new ArgumentException(CsML.Errors.Messages.E6);
+                throw new ArgumentException(CsML.Util.ErrorMessages.E6);
         }
         var result = new (double, Dictionary<double, double>)[inputRecordCount];
         Parallel.For(0, inputRecordCount, i =>
