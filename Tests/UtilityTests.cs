@@ -313,7 +313,7 @@ public class Features
         }
 
         [Fact]
-        public void NoOutliers_true()
+        public void HasOutliers_fasle()
         {
             var matrix = new double[,]
             {
@@ -324,11 +324,11 @@ public class Features
             };
             var target = new double[] { 1, 2, 3, 4 };
             var profiler = new CsML.Utility.Features.Profiler(matrix, target);
-            Assert.True(profiler.NoOutliers(matrix));
+            Assert.False(profiler.HasOutliers(matrix));
         }
 
         [Fact]
-        public void NoOutliers_false()
+        public void HasOutliers_true()
         {
             var matrix = new double[,]
            {
@@ -339,7 +339,7 @@ public class Features
            };
             var target = new double[] { 1, 2, 3, 4 };
             var profiler = new CsML.Utility.Features.Profiler(matrix, target);
-            Assert.False(profiler.NoOutliers(matrix));
+            Assert.True(profiler.HasOutliers(matrix));
         }
 
         [Fact]

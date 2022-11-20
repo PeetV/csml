@@ -446,7 +446,7 @@ public static class Features
             for (int columnIndex = 0; columnIndex < minColumns; columnIndex++)
             {
                 double[] col = matrixSpan.GetColumn(columnIndex).ToArray();
-                if (!NoOutliers(col, columnIndex))
+                if (HasOutliers(col, columnIndex))
                     result.Add(columnIndex);
             }
             return result.ToArray();
@@ -455,7 +455,7 @@ public static class Features
         /// <summary>
         /// Test if all columns are within outlier boundaries.
         /// </summary>
-        public bool NoOutliers(double[,] matrix)
+        public bool HasOutliers(double[,] matrix)
         {
             if (matrix.GetLength(1) != minColumns)
                 throw new ArgumentException(ErrorMessages.E4);
@@ -463,19 +463,19 @@ public static class Features
             for (int columnIndex = 0; columnIndex < minColumns; columnIndex++)
             {
                 double[] col = matrixSpan.GetColumn(columnIndex).ToArray();
-                if (!NoOutliers(col, columnIndex))
-                    return false;
+                if (HasOutliers(col, columnIndex))
+                    return true;
             }
-            return true;
+            return false;
         }
 
         /// <summary>Test if column values within outlier boundaries.</summary>
-        public bool NoOutliers(double[] column, int columnIndex)
+        public bool HasOutliers(double[] column, int columnIndex)
         {
-            return column.All(x =>
+            return column.Any(x =>
             {
-                return x > columnData[columnIndex].outlierLower &
-                       x < columnData[columnIndex].outlierUpper;
+                return x < columnData[columnIndex].outlierLower |
+                       x > columnData[columnIndex].outlierUpper;
             });
         }
 
