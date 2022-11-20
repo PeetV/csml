@@ -250,6 +250,26 @@ public static class Distributions
                Math.Pow(Math.Exp(1.0),
                         -(Math.Pow(value - mean, 2.0) / (2.0 * variance)));
     }
+
+    /// <summary>
+    /// Calculate the probability of a value assuming a Poisson distribution
+    /// defined by the λ and k parameters.
+    /// <see> See <seealso
+    /// href="https://en.wikipedia.org/wiki/Poisson_distribution">
+    /// Wikipedia</seealso>.
+    /// </see>
+    /// </summary>
+    /// <param name="λ">Average event rate.</param>
+    /// <param name="k">
+    /// The number of times an event occurs in an interval.
+    /// </param>
+    public static double ProbabilityPoisson(double λ, int k)
+    {
+        return Math.Pow(λ, k) *
+               Math.Exp(-λ) /
+               CsML.Utility.Statistics.Factorial(k);
+    }
+
     /// <summary>
     /// A Probability Mass Function for modelling discrete outcomes. Adapted from
     /// Think Bayes by Allen B. Downey.

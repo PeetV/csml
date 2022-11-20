@@ -160,6 +160,14 @@ public class Distributions
     }
 
     [Fact]
+    public void ProbabilityPoisson()
+    {
+        double result = CsML.Probability.Distributions
+                            .ProbabilityPoisson(1.4, 4);
+        Assert.Equal(0.039471954028253139, result);
+    }
+
+    [Fact]
     public void ProbabilityMassFunction_BracketOperator()
     {
         var outcomes = new string[] { "heads", "tails" };
