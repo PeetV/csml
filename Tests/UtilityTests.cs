@@ -5,6 +5,12 @@ namespace CsML.Tests.Utility;
 public class Array
 {
     [Fact]
+    public void Factorial()
+    {
+        Assert.Equal(120, CsML.Utility.Statistics.Factorial(5));
+    }
+
+    [Fact]
     public void BestSplit_accuracy_test1()
     {
         double[] values = { 1.0, 1.0, 1.0, 2.0, 12.0, 1.0, 1.0, 2.0, 1.0, 2.0,

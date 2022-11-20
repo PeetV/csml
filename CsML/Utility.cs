@@ -79,7 +79,9 @@ public static class Array
     /// Thrown if inputs aren't the same length.
     /// </exception>
     public static double ClassificationAccuracy<T>(
-        T[] actuals, T[] predictions)
+        T[] actuals,
+        T[] predictions
+    )
         where T : IComparable<T>
     {
         int lenActuals = actuals.Length, lenPredictions = predictions.Length;
@@ -795,6 +797,17 @@ public static class Matrix
 /// <summary>A collection of statistics utility functions.</summary>
 public static class Statistics
 {
+    /// <summary>
+    /// Calculate the factorial of a number. n! = n x (n - 1) x (n - 2) ...
+    /// </summary>
+    public static int Factorial(int n)
+    {
+        int fact = n;
+        for (int i = n - 1; i >= 1; i--)
+            fact = fact * i;
+        return fact;
+    }
+
     /// <summary>
     /// Calculate the Gini index of a set of discrete values.
     /// </summary>
