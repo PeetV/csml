@@ -483,8 +483,8 @@ public static class Features
         public int[] OutlierIndex(double[] column, int columnIndex)
         {
             if (column.Length == 0) return new int[] { };
-            var upper = columnData[columnIndex].outlierLower;
-            var lower = columnData[columnIndex].outlierUpper;
+            var lower = columnData[columnIndex].outlierLower;
+            var upper = columnData[columnIndex].outlierUpper;
             var result = new List<int>();
             double rowval;
             for (int ri = 0; ri < column.Length; ri++)
