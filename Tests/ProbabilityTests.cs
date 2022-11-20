@@ -167,248 +167,265 @@ public class Distributions
         Assert.Equal(0.039471954028253139, result);
     }
 
-    [Fact]
-    public void ProbabilityMassFunction_BracketOperator()
+    public class ProbabilityMassFunction
     {
-        var outcomes = new string[] { "heads", "tails" };
-        var coin = new CsML.Probability.Distributions
-                           .ProbabilityMassFunction<string>(outcomes);
-        Assert.Equal(0.5, coin["heads"]);
-        Assert.Equal(0.5, coin["tails"]);
-    }
 
-    [Fact]
-    public void ProbabilityMassFunction_Get_hypotheses()
-    {
-        var outcomes = new string[] { "b", "a", "c" };
-        var pmf = new CsML.Probability.Distributions
-                          .ProbabilityMassFunction<string>(outcomes);
-        Assert.True(pmf.hypotheses.SequenceEqual(
-                    new string[] { "a", "b", "c" }));
-    }
+        [Fact]
+        public void BracketOperator()
+        {
+            var outcomes = new string[] { "heads", "tails" };
+            var coin = new CsML.Probability.Distributions
+                               .ProbabilityMassFunction<string>(outcomes);
+            Assert.Equal(0.5, coin["heads"]);
+            Assert.Equal(0.5, coin["tails"]);
+        }
 
-    [Fact]
-    public void ProbabilityMassFunction_Get_probabilities()
-    {
-        var outcomes = new string[] { "b", "a", "c" };
-        var pmf = new CsML.Probability.Distributions
-                          .ProbabilityMassFunction<string>(outcomes);
-        pmf["a"] = 0.1;
-        pmf["b"] = 0.2;
-        pmf["c"] = 0.3;
-        Assert.True(pmf.probabilities.SequenceEqual(
-                    new double[] { 0.1, 0.2, 0.3 }));
-    }
+        [Fact]
+        public void Get_hypotheses()
+        {
+            var outcomes = new string[] { "b", "a", "c" };
+            var pmf = new CsML.Probability.Distributions
+                              .ProbabilityMassFunction<string>(outcomes);
+            Assert.True(pmf.hypotheses.SequenceEqual(
+                        new string[] { "a", "b", "c" }));
+        }
 
-    [Fact]
-    public void ProbabilityMassFunction_Get_zipped()
-    {
-        var outcomes = new string[] { "b", "a", "c" };
-        var pmf = new CsML.Probability.Distributions
-                          .ProbabilityMassFunction<string>(outcomes);
-        var expected = new (string, double)[] {
+        [Fact]
+        public void Get_probabilities()
+        {
+            var outcomes = new string[] { "b", "a", "c" };
+            var pmf = new CsML.Probability.Distributions
+                              .ProbabilityMassFunction<string>(outcomes);
+            pmf["a"] = 0.1;
+            pmf["b"] = 0.2;
+            pmf["c"] = 0.3;
+            Assert.True(pmf.probabilities.SequenceEqual(
+                        new double[] { 0.1, 0.2, 0.3 }));
+        }
+
+        [Fact]
+        public void Get_zipped()
+        {
+            var outcomes = new string[] { "b", "a", "c" };
+            var pmf = new CsML.Probability.Distributions
+                              .ProbabilityMassFunction<string>(outcomes);
+            var expected = new (string, double)[] {
             ("a", 1.0/3.0), ("b", 1.0 / 3.0), ("c", 1.0 / 3.0) };
-        Assert.True(expected.SequenceEqual(pmf.zipped));
-    }
+            Assert.True(expected.SequenceEqual(pmf.zipped));
+        }
 
-    [Fact]
-    public void ProbabilityMassFunction_FromBinomial()
-    {
-        CsML.Probability.Distributions.ProbabilityMassFunction<int> pmf;
-        int[] ks = Enumerable.Range(1, 251).ToArray();
-        pmf = CsML.Probability.Distributions
-                              .ProbabilityMassFunction<int>
-                              .FromBinomial(250, ks, 0.5);
-        Assert.Equal((125, 0.05041221314730964), pmf.Max());
-        Assert.Equal(0.0083571817249182, pmf[140]);
-        Assert.Equal(0.06642115124004333, 1 - pmf.SumProbabilities(
-            110, 140, includeLower: false, includeUpper: false));
-    }
+        [Fact]
+        public void FromBinomial()
+        {
+            CsML.Probability.Distributions.ProbabilityMassFunction<int> pmf;
+            int[] ks = Enumerable.Range(1, 251).ToArray();
+            pmf = CsML.Probability.Distributions
+                                  .ProbabilityMassFunction<int>
+                                  .FromBinomial(250, ks, 0.5);
+            Assert.Equal((125, 0.05041221314730964), pmf.Max());
+            Assert.Equal(0.0083571817249182, pmf[140]);
+            Assert.Equal(0.06642115124004333, 1 - pmf.SumProbabilities(
+                110, 140, includeLower: false, includeUpper: false));
+        }
 
-    [Fact]
-    public void ProbabilityMassFunction_FromNormal()
-    {
-        CsML.Probability.Distributions.ProbabilityMassFunction<double> pmf;
-        double[] hypotheses = Enumerable.Range(0, 1001)
-                                        .Select(x => (double)x)
-                                        .ToArray();
-        pmf = CsML.Probability.Distributions
-                  .ProbabilityMassFunction<double>
-                  .FromNormal(hypotheses, 500, 200 * 200);
-        Assert.Equal((500, 0.0020196170605523193), pmf.Max());
-        Assert.Equal(0.6899874672473569,
-                     pmf.SumProbabilities(300, 700, includeLower: false));
-        Assert.Equal(0.9661436914270904,
-                     pmf.SumProbabilities(100, 900, includeLower: false));
-    }
+        [Fact]
+        public void FromPoisson()
+        {
+            int[] ks = Enumerable.Range(0, 9).ToArray();
+            var pmf = CsML.Probability.Distributions.ProbabilityMassFunction<int>
+                            .FromPoison(1.4, ks);
+            Assert.Equal(0.24660098077925072, pmf[0]);
+            Assert.Equal(0.34524137309095099, pmf[1]);
+            Assert.Equal(0.24166896116366568, pmf[2]);
+            Assert.Equal(0.11277884854304397, pmf[3]);
+            Assert.Equal(0.039472596990065389, pmf[4]);
+        }
 
-    [Fact]
-    public void ProbabilityMassFunction_Add_double()
-    {
-        double[] diceValues = Enumerable.Range(1, 6)
-                                        .Select(x => (double)x)
-                                        .ToArray();
-        Assert.Equal(1, diceValues.Min());
-        Assert.Equal(6, diceValues.Max());
-        var dice1 = new CsML.Probability.Distributions
-                            .ProbabilityMassFunction<double>(
-                                (double[])diceValues.Clone());
-        var dice2 = new CsML.Probability.Distributions
-                            .ProbabilityMassFunction<double>(
-                                (double[])diceValues.Clone());
-        var pmf = dice1.Add(dice2);
-        double[] summmedDice = Enumerable.Range(2, 11)
-                                         .Select(x => (double)x)
-                                         .ToArray();
-        Assert.True(summmedDice.SequenceEqual(pmf.hypotheses));
-        Assert.True(1.0 - pmf.probabilities.Sum() < 0.0000000001);
-        Assert.Equal((7, 0.166666666666666666), pmf.Max());
-    }
+        [Fact]
+        public void FromNormal()
+        {
+            CsML.Probability.Distributions.ProbabilityMassFunction<double> pmf;
+            double[] hypotheses = Enumerable.Range(0, 1001)
+                                            .Select(x => (double)x)
+                                            .ToArray();
+            pmf = CsML.Probability.Distributions
+                      .ProbabilityMassFunction<double>
+                      .FromNormal(hypotheses, 500, 200 * 200);
+            Assert.Equal((500, 0.0020196170605523193), pmf.Max());
+            Assert.Equal(0.6899874672473569,
+                         pmf.SumProbabilities(300, 700, includeLower: false));
+            Assert.Equal(0.9661436914270904,
+                         pmf.SumProbabilities(100, 900, includeLower: false));
+        }
 
-    [Fact]
-    public void ProbabilityMassFunction_Add_int()
-    {
-        int[] diceValues = Enumerable.Range(1, 6).ToArray();
-        Assert.Equal(1, diceValues.Min());
-        Assert.Equal(6, diceValues.Max());
-        var dice1 = new CsML.Probability.Distributions
-                            .ProbabilityMassFunction<int>(
-                                (int[])diceValues.Clone());
-        var dice2 = new CsML.Probability.Distributions
-                            .ProbabilityMassFunction<int>(
-                                (int[])diceValues.Clone());
-        var pmf = dice1.Add(dice2);
-        int[] summmedDice = Enumerable.Range(2, 11).ToArray();
-        Assert.True(summmedDice.SequenceEqual(pmf.hypotheses));
-        Assert.True(1.0 - pmf.probabilities.Sum() < 0.0000000001);
-        Assert.Equal((7, 0.166666666666666666), pmf.Max());
-    }
+        [Fact]
+        public void Add_double()
+        {
+            double[] diceValues = Enumerable.Range(1, 6)
+                                            .Select(x => (double)x)
+                                            .ToArray();
+            Assert.Equal(1, diceValues.Min());
+            Assert.Equal(6, diceValues.Max());
+            var dice1 = new CsML.Probability.Distributions
+                                .ProbabilityMassFunction<double>(
+                                    (double[])diceValues.Clone());
+            var dice2 = new CsML.Probability.Distributions
+                                .ProbabilityMassFunction<double>(
+                                    (double[])diceValues.Clone());
+            var pmf = dice1.Add(dice2);
+            double[] summmedDice = Enumerable.Range(2, 11)
+                                             .Select(x => (double)x)
+                                             .ToArray();
+            Assert.True(summmedDice.SequenceEqual(pmf.hypotheses));
+            Assert.True(1.0 - pmf.probabilities.Sum() < 0.0000000001);
+            Assert.Equal((7, 0.166666666666666666), pmf.Max());
+        }
 
-    [Fact]
-    public void ProbabilityMassFunction_Max()
-    {
-        var outcomes = new string[] { "b", "a", "c" };
-        var pmf = new CsML.Probability.Distributions
-                          .ProbabilityMassFunction<string>(outcomes);
-        pmf["a"] = 0.1;
-        pmf["b"] = 0.2;
-        pmf["c"] = 0.3;
-        Assert.Equal(("c", 0.3), pmf.Max());
-    }
+        [Fact]
+        public void Add_int()
+        {
+            int[] diceValues = Enumerable.Range(1, 6).ToArray();
+            Assert.Equal(1, diceValues.Min());
+            Assert.Equal(6, diceValues.Max());
+            var dice1 = new CsML.Probability.Distributions
+                                .ProbabilityMassFunction<int>(
+                                    (int[])diceValues.Clone());
+            var dice2 = new CsML.Probability.Distributions
+                                .ProbabilityMassFunction<int>(
+                                    (int[])diceValues.Clone());
+            var pmf = dice1.Add(dice2);
+            int[] summmedDice = Enumerable.Range(2, 11).ToArray();
+            Assert.True(summmedDice.SequenceEqual(pmf.hypotheses));
+            Assert.True(1.0 - pmf.probabilities.Sum() < 0.0000000001);
+            Assert.Equal((7, 0.166666666666666666), pmf.Max());
+        }
 
-    [Fact]
-    public void ProbabilityMassFunction_Mean()
-    {
-        var hypos = new double[] { 10, 20, 30 };
-        var pmf = new CsML.Probability.Distributions
-                            .ProbabilityMassFunction<double>(hypos);
-        pmf[10] = 0.5;
-        pmf[20] = 0.25;
-        pmf[30] = 0.25;
-        Assert.Equal(10 * 0.5 + 20 * 0.25 + 30 * 0.25, pmf.Mean());
-    }
+        [Fact]
+        public void Max()
+        {
+            var outcomes = new string[] { "b", "a", "c" };
+            var pmf = new CsML.Probability.Distributions
+                              .ProbabilityMassFunction<string>(outcomes);
+            pmf["a"] = 0.1;
+            pmf["b"] = 0.2;
+            pmf["c"] = 0.3;
+            Assert.Equal(("c", 0.3), pmf.Max());
+        }
 
-    [Fact]
-    public void ProbabilityMassFunction_Normalise()
-    {
-        var outcomes = new string[] { "heads", "tails" };
-        var coin = new CsML.Probability.Distributions
-                            .ProbabilityMassFunction<string>(outcomes);
-        Assert.Equal(0.5, coin.table["heads"]);
-        Assert.Equal(0.5, coin.table["tails"]);
-    }
+        [Fact]
+        public void Mean()
+        {
+            var hypos = new double[] { 10, 20, 30 };
+            var pmf = new CsML.Probability.Distributions
+                                .ProbabilityMassFunction<double>(hypos);
+            pmf[10] = 0.5;
+            pmf[20] = 0.25;
+            pmf[30] = 0.25;
+            Assert.Equal(10 * 0.5 + 20 * 0.25 + 30 * 0.25, pmf.Mean());
+        }
 
-    [Fact]
-    public void ProbabilityMassFunction_SumProbabilities_lowerOnly()
-    {
-        var target = new string[] { "a", "b", "c", "d", "e" };
-        var weights = new double[] { 50, 30, 10, 5, 5 };
-        var pmf = new CsML.Probability.Distributions
-                            .ProbabilityMassFunction<string>();
-        foreach ((string, double) pair in target.Zip(weights))
-            pmf[pair.Item1] = pair.Item2;
-        pmf.Normalise();
-        Assert.Equal(0.5, pmf["a"]);
-        Assert.Equal(0.1, pmf.SumProbabilities("c", null, false));
-        Assert.Equal(0.2, pmf.SumProbabilities("c", null, true));
-    }
+        [Fact]
+        public void Normalise()
+        {
+            var outcomes = new string[] { "heads", "tails" };
+            var coin = new CsML.Probability.Distributions
+                                .ProbabilityMassFunction<string>(outcomes);
+            Assert.Equal(0.5, coin.table["heads"]);
+            Assert.Equal(0.5, coin.table["tails"]);
+        }
 
-    [Fact]
-    public void ProbabilityMassFunction_SumProbabilities_upperOnly()
-    {
-        var target = new string[] { "a", "b", "c", "d", "e" };
-        var weights = new double[] { 50, 30, 10, 5, 5 };
-        var pmf = new CsML.Probability.Distributions
-                            .ProbabilityMassFunction<string>();
-        foreach ((string, double) pair in target.Zip(weights))
-            pmf[pair.Item1] = pair.Item2;
-        pmf.Normalise();
-        Assert.Equal(0.5, pmf["a"]);
-        Assert.Equal(0.8, pmf.SumProbabilities(null, "c", includeUpper: false));
-        Assert.Equal(0.9, pmf.SumProbabilities(null, "c", includeUpper: true));
-    }
-    [Fact]
-    public void ProbabilityMassFunction_SumProbabilities_bothUpperandLower()
-    {
-        var target = new string[] { "a", "b", "c", "d", "e" };
-        var weights = new double[] { 50, 30, 10, 5, 5 };
-        var pmf = new CsML.Probability.Distributions
-                            .ProbabilityMassFunction<string>();
-        foreach ((string, double) pair in target.Zip(weights))
-            pmf[pair.Item1] = pair.Item2;
-        pmf.Normalise();
-        Assert.Equal(0.5, pmf["a"]);
-        Assert.Equal(0.1, pmf.SumProbabilities("c", "d"));
-        Assert.True((pmf.SumProbabilities("c", "d", includeUpper: true) - 0.15)
-                     < 0.00000001);
-    }
+        [Fact]
+        public void SumProbabilities_lowerOnly()
+        {
+            var target = new string[] { "a", "b", "c", "d", "e" };
+            var weights = new double[] { 50, 30, 10, 5, 5 };
+            var pmf = new CsML.Probability.Distributions
+                                .ProbabilityMassFunction<string>();
+            foreach ((string, double) pair in target.Zip(weights))
+                pmf[pair.Item1] = pair.Item2;
+            pmf.Normalise();
+            Assert.Equal(0.5, pmf["a"]);
+            Assert.Equal(0.1, pmf.SumProbabilities("c", null, false));
+            Assert.Equal(0.2, pmf.SumProbabilities("c", null, true));
+        }
 
-    [Fact]
-    public void ProbabilityMassFunction_ToSampler()
-    {
-        var target = new string[] { "a", "b", "c", "d", "e" };
-        var weights = new double[] { 50, 30, 10, 5, 5 };
-        var pmf = new CsML.Probability.Distributions
-                            .ProbabilityMassFunction<string>();
-        foreach ((string, double) pair in target.Zip(weights))
-            pmf[pair.Item1] = pair.Item2;
-        var sampler = pmf.ToSampler();
-        string[] result = sampler.SampleTarget(1000);
-        var counts = result.ElementCounts();
-        Assert.InRange((double)counts["a"] / 1000.0, 0.45, 0.55);
-        Assert.InRange((double)counts["b"] / 1000.0, 0.25, 0.35);
-        Assert.InRange((double)counts["c"] / 1000.0, 0.05, 0.15);
-        Assert.InRange((double)counts["d"] / 1000.0, 0.01, 0.1);
-        Assert.InRange((double)counts["e"] / 1000.0, 0.01, 0.1);
-    }
+        [Fact]
+        public void SumProbabilities_upperOnly()
+        {
+            var target = new string[] { "a", "b", "c", "d", "e" };
+            var weights = new double[] { 50, 30, 10, 5, 5 };
+            var pmf = new CsML.Probability.Distributions
+                                .ProbabilityMassFunction<string>();
+            foreach ((string, double) pair in target.Zip(weights))
+                pmf[pair.Item1] = pair.Item2;
+            pmf.Normalise();
+            Assert.Equal(0.5, pmf["a"]);
+            Assert.Equal(0.8, pmf.SumProbabilities(null, "c", includeUpper: false));
+            Assert.Equal(0.9, pmf.SumProbabilities(null, "c", includeUpper: true));
+        }
+        [Fact]
+        public void SumProbabilities_bothUpperandLower()
+        {
+            var target = new string[] { "a", "b", "c", "d", "e" };
+            var weights = new double[] { 50, 30, 10, 5, 5 };
+            var pmf = new CsML.Probability.Distributions
+                                .ProbabilityMassFunction<string>();
+            foreach ((string, double) pair in target.Zip(weights))
+                pmf[pair.Item1] = pair.Item2;
+            pmf.Normalise();
+            Assert.Equal(0.5, pmf["a"]);
+            Assert.Equal(0.1, pmf.SumProbabilities("c", "d"));
+            Assert.True((pmf.SumProbabilities("c", "d", includeUpper: true) - 0.15)
+                         < 0.00000001);
+        }
 
-    [Fact]
-    public void ProbabilityMassFunction_Update_dictionary()
-    {
-        var outcomes = new string[] { "heads", "tails" };
-        var coin = new CsML.Probability.Distributions
-                           .ProbabilityMassFunction<string>(outcomes);
-        coin.Update(new Dictionary<string, double> { { "heads", 0.75 },
+        [Fact]
+        public void ToSampler()
+        {
+            var target = new string[] { "a", "b", "c", "d", "e" };
+            var weights = new double[] { 50, 30, 10, 5, 5 };
+            var pmf = new CsML.Probability.Distributions
+                                .ProbabilityMassFunction<string>();
+            foreach ((string, double) pair in target.Zip(weights))
+                pmf[pair.Item1] = pair.Item2;
+            var sampler = pmf.ToSampler();
+            string[] result = sampler.SampleTarget(1000);
+            var counts = result.ElementCounts();
+            Assert.InRange((double)counts["a"] / 1000.0, 0.45, 0.55);
+            Assert.InRange((double)counts["b"] / 1000.0, 0.25, 0.35);
+            Assert.InRange((double)counts["c"] / 1000.0, 0.05, 0.15);
+            Assert.InRange((double)counts["d"] / 1000.0, 0.01, 0.1);
+            Assert.InRange((double)counts["e"] / 1000.0, 0.01, 0.1);
+        }
+
+        [Fact]
+        public void Update_dictionary()
+        {
+            var outcomes = new string[] { "heads", "tails" };
+            var coin = new CsML.Probability.Distributions
+                               .ProbabilityMassFunction<string>(outcomes);
+            coin.Update(new Dictionary<string, double> { { "heads", 0.75 },
                                                      { "tails", 0.5 } });
-        Assert.Equal(0.375, coin.table["heads"]);
-        Assert.Equal(0.25, coin.table["tails"]);
-        coin.Normalise();
-        Assert.Equal(0.6, coin.table["heads"]);
-        Assert.Equal(0.4, coin.table["tails"]);
-    }
+            Assert.Equal(0.375, coin.table["heads"]);
+            Assert.Equal(0.25, coin.table["tails"]);
+            coin.Normalise();
+            Assert.Equal(0.6, coin.table["heads"]);
+            Assert.Equal(0.4, coin.table["tails"]);
+        }
 
-    [Fact]
-    public void ProbabilityMassFunction_Update_array()
-    {
-        var outcomes = new string[] { "heads", "tails" };
-        var coin = new CsML.Probability.Distributions
-                           .ProbabilityMassFunction<string>(outcomes);
-        coin.Update(new double[] { 0.75, 0.5 });
-        Assert.Equal(0.375, coin.table["heads"]);
-        Assert.Equal(0.25, coin.table["tails"]);
-        coin.Normalise();
-        Assert.Equal(0.6, coin.table["heads"]);
-        Assert.Equal(0.4, coin.table["tails"]);
+        [Fact]
+        public void Update_array()
+        {
+            var outcomes = new string[] { "heads", "tails" };
+            var coin = new CsML.Probability.Distributions
+                               .ProbabilityMassFunction<string>(outcomes);
+            coin.Update(new double[] { 0.75, 0.5 });
+            Assert.Equal(0.375, coin.table["heads"]);
+            Assert.Equal(0.25, coin.table["tails"]);
+            coin.Normalise();
+            Assert.Equal(0.6, coin.table["heads"]);
+            Assert.Equal(0.4, coin.table["tails"]);
+        }
     }
 }
 

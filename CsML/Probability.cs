@@ -369,8 +369,8 @@ public static class Distributions
         }
 
         /// <summary>
-        /// Create a Normal distribution PMF from a series of hypotheses values,
-        /// mean and variance.
+        /// Create a Normal distribution based PMF from a series of hypotheses
+        /// values, mean and variance.
         /// </summary>
         public static ProbabilityMassFunction<double> FromNormal(
             double[] hypotheses, double mean, double variance)
@@ -383,12 +383,23 @@ public static class Distributions
             return doublePMF;
         }
 
+        /// <summary>
+        /// Create a Poisson distribution based PMF from a series of hypotheses
+        /// values and λ average event rate.
+        /// </summary>
+        public static ProbabilityMassFunction<int> FromPoison(double λ, int[] ks)
+        {
+            var intPMF = new ProbabilityMassFunction<int>();
+            for (int i = 0; i < ks.Length; i++)
+                intPMF[ks[i]] = CsML.Probability.Distributions
+                                    .ProbabilityPoisson(λ, ks[i]);
+            intPMF.Normalise();
+            return intPMF;
+        }
+
         /// <summary>Add two PMFs.</summary>
         /// <returns>A PMF with hypotheses summed.</returns>
         /// <param name="pmf">A PMF with hypotheses double type.</param>
-        /// <exception cref="System.ArithmeticException">
-        /// Throws an exception if the hypotheses type is not double.
-        /// </exception>
         public ProbabilityMassFunction<double> Add(
             ProbabilityMassFunction<double> pmf)
         {
@@ -413,9 +424,6 @@ public static class Distributions
         /// <summary>Add two PMFs.</summary>
         /// <returns>A PMF with hypotheses summed.</returns>
         /// <param name="pmf">A PMF with hypotheses double type.</param>
-        /// <exception cref="System.ArithmeticException">
-        /// Throws an exception if the hypotheses type is not double.
-        /// </exception>
         public ProbabilityMassFunction<int> Add(
             ProbabilityMassFunction<int> pmf)
         {

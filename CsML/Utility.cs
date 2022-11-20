@@ -802,6 +802,7 @@ public static class Statistics
     /// </summary>
     public static int Factorial(int n)
     {
+        if (n == 0) return 1;
         int fact = n;
         for (int i = n - 1; i >= 1; i--)
             fact = fact * i;
