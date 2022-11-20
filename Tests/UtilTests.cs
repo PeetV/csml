@@ -411,6 +411,32 @@ public class Matrix
     }
 
     [Fact]
+    public void FromListColumns()
+    {
+        var lst = new List<double[]>();
+        lst.Add(new double[] { 1, 2, 3 });
+        lst.Add(new double[] { 4, 5, 6 });
+        Assert.Equal(2, lst.Count);
+        var m = CsML.Util.Matrix.FromListColumns(lst);
+        Assert.Equal(3, m.GetLength(0));
+        Assert.Equal(1, m[0, 0]);
+        Assert.Equal(6, m[2, 1]);
+    }
+
+    [Fact]
+    public void FromListRows()
+    {
+        var lst = new List<double[]>();
+        lst.Add(new double[] { 1, 2, 3 });
+        lst.Add(new double[] { 4, 5, 6 });
+        Assert.Equal(2, lst.Count);
+        var m = CsML.Util.Matrix.FromListRows(lst);
+        Assert.Equal(2, m.GetLength(0));
+        Assert.Equal(1, m[0, 0]);
+        Assert.Equal(6, m[1, 2]);
+    }
+
+    [Fact]
     public void GetColumn()
     {
         var matrix = new double[,]{

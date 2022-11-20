@@ -152,7 +152,7 @@ public class RandomForest
                 foreach (var tree in trees)
                     predictions.Add(
                         tree.Predict(
-                            CsML.Util.Matrix.FromList2D(input))[0]);
+                            CsML.Util.Matrix.FromListRows(input))[0]);
                 result[i] = predictions.Average();
             }
             else
@@ -161,7 +161,7 @@ public class RandomForest
                 double vote;
                 foreach (var tree in trees)
                 {
-                    vote = tree.Predict(CsML.Util.Matrix.FromList2D(input))[0];
+                    vote = tree.Predict(CsML.Util.Matrix.FromListRows(input))[0];
                     counts.Increment(vote);
                 }
                 result[i] = counts.MaxKey();
@@ -206,7 +206,7 @@ public class RandomForest
             foreach (var tree in trees)
             {
                 vote = tree.PredictWithProbabilities(
-                    CsML.Util.Matrix.FromList2D(input))[0];
+                    CsML.Util.Matrix.FromListRows(input))[0];
                 counts.Increment(vote.Item1);
                 foreach (double key in vote.Item2.Keys)
                 {

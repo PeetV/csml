@@ -456,6 +456,10 @@ public class Features
         /// Scale columns to z-scores using column metrics captured
         /// at instantiation.
         /// </summary>
+        // public double[,] ScaleZScore(int[]? columns = null)
+        // {
+
+        // }
     }
 }
 
@@ -586,10 +590,27 @@ public class Matrix
         return result;
     }
 
-    /// <summary>Create a two dimensional array from a List.</summary>
-    public static T[,] FromList2D<T>(List<T[]> matrix)
+    /// <summary>Create a two dimensional array from a List of columns.</summary>
+    public static T[,] FromListColumns<T>(List<T[]> matrix)
     {
-        int rows = matrix.Count, cols = matrix[0].Length;
+        int cols = matrix.Count;
+        if (cols == 0) return new T[,] { };
+        int rows = matrix[0].Length;
+        T[,] result = new T[rows, cols];
+        for (int ri = 0; ri < rows; ri++)
+        {
+            for (int ci = 0; ci < cols; ci++)
+                result[ri, ci] = matrix[ci][ri];
+        }
+        return result;
+    }
+
+    /// <summary>Create a two dimensional array from a List of rows.</summary>
+    public static T[,] FromListRows<T>(List<T[]> matrix)
+    {
+        int rows = matrix.Count;
+        if (rows == 0) return new T[,] { };
+        int cols = matrix[0].Length;
         T[,] result = new T[rows, cols];
         for (int ri = 0; ri < rows; ri++)
         {
@@ -679,9 +700,9 @@ public class Matrix
                 rhs.Add(row);
         }
         double[,] dlhs, drhs;
-        if (lhs.Count != 0) dlhs = FromList2D(lhs);
+        if (lhs.Count != 0) dlhs = FromListRows(lhs);
         else dlhs = new double[,] { };
-        if (rhs.Count != 0) drhs = FromList2D(rhs);
+        if (rhs.Count != 0) drhs = FromListRows(rhs);
         else drhs = new double[,] { };
         return (dlhs, drhs, filter);
     }
@@ -710,9 +731,9 @@ public class Matrix
                 rhs.Add(row);
         }
         double[,] dlhs, drhs;
-        if (lhs.Count != 0) dlhs = FromList2D(lhs);
+        if (lhs.Count != 0) dlhs = FromListRows(lhs);
         else dlhs = new double[,] { };
-        if (rhs.Count != 0) drhs = FromList2D(rhs);
+        if (rhs.Count != 0) drhs = FromListRows(rhs);
         else drhs = new double[,] { };
         return (dlhs, drhs);
     }
