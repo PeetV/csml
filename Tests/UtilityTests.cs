@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace CsML.Tests.Util;
+namespace CsML.Tests.Utility;
 
 public class Array
 {
@@ -11,10 +11,10 @@ public class Array
                             3.0, 1.0 };
         double[] target = { 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0,
                             0.0, 1.0 };
-        var result = CsML.Util.Array.BestSplit(
+        var result = CsML.Utility.Array.BestSplit(
             values,
             target,
-            CsML.Util.Statistics.Gini);
+            CsML.Utility.Statistics.Gini);
         Assert.Equal(7.5, result.Item1);
         Assert.Equal(0.061868686868686684, result.Item2);
     }
@@ -26,10 +26,10 @@ public class Array
         1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
         double[] target = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0,
         0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
-        var result = CsML.Util.Array.BestSplit(
+        var result = CsML.Utility.Array.BestSplit(
             values,
             target,
-            CsML.Util.Statistics.Gini);
+            CsML.Utility.Statistics.Gini);
         Assert.Equal(0.5, result.Item1);
         Assert.Equal(0.0625, result.Item2);
     }
@@ -39,10 +39,10 @@ public class Array
     {
         double[] values = { 5.0, 5.0, 5.0, 5.0, 5.0 };
         double[] target = { 1.0, 2.0, 1.0, 2.0, 1.0 };
-        var result = CsML.Util.Array.BestSplit(
+        var result = CsML.Utility.Array.BestSplit(
             values,
             target,
-            CsML.Util.Statistics.Gini);
+            CsML.Utility.Statistics.Gini);
         Assert.Equal(4.0, result.Item1);
         Assert.Equal(0.0, result.Item2);
     }
@@ -52,14 +52,14 @@ public class Array
     {
         double[] values = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         double[] target = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
-        double result = CsML.Util.Array.ClassificationAccuracy(values, target);
+        double result = CsML.Utility.Array.ClassificationAccuracy(values, target);
         Assert.Equal(1, result);
     }
 
     [Fact]
     public void ClassificationAccuracy_empty()
     {
-        double result = CsML.Util.Array.ClassificationAccuracy(
+        double result = CsML.Utility.Array.ClassificationAccuracy(
                             System.Array.Empty<double>(),
                             System.Array.Empty<double>());
         Assert.Equal(0.0, result);
@@ -70,7 +70,7 @@ public class Array
     {
         double[] values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         double[] target = new double[] { 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 };
-        double result = CsML.Util.Array.ClassificationAccuracy(values, target);
+        double result = CsML.Utility.Array.ClassificationAccuracy(values, target);
         Assert.Equal(0.5, result);
     }
 
@@ -79,7 +79,7 @@ public class Array
     {
         var values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         var target = new double[] { 5.0, 5.0, 1.0, 5.0, 5.0, 5.0 };
-        var result = CsML.Util.Array.ClassificationAccuracy(values, target);
+        var result = CsML.Utility.Array.ClassificationAccuracy(values, target);
         Assert.Equal(2.0 / 6.0, result);
     }
 
@@ -88,7 +88,7 @@ public class Array
     {
         double[] values = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         double[] target = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
-        double result = CsML.Util.Array.ClassificationError(values, target);
+        double result = CsML.Utility.Array.ClassificationError(values, target);
         Assert.Equal(0, result);
 
     }
@@ -97,7 +97,7 @@ public class Array
     public void ClassificationError_empty()
     {
 
-        var result = CsML.Util.Array.ClassificationAccuracy(
+        var result = CsML.Utility.Array.ClassificationAccuracy(
                             System.Array.Empty<double>(),
                             System.Array.Empty<double>());
         Assert.Equal(0.0, result);
@@ -108,7 +108,7 @@ public class Array
     {
         var values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         var target = new double[] { 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 };
-        var result = CsML.Util.Array.ClassificationError(values, target);
+        var result = CsML.Utility.Array.ClassificationError(values, target);
         Assert.Equal(0.5, result);
     }
 
@@ -117,7 +117,7 @@ public class Array
     {
         var values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         var target = new double[] { 5.0, 5.0, 1.0, 5.0, 5.0, 5.0 };
-        var result = CsML.Util.Array.ClassificationError(values, target);
+        var result = CsML.Utility.Array.ClassificationError(values, target);
         Assert.True(4.0 / 6.0 - result < 0.00000001);
     }
 
@@ -128,7 +128,7 @@ public class Array
                                      "C", "B" };
         var predicted = new string[] { "A", "B", "B", "A", "C", "C", "C",
                                        "A", "B" };
-        var result = CsML.Util.Array.ClassificationMetrics(actuals, predicted);
+        var result = CsML.Utility.Array.ClassificationMetrics(actuals, predicted);
         Assert.Equal(0.6666666666666666, result["A"].Item1);
         Assert.Equal(0.6666666666666666, result["B"].Item1);
         Assert.Equal(0.6666666666666666, result["C"].Item1);
@@ -140,7 +140,7 @@ public class Array
     [Fact]
     public void ClassificationMetrics_empty()
     {
-        var result = CsML.Util.Array.ClassificationMetrics(
+        var result = CsML.Utility.Array.ClassificationMetrics(
             new string[] { }, new string[] { });
         Assert.True(result.Keys.Count == 0);
     }
@@ -151,7 +151,7 @@ public class Array
         var vector = new double[] { 1, 1, 1, 2, 2 };
         var filter = new bool[] { true, true, true, false, false };
         double[] lhs, rhs;
-        (lhs, rhs) = CsML.Util.Array.Split(vector, filter);
+        (lhs, rhs) = CsML.Utility.Array.Split(vector, filter);
         Assert.Equal(3, lhs.Sum());
         Assert.Equal(4, rhs.Sum());
     }
@@ -160,7 +160,7 @@ public class Array
     public void ToElementCounts()
     {
         var vector = new double[] { 1, 1, 1, 2, 2 };
-        var result = CsML.Util.Array.ElementCounts(vector);
+        var result = CsML.Utility.Array.ElementCounts(vector);
         Assert.Equal(3, result[1]);
         Assert.Equal(2, result[2]);
     }
@@ -172,7 +172,7 @@ public class Features
     public void ClassProportions()
     {
         var target = new double[] { 1, 1, 2, 2, 3, 3, 4, 4, 5, 5 };
-        var result = CsML.Util.Features.ClassProportions(target);
+        var result = CsML.Utility.Features.ClassProportions(target);
         Assert.Equal(1, result[0].Item1);
         Assert.Equal(2, result[0].Item2);
         Assert.Equal(0.2, result[0].Item3);
@@ -194,11 +194,11 @@ public class Features
         };
         var target = new double[] { 1, 2, 3, 4, 5 };
         (double[,] newm, double[] newt, int[] oobidx) = CsML
-                            .Util.Features.Bootstrap(matrix, target);
+                            .Utility.Features.Bootstrap(matrix, target);
         Assert.Equal(5, newm.GetLength(0));
         Assert.Equal(3, newm.GetLength(1));
         Assert.Equal(5, newt.Length);
-        var row0 = CsML.Util.Matrix.GetRow(matrix, 0);
+        var row0 = CsML.Utility.Matrix.GetRow(matrix, 0);
         double[] allowedVals = Enumerable
                                 .Range(1, 6)
                                 .Select(x => (double)x)
@@ -222,11 +222,11 @@ public class Features
             {5, 5, 5}
         };
         var target = new double[] { 1, 2, 3, 4, 5 };
-        (double[,] newmatrix, double[] newtarget) = CsML.Util
+        (double[,] newmatrix, double[] newtarget) = CsML.Utility
                                     .Features.Shuffle(matrix, target);
         Assert.Equal(5, newmatrix.GetLength(0));
         Assert.Equal(3, newmatrix.GetLength(1));
-        Assert.False(CsML.Util.Matrix.Equal(matrix, newmatrix));
+        Assert.False(CsML.Utility.Matrix.Equal(matrix, newmatrix));
         Assert.False(target.SequenceEqual(newtarget));
         Assert.True(newtarget.OrderBy(x => x).ToArray().SequenceEqual(target));
     }
@@ -245,7 +245,7 @@ public class Features
         var target = new double[] { 1, 2, 3, 4, 5 };
         double[,] mlhs, mrhs;
         double[] tlhs, trhs;
-        ((mlhs, tlhs), (mrhs, trhs)) = CsML.Util.Features.Split(
+        ((mlhs, tlhs), (mrhs, trhs)) = CsML.Utility.Features.Split(
                                             matrix, target, 3.0 / 5.0);
         Assert.Equal(3, mlhs.GetLength(0));
         Assert.Equal(3, mlhs.GetLength(1));
@@ -265,7 +265,7 @@ public class Features
             {3, 30, 300},
         };
         var target = new double[] { 1, 2, 3 };
-        var profiler = new CsML.Util.Features.Profiler(matrix, target);
+        var profiler = new CsML.Utility.Features.Profiler(matrix, target);
         Assert.Equal(1.5, profiler.columnData[0].q25);
         Assert.Equal(20, profiler.columnData[1].q50);
         Assert.Equal(250, profiler.columnData[2].q75);
@@ -288,7 +288,7 @@ public class Features
             {4, 40, 400}
         };
         var target = new double[] { 1, 2, 3, 4 };
-        var profiler = new CsML.Util.Features.Profiler(matrix, target);
+        var profiler = new CsML.Utility.Features.Profiler(matrix, target);
         Assert.Empty(profiler.ColumnsWithOutliers(matrix));
     }
 
@@ -303,7 +303,7 @@ public class Features
             {100, 30, -1000},
         };
         var target = new double[] { 1, 2, 3, 4 };
-        var profiler = new CsML.Util.Features.Profiler(matrix, target);
+        var profiler = new CsML.Utility.Features.Profiler(matrix, target);
         var result = profiler.ColumnsWithOutliers(matrix);
         Assert.Equal(2, result.Length);
         Assert.Equal(0, result[0]);
@@ -321,7 +321,7 @@ public class Features
             {4, 40, 400}
         };
         var target = new double[] { 1, 2, 3, 4 };
-        var profiler = new CsML.Util.Features.Profiler(matrix, target);
+        var profiler = new CsML.Utility.Features.Profiler(matrix, target);
         Assert.True(profiler.NoOutliers(matrix));
     }
 
@@ -336,7 +336,7 @@ public class Features
             {100, 30, 3},
        };
         var target = new double[] { 1, 2, 3, 4 };
-        var profiler = new CsML.Util.Features.Profiler(matrix, target);
+        var profiler = new CsML.Utility.Features.Profiler(matrix, target);
         Assert.False(profiler.NoOutliers(matrix));
     }
 
@@ -350,13 +350,13 @@ public class Features
             {3, 30, 300}
         };
         var target = new double[] { 1, 2, 3 };
-        var profiler = new CsML.Util.Features.Profiler(matrix, target);
+        var profiler = new CsML.Utility.Features.Profiler(matrix, target);
         var scaled = profiler.ScaleZScore(matrix);
         Assert.Equal(3, scaled.GetLength(0));
         Assert.Equal(3, scaled.GetLength(1));
         double col1mn = (1 + 2 + 3) / 3;
         double[] col1 = { 1, 2, 3 };
-        double col1st = CsML.Util.Statistics.StdevP(col1);
+        double col1st = CsML.Utility.Statistics.StdevP(col1);
         double[] col1e = col1.Select(x => (x - col1mn) / col1st).ToArray();
         double[] col1a = { scaled[0, 0], scaled[1, 0], scaled[2, 0] };
         Assert.True(col1e.SequenceEqual(col1a));
@@ -385,8 +385,8 @@ public class Matrix
         Assert.Equal(12, matrix.GetLength(0)); // rows
         Assert.Equal(2, matrix.GetLength(1)); // columns
         double[] target = { 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1 };
-        var result = CsML.Util.Matrix.BestSplit(
-            matrix, target, CsML.Util.Statistics.Gini, -1);
+        var result = CsML.Utility.Matrix.BestSplit(
+            matrix, target, CsML.Utility.Statistics.Gini, -1);
         Assert.Equal(0, result.Item1); // best column
         Assert.Equal(0.5, result.Item2); // best split
         Assert.Equal(0.05555555555555555, result.Item3); // best gain
@@ -399,9 +399,9 @@ public class Matrix
         var matrix2 = new double[,] { { 1, 1 }, { 2, 2 } };
         var matrix3 = new double[,] { { 1, 1 }, { 3, 3 } };
         var matrix4 = new double[,] { { 1, 1 } };
-        Assert.True(CsML.Util.Matrix.Equal(matrix1, matrix2));
-        Assert.False(CsML.Util.Matrix.Equal(matrix1, matrix3));
-        Assert.False(CsML.Util.Matrix.Equal(matrix1, matrix4));
+        Assert.True(CsML.Utility.Matrix.Equal(matrix1, matrix2));
+        Assert.False(CsML.Utility.Matrix.Equal(matrix1, matrix3));
+        Assert.False(CsML.Utility.Matrix.Equal(matrix1, matrix4));
     }
 
     [Fact]
@@ -418,7 +418,7 @@ public class Matrix
                                 .Parent!
                                 .FullName;
         string inpuPath = Path.Combine(strWorkPath, "Data/iris.csv");
-        double[,] matrix = CsML.Util.Matrix.FromCSV(
+        double[,] matrix = CsML.Utility.Matrix.FromCSV(
                                 inpuPath, mapping, loadFromRow: 1);
         Assert.Equal(150, matrix.GetLength(0));
         Assert.Equal(5.1, matrix[0, 0]);
@@ -440,7 +440,7 @@ public class Matrix
         lst.Add(new double[] { 1, 2, 3 });
         lst.Add(new double[] { 4, 5, 6 });
         Assert.Equal(2, lst.Count);
-        var m = CsML.Util.Matrix.FromListColumns(lst);
+        var m = CsML.Utility.Matrix.FromListColumns(lst);
         Assert.Equal(3, m.GetLength(0));
         Assert.Equal(1, m[0, 0]);
         Assert.Equal(6, m[2, 1]);
@@ -453,7 +453,7 @@ public class Matrix
         lst.Add(new double[] { 1, 2, 3 });
         lst.Add(new double[] { 4, 5, 6 });
         Assert.Equal(2, lst.Count);
-        var m = CsML.Util.Matrix.FromListRows(lst);
+        var m = CsML.Utility.Matrix.FromListRows(lst);
         Assert.Equal(2, m.GetLength(0));
         Assert.Equal(1, m[0, 0]);
         Assert.Equal(6, m[1, 2]);
@@ -467,7 +467,7 @@ public class Matrix
             {1, 4, 7},
             {2, 5, 8},
         };
-        var result = CsML.Util.Matrix.GetColumn(matrix, 1);
+        var result = CsML.Utility.Matrix.GetColumn(matrix, 1);
         double[] expected = { 3, 4, 5 };
         Assert.True(result.SequenceEqual(expected));
     }
@@ -480,7 +480,7 @@ public class Matrix
             {1, 4, 7},
             {2, 5, 8},
         };
-        var result = CsML.Util.Matrix.GetRow(matrix, 1);
+        var result = CsML.Utility.Matrix.GetRow(matrix, 1);
         double[] expected = { 1, 4, 7 };
         Assert.True(result.SequenceEqual(expected));
     }
@@ -526,13 +526,13 @@ public class Matrix
             false, false,
             true
         };
-        var result = CsML.Util.Matrix.Split(matrix, 2, 0.5);
+        var result = CsML.Utility.Matrix.Split(matrix, 2, 0.5);
         var lhs = result.Item1;
         var rhs = result.Item2;
         var filter = result.Item3;
-        Assert.True(CsML.Util.Matrix.Equal(expectedLhs, lhs));
-        Assert.True(CsML.Util.Matrix.Equal(expectedRhs, rhs));
-        Assert.False(CsML.Util.Matrix.Equal(lhs, rhs));
+        Assert.True(CsML.Utility.Matrix.Equal(expectedLhs, lhs));
+        Assert.True(CsML.Utility.Matrix.Equal(expectedRhs, rhs));
+        Assert.False(CsML.Utility.Matrix.Equal(lhs, rhs));
         Assert.True(expectedFilter.SequenceEqual(filter));
     }
 
@@ -542,7 +542,7 @@ public class Matrix
         var matrix = new double[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
         var filter = new bool[] { true, false, false };
         double[,] lhs, rhs;
-        (lhs, rhs) = CsML.Util.Matrix.Split(matrix, filter);
+        (lhs, rhs) = CsML.Utility.Matrix.Split(matrix, filter);
         Assert.Equal(1, lhs.GetLength(0));
         Assert.Equal(2, lhs.GetLength(1));
         Assert.Equal(2, rhs.GetLength(0));
@@ -559,7 +559,7 @@ public class Statistics
     public void Gini_strings()
     {
         string[] stringvals = { "a", "a", "a", "b", "b", "b" };
-        double result = CsML.Util.Statistics.Gini(stringvals);
+        double result = CsML.Utility.Statistics.Gini(stringvals);
         Assert.Equal(0.5, result);
     }
 
@@ -567,7 +567,7 @@ public class Statistics
     public void Gini_ints()
     {
         int[] intvals = { 1, 1, 1, 2, 2, 1 };
-        double result = CsML.Util.Statistics.Gini(intvals);
+        double result = CsML.Utility.Statistics.Gini(intvals);
         Assert.Equal(0.4444444444444445, result);
     }
 
@@ -575,7 +575,7 @@ public class Statistics
     public void Gini_empty()
     {
         int[] emptyvals = new int[] { };
-        double result = CsML.Util.Statistics.Gini(emptyvals);
+        double result = CsML.Utility.Statistics.Gini(emptyvals);
         Assert.Equal(0.0, result);
     }
 
@@ -583,7 +583,7 @@ public class Statistics
     public void Gini_different()
     {
         int[] emptyvals = new int[] { 1, 2, 3 };
-        double result = CsML.Util.Statistics.Gini(emptyvals);
+        double result = CsML.Utility.Statistics.Gini(emptyvals);
         Assert.Equal(0.6666666666666665, result);
     }
 
@@ -591,7 +591,7 @@ public class Statistics
     public void OutlierBounds_upperskew()
     {
         double[] input = { 1, 2, 4, 2, 1, 100 };
-        var result = CsML.Util.Statistics.OutlierBounds(input);
+        var result = CsML.Utility.Statistics.OutlierBounds(input);
         Assert.Equal((-2.125, 6.875), result);
     }
 
@@ -599,7 +599,7 @@ public class Statistics
     public void OutlierBounds_lowerskew()
     {
         double[] input = { -100, 2, 4, 2, 1, 1 };
-        var result = CsML.Util.Statistics.OutlierBounds(input);
+        var result = CsML.Utility.Statistics.OutlierBounds(input);
         Assert.Equal((-0.5, 3.5), result);
     }
 
@@ -607,14 +607,14 @@ public class Statistics
     public void OutlierBounds_upperandlowerskew()
     {
         double[] input = { -100, 2, 4, 2, 1, 100 };
-        var result = CsML.Util.Statistics.OutlierBounds(input);
+        var result = CsML.Utility.Statistics.OutlierBounds(input);
         Assert.Equal((-2.125, 6.875), result);
     }
 
     [Fact]
     public void PercentileLinear_empty()
     {
-        double result = CsML.Util.Statistics
+        double result = CsML.Utility.Statistics
                 .PercentileLinear(System.Array.Empty<double>(), 0.5);
         Assert.Equal(0, result);
     }
@@ -623,9 +623,9 @@ public class Statistics
     public void PercentileLinear_same()
     {
         double[] input = { 1, 1, 1, 1, 1, };
-        double result = CsML.Util.Statistics.PercentileLinear(input, 0.5);
+        double result = CsML.Utility.Statistics.PercentileLinear(input, 0.5);
         Assert.Equal(1, result);
-        result = CsML.Util.Statistics.PercentileLinear(input, 0.25);
+        result = CsML.Utility.Statistics.PercentileLinear(input, 0.25);
         Assert.Equal(1, result);
     }
 
@@ -633,11 +633,11 @@ public class Statistics
     public void PercentileLinear_precalculated()
     {
         double[] input = { 2, 6, 4, 8, 13, 22, 16, 40, 35, 48, 42 };
-        double result = CsML.Util.Statistics.PercentileLinear(input, 0.5);
+        double result = CsML.Utility.Statistics.PercentileLinear(input, 0.5);
         Assert.Equal(16, result);
-        result = CsML.Util.Statistics.PercentileLinear(input, 0.75);
+        result = CsML.Utility.Statistics.PercentileLinear(input, 0.75);
         Assert.Equal(37.5, result);
-        result = CsML.Util.Statistics.PercentileLinear(input, 0.25);
+        result = CsML.Utility.Statistics.PercentileLinear(input, 0.25);
         Assert.Equal(7, result);
     }
 
@@ -646,7 +646,7 @@ public class Statistics
     {
         var acts = new double[] { 2.0, 2.0, 4.0 };
         var preds = new double[] { 1.0, 2.0, 3.0 };
-        var result = CsML.Util.Statistics.RSquared(acts, preds, null);
+        var result = CsML.Utility.Statistics.RSquared(acts, preds, null);
         Assert.Equal((0.25, 00), result);
     }
 
@@ -655,7 +655,7 @@ public class Statistics
     {
         var acts = new double[] { 2.0, 2.0, 4.0 };
         var preds = new double[] { 1.0, 2.0, 3.0 };
-        var result = CsML.Util.Statistics.RSquared(acts, preds, 1);
+        var result = CsML.Utility.Statistics.RSquared(acts, preds, 1);
         var n = acts.Length;
         var adjusted = 1.0 - (1.0 - 0.25) * ((n - 1.0) / (n - 1 - 1));
         Assert.Equal((0.25, adjusted), result);
@@ -666,7 +666,7 @@ public class Statistics
     {
         var actuals = new double[] { 1, 2, 3, 4, 5 };
         var predicted = new double[] { 1, 3, 5, 4, 5 };
-        var result = CsML.Util.Statistics.SSE(actuals, predicted);
+        var result = CsML.Utility.Statistics.SSE(actuals, predicted);
         Assert.Equal(5, result);
     }
 
@@ -674,14 +674,14 @@ public class Statistics
     public void StdevP()
     {
         var input = new double[] { 1, 2, 3, 4 };
-        Assert.Equal(1.118033988749895, CsML.Util.Statistics.StdevP(input));
+        Assert.Equal(1.118033988749895, CsML.Utility.Statistics.StdevP(input));
     }
 
     [Fact]
     public void Variance()
     {
         var input = new double[] { 1, 2, 3, 4 };
-        Assert.Equal(1.25, CsML.Util.Statistics.Variance(input));
+        Assert.Equal(1.25, CsML.Utility.Statistics.Variance(input));
     }
 }
 
@@ -690,7 +690,7 @@ public class KFoldIterator
     [Fact]
     public void iterator_test_correctfilter()
     {
-        CsML.Util.KFoldIterator iter = new CsML.Util.KFoldIterator(100, 10);
+        CsML.Utility.KFoldIterator iter = new CsML.Utility.KFoldIterator(100, 10);
         Assert.Equal((0, 10), iter.foldIndeces[0]);
         Assert.Equal((30, 40), iter.foldIndeces[3]);
         Assert.Equal((90, 100), iter.foldIndeces[9]);
@@ -724,7 +724,7 @@ public class KFoldIterator
     [Fact]
     public void iterator_test_numiters()
     {
-        CsML.Util.KFoldIterator iter = new CsML.Util.KFoldIterator(100, 10);
+        CsML.Utility.KFoldIterator iter = new CsML.Utility.KFoldIterator(100, 10);
         int cntr = 0;
         foreach (bool[] f in iter)
         {

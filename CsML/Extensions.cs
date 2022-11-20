@@ -29,6 +29,6 @@ public static class IEnumerable
         this IEnumerable<T> sequence)
         where T : notnull
     {
-        return CsML.Util.Array.ElementCounts<T>(sequence.ToArray());
+        return CsML.Utility.Array.ElementCounts<T>(sequence.ToArray());
     }
 }

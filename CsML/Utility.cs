@@ -1,6 +1,6 @@
 ﻿using Microsoft.Toolkit.HighPerformance;
 
-namespace CsML.Util;
+namespace CsML.Utility;
 
 // TODO: Adopt math generics when moving to .net7.
 // https://learn.microsoft.com/en-au/dotnet/standard/generics/math
@@ -256,7 +256,7 @@ public static class Features
     public static (T, int, double)[] ClassProportions<T>(T[] target)
         where T : notnull
     {
-        var counts = CsML.Util.Array.ElementCounts(target);
+        var counts = CsML.Utility.Array.ElementCounts(target);
         int total = counts.Values.Sum();
         return counts.Keys
             .OrderBy(x => x)
@@ -325,7 +325,7 @@ public static class Features
         if (inputLength != target.Length)
             throw new ArgumentException(ErrorMessages.E2);
         int[] startingIndex = Enumerable.Range(0, inputLength).ToArray();
-        int[] shuffledIndex = CsML.Probability.Shuffling.Array(
+        int[] shuffledIndex = CsML.Probability.Shuffling.Shuffle(
                                 startingIndex, inPlace: false);
         var fromtoIndex = startingIndex.Zip(shuffledIndex);
         var newmatrix = new double[inputLength, inputWidth];
@@ -365,8 +365,8 @@ public static class Features
         bool[] filter = index.Select(x => x <= cutPoint).ToArray();
         double[,] mlhs, mrhs;
         double[] tlhs, trhs;
-        (mlhs, mrhs) = CsML.Util.Matrix.Split(matrix, filter);
-        (tlhs, trhs) = CsML.Util.Array.Split(target, filter);
+        (mlhs, mrhs) = CsML.Utility.Matrix.Split(matrix, filter);
+        (tlhs, trhs) = CsML.Utility.Array.Split(target, filter);
         return ((mlhs, tlhs), (mrhs, trhs));
     }
 
@@ -568,7 +568,7 @@ public static class Matrix
             double[] columnToCheck = matrixSpan
                                         .GetColumn(columnIndex)
                                         .ToArray();
-            (split, gain) = CsML.Util.Array.BestSplit(
+            (split, gain) = CsML.Utility.Array.BestSplit(
                                 columnToCheck, target, purityfn);
             if (gain > bestgain)
             {
