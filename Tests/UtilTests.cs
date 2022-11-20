@@ -272,6 +272,7 @@ public class Features
         Assert.Equal(3, profiler.columnData[0].max);
         Assert.Equal(10, profiler.columnData[1].min);
         Assert.Equal(200, profiler.columnData[2].mean);
+        Assert.Equal(0.81649658092772603, profiler.columnData[0].stdevp);
         Assert.Equal(0, profiler.columnData[2].outlierLower);
         Assert.Equal(400, profiler.columnData[2].outlierUpper);
     }
@@ -280,12 +281,12 @@ public class Features
     public void Profiler_ColumnsWithOutliers_noOutliers()
     {
         var matrix = new double[,]
-       {
+        {
             {1, 10, 100},
             {2, 20, 200},
             {3, 30, 300},
             {4, 40, 400}
-       };
+        };
         var target = new double[] { 1, 2, 3, 4 };
         var profiler = new CsML.Util.Features.Profiler(matrix, target);
         Assert.Empty(profiler.ColumnsWithOutliers(matrix));
@@ -295,12 +296,12 @@ public class Features
     public void Profiler_ColumnsWithOutliers_outliers()
     {
         var matrix = new double[,]
-       {
+        {
             {1, 10, 100},
             {2, 20, 200},
             {3, 30, 300},
             {100, 30, -1000},
-       };
+        };
         var target = new double[] { 1, 2, 3, 4 };
         var profiler = new CsML.Util.Features.Profiler(matrix, target);
         var result = profiler.ColumnsWithOutliers(matrix);
@@ -313,12 +314,12 @@ public class Features
     public void Profiler_NoOutliers_true()
     {
         var matrix = new double[,]
-       {
+        {
             {1, 10, 100},
             {2, 20, 200},
             {3, 30, 300},
             {4, 40, 400}
-       };
+        };
         var target = new double[] { 1, 2, 3, 4 };
         var profiler = new CsML.Util.Features.Profiler(matrix, target);
         Assert.True(profiler.NoOutliers(matrix));
@@ -337,6 +338,28 @@ public class Features
         var target = new double[] { 1, 2, 3, 4 };
         var profiler = new CsML.Util.Features.Profiler(matrix, target);
         Assert.False(profiler.NoOutliers(matrix));
+    }
+
+    [Fact]
+    public void Profiler_ScaleZScore()
+    {
+        var matrix = new double[,]
+        {
+            {1, 10, 100},
+            {2, 20, 200},
+            {3, 30, 300}
+        };
+        var target = new double[] { 1, 2, 3 };
+        var profiler = new CsML.Util.Features.Profiler(matrix, target);
+        var scaled = profiler.ScaleZScore(matrix);
+        Assert.Equal(3, scaled.GetLength(0));
+        Assert.Equal(3, scaled.GetLength(1));
+        double col1mn = (1 + 2 + 3) / 3;
+        double[] col1 = { 1, 2, 3 };
+        double col1st = CsML.Util.Statistics.StdevP(col1);
+        double[] col1e = col1.Select(x => (x - col1mn) / col1st).ToArray();
+        double[] col1a = { scaled[0, 0], scaled[1, 0], scaled[2, 0] };
+        Assert.True(col1e.SequenceEqual(col1a));
     }
 }
 

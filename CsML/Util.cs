@@ -453,13 +453,41 @@ public class Features
         }
 
         /// <summary>
-        /// Scale columns to z-scores using column metrics captured
-        /// at instantiation.
+        /// Scale matrix columns to z-scores using column metrics captured at
+        /// instantiation.
         /// </summary>
-        // public double[,] ScaleZScore(int[]? columns = null)
-        // {
-
-        // }
+        /// <param name="matrix">
+        /// The matrix to scale. Must be the same number of columns as matrix
+        /// used to capture metrics at instantiation.
+        /// </param>
+        /// <param name="columns">
+        /// Columns to scale. Scale all columns if null (default).
+        /// </param>
+        public double[,] ScaleZScore(double[,] matrix, int[]? columns = null)
+        {
+            if (matrix.GetLength(1) != minColumns)
+                throw new ArgumentException(CsML.Errors.Messages.E4);
+            var result = new List<double[]>();
+            int[] cols = columns == null ?
+                        Enumerable.Range(0, minColumns).ToArray() :
+                        columns;
+            Span2D<double> matrixSpan = matrix;
+            for (int columnIndex = 0; columnIndex < minColumns; columnIndex++)
+            {
+                var col = matrixSpan.GetColumn(columnIndex).ToArray();
+                if (!cols.Contains(columnIndex))
+                {
+                    result.Add(col);
+                    continue;
+                }
+                result.Add(col.Select(x =>
+                {
+                    return (x - columnData[columnIndex].mean) /
+                            columnData[columnIndex].stdevp;
+                }).ToArray());
+            }
+            return Matrix.FromListColumns(result);
+        }
     }
 }
 
