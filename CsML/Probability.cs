@@ -194,37 +194,11 @@ public static class Classification
     }
 }
 
-
 /// <summary>
 /// A collection of functions dealing with or to generate distributions.
 /// </summary>
 public static class Distributions
 {
-    /// <summary>
-    /// Calculate Binomial probabilities for a series of k values. The Binomial
-    /// distribution is used to model the probability of a number of successes
-    /// during a certain number of trials.
-    /// </summary>
-    /// <param name="n">
-    /// Number of independent experiments, each asking a yes–no question, and 
-    /// each with its own Boolean-valued outcome: success (with probability p).
-    /// </param>
-    /// <param name="ks">
-    /// Array of k values representing number of successes.
-    /// </param>
-    /// <param name="p">Probability of experiment success.</param>
-    /// <returns>
-    /// An array of doubles representing the proability of each corresponding
-    /// k values specified in the ks parameter.
-    /// </returns>
-    public static double[] Binomial(int n, int[] ks, double p)
-    {
-        double[] result = ks
-            .Select(k => ProbabilityBinomial(n, k, p))
-            .ToArray();
-        return result;
-    }
-
     /// <summary>Calculate a Binomial probability.</summary>
     /// <param name="n">
     /// Number of independent experiments, each asking a yes–no question, and 
@@ -361,7 +335,9 @@ public static class Distributions
             int n, int[] ks, double p)
         {
             var intPMF = new ProbabilityMassFunction<int>();
-            double[] probs = CsML.Probability.Distributions.Binomial(n, ks, p);
+            double[] probs = ks.Select(k => ProbabilityBinomial(n, k, p))
+                               .ToArray();
+            // double[] probs = CsML.Probability.Distributions.Binomial(n, ks, p);
             for (int i = 0; i < ks.Length; i++)
                 intPMF[ks[i]] = probs[i];
             intPMF.Normalise();

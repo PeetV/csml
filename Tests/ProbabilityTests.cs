@@ -126,16 +126,6 @@ public class Classification
 public class Distributions
 {
     [Fact]
-    public void Binomial()
-    {
-        var ks = new int[] { 0, 1, 2 };
-        var result = CsML.Probability.Distributions.Binomial(2, ks, 0.5);
-        var expected = new double[] { 0.25, 0.5, 0.25 };
-        Assert.Equal(expected[0], result[0]);
-        Assert.True(expected.SequenceEqual(result));
-    }
-
-    [Fact]
     public void ProbabilityBinomial()
     {
         double result = CsML.Probability.Distributions
