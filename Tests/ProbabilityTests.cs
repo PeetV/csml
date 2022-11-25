@@ -176,7 +176,7 @@ public class Distributions
             var outcomes = new string[] { "b", "a", "c" };
             var pmf = new CsML.Probability.Distributions
                               .ProbabilityMassFunction<string>(outcomes);
-            Assert.True(pmf.hypotheses.SequenceEqual(
+            Assert.True(pmf.Hypotheses.SequenceEqual(
                         new string[] { "a", "b", "c" }));
         }
 
@@ -189,7 +189,7 @@ public class Distributions
             pmf["a"] = 0.1;
             pmf["b"] = 0.2;
             pmf["c"] = 0.3;
-            Assert.True(pmf.probabilities.SequenceEqual(
+            Assert.True(pmf.Probabilities.SequenceEqual(
                         new double[] { 0.1, 0.2, 0.3 }));
         }
 
@@ -201,7 +201,7 @@ public class Distributions
                               .ProbabilityMassFunction<string>(outcomes);
             var expected = new (string, double)[] {
             ("a", 1.0/3.0), ("b", 1.0 / 3.0), ("c", 1.0 / 3.0) };
-            Assert.True(expected.SequenceEqual(pmf.zipped));
+            Assert.True(expected.SequenceEqual(pmf.Zipped));
         }
 
         [Fact]
@@ -266,8 +266,8 @@ public class Distributions
             double[] summmedDice = Enumerable.Range(2, 11)
                                              .Select(x => (double)x)
                                              .ToArray();
-            Assert.True(summmedDice.SequenceEqual(pmf.hypotheses));
-            Assert.True(1.0 - pmf.probabilities.Sum() < 0.0000000001);
+            Assert.True(summmedDice.SequenceEqual(pmf.Hypotheses));
+            Assert.True(1.0 - pmf.Probabilities.Sum() < 0.0000000001);
             Assert.Equal((7, 0.166666666666666666), pmf.Max());
         }
 
@@ -285,8 +285,8 @@ public class Distributions
                                     (int[])diceValues.Clone());
             var pmf = dice1.Add(dice2);
             int[] summmedDice = Enumerable.Range(2, 11).ToArray();
-            Assert.True(summmedDice.SequenceEqual(pmf.hypotheses));
-            Assert.True(1.0 - pmf.probabilities.Sum() < 0.0000000001);
+            Assert.True(summmedDice.SequenceEqual(pmf.Hypotheses));
+            Assert.True(1.0 - pmf.Probabilities.Sum() < 0.0000000001);
             Assert.Equal((7, 0.166666666666666666), pmf.Max());
         }
 

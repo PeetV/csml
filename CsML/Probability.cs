@@ -96,8 +96,8 @@ public static class Classification
                         {
                             colvals = columnMeans[c];
                             (mn, var) = colvals[classLabel];
-                            prob = CsML.Probability.Distributions.ProbabilityNormal(
-                                row[c], mn, var);
+                            prob = Distributions.ProbabilityNormal(
+                                                row[c], mn, var);
                         }
                         else prob = 0.0001;
                         // Some underflow protection given values can get really
@@ -164,8 +164,8 @@ public static class Classification
         /// <summary>Create an untrained model.</summary>
         public RandomClassifier()
         {
-            classes = new T[] { };
-            weights = new double[] { };
+            classes = Array.Empty<T>();
+            weights = Array.Empty<double>();
         }
 
         /// <summary>Train the model.</summary>
@@ -208,7 +208,7 @@ public static class Distributions
     /// <param name="p">Probability of experiment success.</param>
     public static double ProbabilityBinomial(int n, int k, double p)
     {
-        double bc = CsML.Probability.Functions.NChooseK(n, k);
+        double bc = Functions.NChooseK(n, k);
         return bc * Math.Pow(p, (double)k) * Math.Pow(1.0 - p, (double)(n - k));
     }
 
@@ -241,7 +241,7 @@ public static class Distributions
     {
         return Math.Pow(λ, k) *
                Math.Exp(-λ) /
-               CsML.Utility.Statistics.Factorial(k);
+               Utility.Statistics.Factorial(k);
     }
 
     /// <summary>
@@ -267,13 +267,13 @@ public static class Distributions
         }
 
         /// <summary>Hypotheses sorted.</summary>
-        public T[] hypotheses
+        public T[] Hypotheses
         {
             get { return table.Keys.OrderBy(x => x).ToArray(); }
         }
 
         /// <summary>Probabilities in order of hypotheses sorted.</summary>
-        public double[] probabilities
+        public double[] Probabilities
         {
             get
             {
@@ -289,7 +289,7 @@ public static class Distributions
         /// Array of tuples containing each hypotheses and corresponding
         /// probability, in order of hypotheses sorted.
         /// </summary>
-        public (T, double)[] zipped
+        public (T, double)[] Zipped
         {
             get
             {
@@ -353,7 +353,7 @@ public static class Distributions
         {
             var doublePMF = new ProbabilityMassFunction<double>();
             for (int i = 0; i < hypotheses.Length; i++)
-                doublePMF[hypotheses[i]] = CsML.Probability.Distributions
+                doublePMF[hypotheses[i]] = Distributions
                     .ProbabilityNormal(hypotheses[i], mean, variance);
             doublePMF.Normalise();
             return doublePMF;
@@ -363,12 +363,15 @@ public static class Distributions
         /// Create a Poisson distribution based PMF from a series of hypotheses
         /// values and λ average event rate.
         /// </summary>
-        public static ProbabilityMassFunction<int> FromPoison(double λ, int[] ks)
+        public static ProbabilityMassFunction<int>
+        FromPoison(
+            double λ, 
+            int[] ks
+         )
         {
             var intPMF = new ProbabilityMassFunction<int>();
             for (int i = 0; i < ks.Length; i++)
-                intPMF[ks[i]] = CsML.Probability.Distributions
-                                    .ProbabilityPoisson(λ, ks[i]);
+                intPMF[ks[i]] = Distributions.ProbabilityPoisson(λ, ks[i]);
             intPMF.Normalise();
             return intPMF;
         }
@@ -441,7 +444,7 @@ public static class Distributions
         public double Mean()
         {
             double result = 0.0;
-            foreach (var pair in zipped)
+            foreach (var pair in Zipped)
                 result += Convert.ToDouble(pair.Item1) * pair.Item2;
             return result;
         }
@@ -475,7 +478,7 @@ public static class Distributions
         {
             if (lower == null & upper == null)
                 return 0.0;
-            return this.zipped.Where((x) =>
+            return this.Zipped.Where((x) =>
             {
                 // Both boundaries apply
                 if (lower != null & upper != null & includeLower & includeUpper)
@@ -510,7 +513,7 @@ public static class Distributions
         /// </summary>
         public Sampling.WeightedSampler<T> ToSampler()
         {
-            return new Sampling.WeightedSampler<T>(hypotheses, probabilities);
+            return new Sampling.WeightedSampler<T>(Hypotheses, Probabilities);
         }
 
         /// <summary>
@@ -533,7 +536,7 @@ public static class Distributions
         /// </param>
         public void Update(double[] likelihoods)
         {
-            foreach ((T, double) pair in this.hypotheses.Zip(likelihoods))
+            foreach ((T, double) pair in this.Hypotheses.Zip(likelihoods))
                 table[pair.Item1] *= pair.Item2;
         }
     }
@@ -559,7 +562,7 @@ public static class Functions
             .Where(x => x.Second)
             .Select(x => x.First)
             .ToArray();
-        return CsML.Probability.Functions.Probability(cond);
+        return Functions.Probability(cond);
     }
 
     /// <summary>Calculate the Binomial Coefficient.</summary>
@@ -602,7 +605,7 @@ public static class Sampling
     /// <param name="count">The number of sample items.</param>
     public static T[] ArrayWithoutReplacement<T>(T[] input, int count)
     {
-        T[] working = CsML.Probability.Shuffling.Shuffle(input, inPlace: false);
+        T[] working = Shuffling.Shuffle(input, inPlace: false);
         return working[0..count];
     }
 

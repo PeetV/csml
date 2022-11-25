@@ -1,5 +1,7 @@
 ﻿using Microsoft.Toolkit.HighPerformance;
 
+using CsML.Extensions;
+
 namespace CsML.Utility;
 
 // TODO: Adopt math generics when moving to .net7.
@@ -37,7 +39,7 @@ public static class Array
                                 .Zip(target)
                                 .OrderBy(x => x.First)
                                 .ToArray();
-        List<T> lhs = new List<T>(), rhs = new List<T>(target);
+        List<T> lhs = new(), rhs = new(target);
         double purityPreSplit = purityfn(target);
         bool allSame = true;
         // Iterate through the sorted arrays
@@ -132,7 +134,7 @@ public static class Array
         if (lenActuals != lenPredictions)
             throw new ArgumentException(ErrorMessages.E2);
         (T, T)[] zipped = actuals.Zip(predictions).ToArray();
-        var counts = new Dictionary<T, double[]> { };
+        Dictionary<T, double[]> counts = new();
         foreach ((T, T) pair in zipped)
         {
             // True positive
@@ -164,7 +166,7 @@ public static class Array
             }
             else counts[pair.Item1] = new double[] { 0.0, 0.0, 1.0 };
         }
-        var result = new Dictionary<T, (double, double)> { };
+        Dictionary<T, (double, double)> result = new();
         double[] tpfpfn;
         double prec, rec;
         foreach (T k in counts.Keys)
@@ -185,7 +187,7 @@ public static class Array
     public static Dictionary<T, int> ElementCounts<T>(T[] input)
         where T : notnull
     {
-        var counts = new Dictionary<T, int>();
+        Dictionary<T, int> counts = new();
         foreach (T item in input)
         {
             if (counts.ContainsKey(item)) counts[item] += 1;
@@ -207,7 +209,7 @@ public static class Array
     {
         if (input.Length != filter.Length)
             throw new ArgumentException(ErrorMessages.E2);
-        List<T> lhs = new List<T>(), rhs = new List<T>();
+        List<T> lhs = new(), rhs = new();
         for (int index = 0; index < input.Length; index++)
         {
             if (filter[index])
@@ -258,7 +260,7 @@ public static class Features
     public static (T, int, double)[] ClassProportions<T>(T[] target)
         where T : notnull
     {
-        var counts = CsML.Utility.Array.ElementCounts(target);
+        var counts = target.ElementCounts();
         int total = counts.Values.Sum();
         return counts.Keys
             .OrderBy(x => x)
@@ -298,7 +300,7 @@ public static class Features
                         .Where(x => !resultIndex
                         .Contains(x))
                         .ToArray();
-        else oobidx = new int[] { };
+        else oobidx = System.Array.Empty<int>();
         int idx;
         for (int i = 0; i < numRows; i++)
         {
@@ -327,16 +329,16 @@ public static class Features
         if (inputLength != target.Length)
             throw new ArgumentException(ErrorMessages.E2);
         int[] startingIndex = Enumerable.Range(0, inputLength).ToArray();
-        int[] shuffledIndex = CsML.Probability.Shuffling.Shuffle(
+        int[] shuffledIndex = Probability.Shuffling.Shuffle(
                                 startingIndex, inPlace: false);
         var fromtoIndex = startingIndex.Zip(shuffledIndex);
         var newmatrix = new double[inputLength, inputWidth];
         var newtarget = new double[inputLength];
-        foreach (var fromto in fromtoIndex)
+        foreach (var (from, to) in fromtoIndex)
         {
-            newtarget[fromto.First] = target[fromto.Second];
+            newtarget[from] = target[to];
             for (int colidx = 0; colidx < inputWidth; colidx++)
-                newmatrix[fromto.First, colidx] = matrix[fromto.Second, colidx];
+                newmatrix[from, colidx] = matrix[to, colidx];
         }
         return (newmatrix, newtarget);
     }
@@ -482,7 +484,7 @@ public static class Features
         /// <summary>Get the index of outlier values in a column.</summary>
         public int[] OutlierIndex(double[] column, int columnIndex)
         {
-            if (column.Length == 0) return new int[] { };
+            if (column.Length == 0) return System.Array.Empty<int>();
             var lower = columnData[columnIndex].outlierLower;
             var upper = columnData[columnIndex].outlierUpper;
             var result = new List<int>();
@@ -512,9 +514,7 @@ public static class Features
             if (matrix.GetLength(1) != minColumns)
                 throw new ArgumentException(ErrorMessages.E4);
             var result = new List<double[]>();
-            int[] cols = columns == null ?
-                        Enumerable.Range(0, minColumns).ToArray() :
-                        columns;
+            int[] cols = columns ?? Enumerable.Range(0, minColumns).ToArray();
             Span2D<double> matrixSpan = matrix;
             for (int columnIndex = 0; columnIndex < minColumns; columnIndex++)
             {
@@ -577,8 +577,8 @@ public static class Matrix
         int columnCount = matrix.GetLength(1);
         columnIndeces = Enumerable.Range(0, columnCount).ToArray();
         if (randomFeatures > 0 & randomFeatures < columnCount)
-            columnIndeces = CsML.Probability
-                .Sampling.ArrayWithoutReplacement(columnIndeces, randomFeatures);
+            columnIndeces = Probability.Sampling
+                .ArrayWithoutReplacement(columnIndeces, randomFeatures);
         double bestsplit = 0.0, bestgain = 0.0;
         int bestColumnIndex = 0;
         double split, gain;
@@ -587,8 +587,7 @@ public static class Matrix
             double[] columnToCheck = matrixSpan
                                         .GetColumn(columnIndex)
                                         .ToArray();
-            (split, gain) = CsML.Utility.Array.BestSplit(
-                                columnToCheck, target, purityfn);
+            (split, gain) = Array.BestSplit(columnToCheck, target, purityfn);
             if (gain > bestgain)
             {
                 bestgain = gain;
@@ -758,7 +757,7 @@ public static class Matrix
             double splitPoint
         )
     {
-        List<double[]> lhs = new List<double[]>(), rhs = new List<double[]>();
+        List<double[]> lhs = new(), rhs = new();
         Span2D<double> matrixSpan = matrix;
         var filterColumn = matrixSpan.GetColumn(columnIndex).ToArray();
         bool[] filter = filterColumn.Select(x => x > splitPoint).ToArray();
@@ -791,7 +790,7 @@ public static class Matrix
     {
         if (matrix.GetLength(0) != filter.Length)
             throw new ArgumentException(ErrorMessages.E2);
-        List<double[]> lhs = new List<double[]>(), rhs = new List<double[]>();
+        List<double[]> lhs = new(), rhs = new();
         Span2D<double> matrixSpan = matrix;
         double[] row;
         for (int rowIndex = 0; rowIndex < matrix.GetLength(0); rowIndex++)
@@ -822,7 +821,7 @@ public static class Statistics
         if (n == 0) return 1;
         int fact = n;
         for (int i = n - 1; i >= 1; i--)
-            fact = fact * i;
+            fact *= i;
         return fact;
     }
 

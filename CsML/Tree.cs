@@ -95,7 +95,7 @@ public class BinaryTree
     /// The function to use to calculate the purity of a slice of the
     /// target array.
     /// <see> See
-    /// <seealso cref="CsML.Utility.Statistics.Gini" />
+    /// <seealso cref="Utility.Statistics.Gini" />
     /// for default function to use.
     /// </see>
     /// </summary>
@@ -122,7 +122,7 @@ public class BinaryTree
         set
         {
             if (value != "classify" & value != "regress")
-                throw new ArgumentException(CsML.Utility.ErrorMessages.E5);
+                throw new ArgumentException(Utility.ErrorMessages.E5);
             _mode = value;
         }
     }
@@ -159,9 +159,9 @@ public class BinaryTree
         if (!skipchecks)
         {
             if (inputRecordCount == 0 | targetLength == 0)
-                throw new ArgumentException(CsML.Utility.ErrorMessages.E1);
+                throw new ArgumentException(Utility.ErrorMessages.E1);
             if (inputRecordCount != targetLength)
-                throw new ArgumentException(CsML.Utility.ErrorMessages.E2);
+                throw new ArgumentException(Utility.ErrorMessages.E2);
         }
         nodes = new List<BinaryNode>();
         minColumns = matrix.GetLength(1);
@@ -174,10 +174,10 @@ public class BinaryTree
         double[] inputt;
         if (bootstrapSampleData)
             if (retainOutOfBagIndeces)
-                (inputm, inputt, outOfBagIndeces) = CsML.Utility.Features.
+                (inputm, inputt, outOfBagIndeces) = Utility.Features.
                     Bootstrap(matrix, target, returnOobIdx: true);
             else
-                (inputm, inputt, _) = CsML.Utility.Features.
+                (inputm, inputt, _) = Utility.Features.
                     Bootstrap(matrix, target, returnOobIdx: false);
         else
         {
@@ -203,11 +203,11 @@ public class BinaryTree
         if (!skipchecks)
         {
             if (inputRecordCount == 0)
-                throw new ArgumentException(CsML.Utility.ErrorMessages.E1);
+                throw new ArgumentException(Utility.ErrorMessages.E1);
             if (nodes.Count == 0)
-                throw new ArgumentException(CsML.Utility.ErrorMessages.E3);
+                throw new ArgumentException(Utility.ErrorMessages.E3);
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException(CsML.Utility.ErrorMessages.E4);
+                throw new ArgumentException(Utility.ErrorMessages.E4);
 
         }
         Span2D<double> matrixSpan = matrix;
@@ -249,13 +249,13 @@ public class BinaryTree
         if (!skipchecks)
         {
             if (inputRecordCount == 0)
-                throw new ArgumentException(CsML.Utility.ErrorMessages.E1);
+                throw new ArgumentException(Utility.ErrorMessages.E1);
             if (nodes.Count == 0)
-                throw new ArgumentException(CsML.Utility.ErrorMessages.E3);
+                throw new ArgumentException(Utility.ErrorMessages.E3);
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException(CsML.Utility.ErrorMessages.E4);
+                throw new ArgumentException(Utility.ErrorMessages.E4);
             if (Mode == "regress")
-                throw new ArgumentException(CsML.Utility.ErrorMessages.E6);
+                throw new ArgumentException(Utility.ErrorMessages.E6);
         }
         Span2D<double> matrixSpan = matrix;
         var result = new (double, Dictionary<double, double>)[inputRecordCount];
@@ -329,12 +329,14 @@ public class BinaryTree
             classCounts = target.ElementCounts();
             predicted = classCounts.MaxBy(kvp => kvp.Value).Key;
         }
-        BinaryNode node = new BinaryNode();
-        node.index = leafIndex;
-        node.isLeaf = true;
-        node.recordCount = recordCount;
-        node.classCounts = classCounts;
-        node.predicted = predicted;
+        BinaryNode node = new()
+        {
+            index = leafIndex,
+            isLeaf = true,
+            recordCount = recordCount,
+            classCounts = classCounts,
+            predicted = predicted
+        };
         nodes.Add(node);
         return leafIndex;
     }
@@ -367,13 +369,15 @@ public class BinaryTree
         target = null;
         int nodeIndex = nodes.Count;
         _splitCount += 1;
-        BinaryNode node = new BinaryNode();
-        node.index = nodeIndex;
-        node.isLeaf = false;
-        node.columnIndex = bs.Item1;
-        node.splitPoint = bs.Item2;
-        node.purityGain = bs.Item3;
-        node.recordCount = recordCount;
+        BinaryNode node = new()
+        {
+            index = nodeIndex,
+            isLeaf = false,
+            columnIndex = bs.Item1,
+            splitPoint = bs.Item2,
+            purityGain = bs.Item3,
+            recordCount = recordCount
+        };
         nodes.Add(node);
         node.yesIndex = Grow(sm.Item1, st.Item1, depth);
         node.noIndex = Grow(sm.Item2, st.Item2, depth);
@@ -420,7 +424,7 @@ public class RandomForest
     /// <summary>
     /// The function to use to calculate the purity of a slice of the target
     /// array.<see> See
-    /// <seealso cref="CsML.Utility.Statistics.Gini" />
+    /// <seealso cref="Utility.Statistics.Gini" />
     /// for default function to use.
     /// </see>
     /// </summary>
@@ -443,7 +447,7 @@ public class RandomForest
         set
         {
             if (value != "classify" & value != "regress")
-                throw new ArgumentException(CsML.Utility.ErrorMessages.E5);
+                throw new ArgumentException(Utility.ErrorMessages.E5);
             _mode = value;
         }
     }
@@ -464,7 +468,7 @@ public class RandomForest
         this.treeCount = treeCount;
     }
 
-    private int DefaultRandomFeatures(int n)
+    public static int DefaultRandomFeatures(int n)
     {
         return (int)Math.Sqrt(n);
     }
@@ -480,9 +484,9 @@ public class RandomForest
         inputRecordCount = matrix.GetLength(0);
         int targetLength = target.Length;
         if (inputRecordCount == 0 | targetLength == 0)
-            throw new ArgumentException(CsML.Utility.ErrorMessages.E1);
+            throw new ArgumentException(Utility.ErrorMessages.E1);
         if (inputRecordCount != targetLength)
-            throw new ArgumentException(CsML.Utility.ErrorMessages.E2);
+            throw new ArgumentException(Utility.ErrorMessages.E2);
         trees = new List<BinaryTree>();
         minColumns = matrix.GetLength(1);
         if (_mode == "classify")
@@ -493,12 +497,14 @@ public class RandomForest
         foreach (int cntr in Enumerable.Range(0, treeCount))
         {
             // Note that mode and purityFn is set in the constructor
-            var tree = new BinaryTree(this.Mode, this.purityFn);
-            tree.maxdepth = this.maxdepth;
-            tree.minrows = this.minrows;
-            tree.randomFeatures = this.randomFeatures;
-            tree.bootstrapSampleData = this.bootstrapSampleData;
-            tree.retainOutOfBagIndeces = this.retainOutOfBagIndeces;
+            var tree = new BinaryTree(this.Mode, this.purityFn)
+            {
+                maxdepth = this.maxdepth,
+                minrows = this.minrows,
+                randomFeatures = this.randomFeatures,
+                bootstrapSampleData = this.bootstrapSampleData,
+                retainOutOfBagIndeces = this.retainOutOfBagIndeces
+            };
             trees.Add(tree);
         }
         Parallel.ForEach(trees, tree => tree.Train(matrix, target, true));
@@ -514,24 +520,24 @@ public class RandomForest
     {
         inputRecordCount = matrix.GetLength(0);
         if (inputRecordCount == 0)
-            throw new ArgumentException(CsML.Utility.ErrorMessages.E1);
+            throw new ArgumentException(Utility.ErrorMessages.E1);
         if (trees.Count == 0)
-            throw new ArgumentException(CsML.Utility.ErrorMessages.E3);
+            throw new ArgumentException(Utility.ErrorMessages.E3);
         if (matrix.GetLength(1) != minColumns)
-            throw new ArgumentException(CsML.Utility.ErrorMessages.E4);
+            throw new ArgumentException(Utility.ErrorMessages.E4);
         var result = new double[inputRecordCount];
         Parallel.For(0, inputRecordCount, i =>
         {
             var input = new List<double[]>();
             input = input.Append(
-                CsML.Utility.Matrix.GetRow(matrix, i, false)).ToList();
+                Utility.Matrix.GetRow(matrix, i, false)).ToList();
             if (Mode == "regress")
             {
                 var predictions = new List<double>(trees.Count);
                 foreach (var tree in trees)
                     predictions.Add(
                         tree.Predict(
-                            CsML.Utility.Matrix.FromListRows(input))[0]);
+                            Utility.Matrix.FromListRows(input))[0]);
                 result[i] = predictions.Average();
             }
             else
@@ -540,7 +546,7 @@ public class RandomForest
                 double vote;
                 foreach (var tree in trees)
                 {
-                    vote = tree.Predict(CsML.Utility.Matrix.FromListRows(input))[0];
+                    vote = tree.Predict(Utility.Matrix.FromListRows(input))[0];
                     counts.Increment(vote);
                 }
                 result[i] = counts.MaxKey();
@@ -565,27 +571,27 @@ public class RandomForest
         if (!skipchecks)
         {
             if (inputRecordCount == 0)
-                throw new ArgumentException(CsML.Utility.ErrorMessages.E1);
+                throw new ArgumentException(Utility.ErrorMessages.E1);
             if (trees.Count == 0)
-                throw new ArgumentException(CsML.Utility.ErrorMessages.E3);
+                throw new ArgumentException(Utility.ErrorMessages.E3);
             if (matrix.GetLength(1) != minColumns)
-                throw new ArgumentException(CsML.Utility.ErrorMessages.E4);
+                throw new ArgumentException(Utility.ErrorMessages.E4);
             if (Mode == "regress")
-                throw new ArgumentException(CsML.Utility.ErrorMessages.E6);
+                throw new ArgumentException(Utility.ErrorMessages.E6);
         }
         var result = new (double, Dictionary<double, double>)[inputRecordCount];
         Parallel.For(0, inputRecordCount, i =>
         {
             var input = new List<double[]>();
             input = input.Append(
-                CsML.Utility.Matrix.GetRow(matrix, i, false)).ToList();
+                Utility.Matrix.GetRow(matrix, i, false)).ToList();
             var counts = new CsML.Probability.Counter<double>();
             var probs = new Dictionary<double, double>();
             (double, Dictionary<double, double>) vote;
             foreach (var tree in trees)
             {
                 vote = tree.PredictWithProbabilities(
-                    CsML.Utility.Matrix.FromListRows(input))[0];
+                    Utility.Matrix.FromListRows(input))[0];
                 counts.Increment(vote.Item1);
                 foreach (double key in vote.Item2.Keys)
                 {
