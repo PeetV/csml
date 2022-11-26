@@ -365,7 +365,7 @@ public static class Distributions
         /// </summary>
         public static ProbabilityMassFunction<int>
         FromPoison(
-            double λ, 
+            double λ,
             int[] ks
          )
         {
@@ -624,6 +624,22 @@ public static class Sampling
         return Enumerable.Range(0, count)
                          .Select(_ => random.Next(minValue, maxValue))
                          .ToArray();
+    }
+
+    /// <summary>
+    /// Sample integers in a range without replacement.
+    /// </summary>
+    /// <param name="minValue">Range starting value.</param>
+    /// <param name="maxValue">
+    /// Range stopping value (not included in sample).
+    /// </param>
+    /// <param name="count">The number of sample items.</param>
+    public static int[] RangeWithoutReplacement(
+        int minValue, int maxValue, int count)
+    {
+        int c = count > (maxValue - minValue) ? maxValue - minValue : count;
+        int[] r = Enumerable.Range(minValue, maxValue).ToArray();
+        return ArrayWithoutReplacement(r, c);
     }
 
     /// <summary>

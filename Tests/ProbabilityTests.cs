@@ -490,6 +490,17 @@ public class Sampling
     }
 
     [Fact]
+    public void RangeWithoutReplacement()
+    {
+        int[] result = CsML.Probability.Sampling
+            .RangeWithoutReplacement(0, 10, 3);
+        Assert.Equal(3, result.Length);
+        int[] possibleVals = Enumerable.Range(0, 10).ToArray();
+        Assert.True(result.All(x => possibleVals.Contains(x)));
+        Assert.Equal(3, result.Distinct().ToArray().Length);
+    }
+
+    [Fact]
     public void WeightedSampler_SampleIndex()
     {
         var target = new string[] { "a", "b", "c", "d", "e" };
