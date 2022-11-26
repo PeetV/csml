@@ -468,7 +468,12 @@ public class RandomForest
         this.treeCount = treeCount;
     }
 
-    public static int DefaultRandomFeatures(int n)
+    /// <summary>
+    /// Calculate the number of features to include in node split.
+    /// </summary>
+    /// <param name="n">Number of columns.</param>
+    /// <returns>Number of features to split on.</returns>
+    public static int DefaultFeatureCount(int n)
     {
         return (int)Math.Sqrt(n);
     }
@@ -492,7 +497,7 @@ public class RandomForest
         if (_mode == "classify")
             classes = target.Distinct().ToArray();
         randomFeatures = randomFeatures == 0 ?
-                         DefaultRandomFeatures(minColumns) :
+                         DefaultFeatureCount(minColumns) :
                          randomFeatures;
         foreach (int cntr in Enumerable.Range(0, treeCount))
         {
