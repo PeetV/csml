@@ -33,4 +33,15 @@ public class IEnumerable
         Assert.Equal(2, result["2"]);
     }
 
+    [Fact]
+    public void Split()
+    {
+        var vector = new double[] { 1, 1, 1, 2, 2 };
+        var filter = new bool[] { true, true, true, false, false };
+        double[] lhs, rhs;
+        (lhs, rhs) = vector.Split(filter);
+        Assert.Equal(3, lhs.Sum());
+        Assert.Equal(4, rhs.Sum());
+    }
+
 }

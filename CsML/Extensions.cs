@@ -31,4 +31,19 @@ public static class IEnumerable
     {
         return CsML.Utility.Array.ElementCounts<T>(sequence.ToArray());
     }
+
+    /// <summary>
+    /// Split an array using a boolean filter array, with related true values 
+    /// going to the left and false values going to the right.
+    /// </summary>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if inputs aren't the same length.
+    /// </exception>
+    public static (T[], T[]) Split<T>(
+        this IEnumerable<T> sequence,
+        bool[] filter
+    )
+    {
+        return CsML.Utility.Array.Split(sequence.ToArray(), filter);
+    }
 }
