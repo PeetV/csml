@@ -356,7 +356,7 @@ public class BinaryTree
         var bs = Utility.Matrix.BestSplit<double>(
                     matrix, target!, purityFn, randomFeatures);
         var sm = Utility.Matrix.Split(matrix, bs.Item1, bs.Item2);
-        var st = Utility.Array.Split(target!, sm.Item3);
+        var st = target!.Split(sm.Item3);
         int yesLength = sm.Item1.GetLength(0);
         int noLength = sm.Item2.GetLength(0);
         if (yesLength == 0 ||

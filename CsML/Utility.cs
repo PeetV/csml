@@ -370,7 +370,7 @@ public static class Features
         double[,] mlhs, mrhs;
         double[] tlhs, trhs;
         (mlhs, mrhs) = CsML.Utility.Matrix.Split(matrix, filter);
-        (tlhs, trhs) = CsML.Utility.Array.Split(target, filter);
+        (tlhs, trhs) = target.Split(filter);
         return ((mlhs, tlhs), (mrhs, trhs));
     }
 
