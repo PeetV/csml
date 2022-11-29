@@ -1,31 +1,38 @@
 namespace CsML.Graph;
 
-/// <summary>Interface for weighted graph edges.</summary>
-public interface IEdge
-{
-    /// <summary>The edge weight.</summary>
-    double Weight { get; set; }
-}
-
-/// <summary>
-/// A graph with edges that have direction and weight and T as node type.
-/// </summary>
-public class DirectedWeightedGraph<TNode, TEdge>
+/// <summary>A graph with edges that have direction and weight.</summary>
+public class DirectedWeightedGraph<TNode>
     where TNode : notnull
-    where TEdge : IEdge
 {
+    ///<summary>Graph nodes.</summary>
     private List<TNode> nodes;
 
-    // Columns represent destinations (to) and rows sources (from). 0 in a cell
-    // represents no link. A number other than 0 indicates a link and the
-    // number represents the weight of the edge.
-    private List<List<TEdge>> adjacencyMatrix;
+    /// <summary>
+    /// Adjacency matrix where rows represent sources (from) and columns
+    /// represent destinations (to) nodes. A node with 0 weight
+    /// represents no link. A number other than 0 indicates a link and the
+    /// number represents the weight of the edge.
+    /// </summary>
+    private List<List<double>> adjacencyMatrix;
 
     /// <summary>Create a new empty graph.</summary>
     public DirectedWeightedGraph()
     {
         nodes = new List<TNode>();
-        adjacencyMatrix = new List<List<TEdge>>();
+        adjacencyMatrix = new List<List<double>>();
+    }
+
+    /// <summary>Add a node and expand the adjacency matrix.</summary>
+    public void AddNode(TNode node)
+    {
+        nodes.Add(node);
+        foreach (List<double> row in adjacencyMatrix)
+            row.Add(0.0);
+        adjacencyMatrix.Add(
+            Enumerable
+                .Repeat(0.0, adjacencyMatrix[0].Count)
+                .ToList()
+        );
     }
 
 }
