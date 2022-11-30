@@ -5,7 +5,7 @@ public class DirectedWeightedGraph<TNode>
     where TNode : notnull
 {
     ///<summary>Graph nodes.</summary>
-    private List<TNode> nodes;
+    public List<TNode> nodes;
 
     /// <summary>
     /// Adjacency matrix where rows represent sources (from) and columns
@@ -13,7 +13,7 @@ public class DirectedWeightedGraph<TNode>
     /// represents no link. A number other than 0 indicates a link and the
     /// number represents the weight of the edge.
     /// </summary>
-    private List<List<double>> adjacencyMatrix;
+    public List<List<double>> adjacencyMatrix;
 
     /// <summary>Create a new empty graph.</summary>
     public DirectedWeightedGraph()
