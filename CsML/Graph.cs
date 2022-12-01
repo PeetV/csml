@@ -26,6 +26,11 @@ public class DirectedWeightedGraph<TNode>
     public void AddNode(TNode node)
     {
         nodes.Add(node);
+        if (adjacencyMatrix.Count == 0)
+        {
+            adjacencyMatrix.Add(new List<double>() { 0.0 });
+            return;
+        }
         foreach (List<double> row in adjacencyMatrix)
             row.Add(0.0);
         adjacencyMatrix.Add(
@@ -33,6 +38,13 @@ public class DirectedWeightedGraph<TNode>
                 .Repeat(0.0, adjacencyMatrix[0].Count)
                 .ToList()
         );
+    }
+
+    /// <summary>Add nodes and expand the adjacency matrix.</summary>
+    public void AddNode(TNode[] nodes)
+    {
+        foreach (TNode node in nodes)
+            AddNode(node);
     }
 
 }
