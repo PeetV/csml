@@ -231,13 +231,13 @@ public static class ErrorMessages
     public const string E2 = "Inputs must be same length";
 
     /// <summary>Error message if model has not been trained.</summary>
-    public const string E3 = "Model must be trained first.";
+    public const string E3 = "Model must be trained first";
 
     /// <summary>
     /// Error message if the model was trained on a different number of
     /// columns.
     /// </summary>
-    public const string E4 = "Same number of columns as trained on needed.";
+    public const string E4 = "Same number of columns as trained on needed";
 
     /// <summary>Error message if model mode is not recognised.</summary>
     public const string E5 = "Mode must be 'classify' or 'regress'";
