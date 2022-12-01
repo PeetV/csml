@@ -35,7 +35,7 @@ public class DirectedWeightedGraph
     }
 
     [Fact]
-    public void DirectedWeightedGraph_AddEdge()
+    public void DirectedWeightedGraph_UpdateEdge()
     {
         var graph = new CsML.Graph.DirectedWeightedGraph<string>();
         Assert.Empty(graph.nodes);

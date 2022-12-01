@@ -57,6 +57,15 @@ public class DirectedWeightedGraph<TNode>
             AddNode(node);
     }
 
+    // / <summary>
+    // / Get the adjacent nodes of a node, where the nodes can be visited from
+    // / the node.
+    // / </summary>
+    // public void TNodes[] AdjacentNodes(TNode node)
+    // {
+    //     int idx = nodes.IndexOf(node));
+    // }
+
     /// <summary>Add an edge between nodes.</summary>
     /// <param name="from">Index of from node (row).</param>
     /// <param name="to">Index of to node (column).</param>
