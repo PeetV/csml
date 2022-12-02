@@ -79,20 +79,29 @@ public class DirectedWeightedGraph<TNode>
     /// <param name="from">Index of from node (row).</param>
     /// <param name="to">Index of to node (column).</param>
     /// <param name="weight">Edge weight (defaults to 1).</param>
-    public void UpdateEdge(int from, int to, double weight = 1.0)
+    /// <param name="undirected">
+    /// Update edige in both directions if false.
+    /// </param>
+    public void UpdateEdge(int from, int to,
+    double weight = 1.0, bool undirected = false)
     {
         if (from > (matrix.Count - 1) | from < 0)
             throw new ArgumentException(ErrorMessages.E1);
         if (to > (matrix[from].Count - 1) | to < 0)
             throw new ArgumentException(ErrorMessages.E2);
         matrix[from][to] = weight;
+        if (undirected) matrix[to][from] = weight;
     }
 
     /// <summary>Add an edge between nodes.</summary>
     /// <param name="from">From node.</param>
     /// <param name="to">To node.</param>
     /// <param name="weight">Edge weight (defaults to 1).</param>
-    public void UpdateEdge(TNode from, TNode to, double weight = 1.0)
+    /// <param name="undirected">
+    /// Update edige in both directions if false.
+    /// </param>
+    public void UpdateEdge(TNode from, TNode to,
+        double weight = 1.0, bool undirected = false)
     {
         int fromIdx = nodes.IndexOf(from);
         if (fromIdx > (matrix.Count - 1) | fromIdx < 0)
@@ -101,6 +110,7 @@ public class DirectedWeightedGraph<TNode>
         if (toIdx > (matrix[fromIdx].Count - 1) | toIdx < 0)
             throw new ArgumentException(ErrorMessages.E2);
         UpdateEdge(fromIdx, toIdx, weight);
+        if (undirected) UpdateEdge(toIdx, fromIdx, weight);
     }
 
 }
