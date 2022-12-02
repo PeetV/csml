@@ -4,6 +4,7 @@ namespace CsML.Tests.Graph;
 
 public class DirectedWeightedGraph
 {
+
     // Assume direction is in increasing alphabetical order:
     //      a
     //    /  \
@@ -22,6 +23,24 @@ public class DirectedWeightedGraph
         graph.UpdateEdge("d", "g");
         graph.UpdateEdge("e", "f");
         graph.UpdateEdge("f", "g");
+        return graph;
+    }
+
+    // Assume direction is in increasing numerical order:
+    //      1  -  4
+    //      |  \
+    //      2 - 3
+    //           \
+    //            5
+    public static CsML.Graph.DirectedWeightedGraph<string> TestGraph2()
+    {
+        var graph = new CsML.Graph.DirectedWeightedGraph<string>();
+        graph.AddNode(new string[] { "1", "2", "3", "4", "5" });
+        graph.UpdateEdge("1", "2");
+        graph.UpdateEdge("1", "3");
+        graph.UpdateEdge("1", "4");
+        graph.UpdateEdge("2", "3");
+        graph.UpdateEdge("3", "5");
         return graph;
     }
 
@@ -85,4 +104,30 @@ public class DirectedWeightedGraph
         graph.UpdateEdge(0, 1, 1.0);
         Assert.Equal(1.0, graph.matrix[0][1]);
     }
+
+
+    [Fact]
+    public void DirectedWeightedGraph_WalkDepthFirst_testgraph1()
+    {
+        var graph = TestGraph1();
+        string[] walk = graph.WalkDepthFirst("a");
+        string[] expected = { "a", "b", "e", "f", "g", "f", "e", "b", "a",
+                              "c", "d" };
+        Assert.True(expected.SequenceEqual(walk));
+        walk = graph.WalkDepthFirst("a", false);
+        expected = new string[] { "a", "b", "e", "f", "g", "c", "d" };
+        Assert.True(expected.SequenceEqual(walk));
+    }
+
+    [Fact]
+    public void DirectedWeightedGraph_WalkDepthFirst_testgraph2()
+    {
+        var graph = TestGraph2();
+        string[] walk = graph.WalkDepthFirst("1");
+        string[] expected = { "1", "2", "3", "5", "3", "2", "1", "4" };
+        Assert.True(expected.SequenceEqual(walk));
+        walk = graph.WalkDepthFirst("1", false);
+        expected = new string[] { "1", "2", "3", "5", "4" };
+    }
+
 }

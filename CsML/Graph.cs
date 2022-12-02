@@ -75,6 +75,21 @@ public class DirectedWeightedGraph<TNode>
         return result.ToArray();
     }
 
+    /// <summary>
+    /// Get the adjacent nodes index of a node, where the nodes can be visited
+    /// from the node.
+    /// </summary>
+    public int[] Neighbours(int row)
+    {
+        List<int> result = new();
+        for (int col = 0; col < matrix[0].Count; col++)
+        {
+            if (matrix[row][col] != 0)
+                result.Add(col);
+        }
+        return result.ToArray();
+    }
+
     /// <summary>Add an edge between nodes.</summary>
     /// <param name="from">Index of from node (row).</param>
     /// <param name="to">Index of to node (column).</param>
@@ -111,6 +126,55 @@ public class DirectedWeightedGraph<TNode>
             throw new ArgumentException(ErrorMessages.E2);
         UpdateEdge(fromIdx, toIdx, weight);
         if (undirected) UpdateEdge(toIdx, fromIdx, weight);
+    }
+
+    /// <summary>
+    /// Walk along edges to all nodes possible using a depth first approach.
+    /// </summary>
+    /// <param name="start">The node to start walking from.</param>
+    /// <param name ="includeBacktrack">Include backtracking steps.</param>
+    public TNode[] WalkDepthFirst(TNode start, bool includeBacktrack = true)
+    {
+        int idx = nodes.IndexOf(start);
+        if (idx == -1) return new TNode[] { };
+        List<int> path = new();
+        List<int> visited = new();
+        Stack<int> stack = new();
+        bool keepGoing = true;
+        int[] unvisitedNeighbours, neighbours;
+        int newIdx, pathIdx;
+        while (keepGoing)
+        {
+            // Visit the node
+            path.Add(idx);
+            if (!visited.Contains(idx)) visited.Add(idx);
+            // Check the neighbhours
+            neighbours = Neighbours(idx);
+            unvisitedNeighbours = neighbours
+                    .Where(x => !visited.Contains(x))
+                    .ToArray();
+            if (unvisitedNeighbours.Length == 0 & stack.Count == 0)
+                break;
+            // Add unvisited neighbours to the top of stack
+            foreach (int val in unvisitedNeighbours.Reverse())
+                if (!stack.Contains(val)) stack.Push(val);
+            // Visit the top of the stack 
+            newIdx = stack.Pop();
+            // If not possible to visit the top of the stack backtrack
+            if (!neighbours.Contains(newIdx) & includeBacktrack)
+            {
+                pathIdx = path.Count - 1;
+                while (pathIdx > 0)
+                {
+                    pathIdx--;
+                    path.Add(path[pathIdx]);
+                    if (Neighbours(path[pathIdx]).Contains(newIdx))
+                        break;
+                }
+            }
+            idx = newIdx;
+        }
+        return path.Select(x => nodes[x]).ToArray();
     }
 
 }
