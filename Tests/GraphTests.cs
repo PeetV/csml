@@ -11,7 +11,7 @@ public class DirectedWeightedGraph
     //   b    c - d
     //    \  /     \
     //     e - f -  g
-    public static CsML.Graph.DirectedWeightedGraph<string> TestGraph1()
+    public static CsML.Graph.DirectedWeightedGraph<string> TestGraphStringDAG()
     {
         var graph = new CsML.Graph.DirectedWeightedGraph<string>();
         graph.AddNode(new string[] { "a", "b", "c", "d", "e", "f", "g" });
@@ -32,7 +32,7 @@ public class DirectedWeightedGraph
     //      2 - 3
     //           \
     //            5
-    public static CsML.Graph.DirectedWeightedGraph<string> TestGraph2()
+    public static CsML.Graph.DirectedWeightedGraph<string> TestGraphIntDAG()
     {
         var graph = new CsML.Graph.DirectedWeightedGraph<string>();
         graph.AddNode(new string[] { "1", "2", "3", "4", "5" });
@@ -62,7 +62,7 @@ public class DirectedWeightedGraph
     }
 
     [Fact]
-    public void DirectedWeightedGraph_Add_nodes()
+    public void DirectedWeightedGraph_AddNode_multiple()
     {
         var graph = new CsML.Graph.DirectedWeightedGraph<string>();
         Assert.Empty(graph.nodes);
@@ -70,14 +70,13 @@ public class DirectedWeightedGraph
         Assert.Equal(2, graph.nodes.Count);
         Assert.Equal(2, graph.matrix.Count);
         Assert.Equal(2, graph.matrix[0].Count);
-        Assert.True(new double[] { 0, 0 }.SequenceEqual(
-                graph.matrix[0]));
+        Assert.True(new double[] { 0, 0 }.SequenceEqual(graph.matrix[0]));
     }
 
     [Fact]
     public void DirectedWeightedGraph_Neighbours()
     {
-        var graph = TestGraph1();
+        var graph = TestGraphStringDAG();
         Assert.Equal(7, graph.nodes.Count);
         Assert.Equal(7, graph.matrix.Count);
         Assert.Equal(7, graph.matrix[0].Count);
@@ -106,9 +105,9 @@ public class DirectedWeightedGraph
     }
 
     [Fact]
-    public void DirectedWeightedGraph_WalkDepthFirst_testgraph1()
+    public void DirectedWeightedGraph_WalkDepthFirst_TestGraphStringDAG()
     {
-        var graph = TestGraph1();
+        var graph = TestGraphStringDAG();
         string[] walk = graph.WalkDepthFirst("a");
         string[] expected = { "a", "b", "e", "f", "g", "f", "e", "b", "a",
                               "c", "d" };
@@ -119,9 +118,9 @@ public class DirectedWeightedGraph
     }
 
     [Fact]
-    public void DirectedWeightedGraph_WalkDepthFirst_testgraph2()
+    public void DirectedWeightedGraph_WalkDepthFirst_TestGraphIntDAG()
     {
-        var graph = TestGraph2();
+        var graph = TestGraphIntDAG();
         string[] walk = graph.WalkDepthFirst("1");
         string[] expected = { "1", "2", "3", "5", "3", "2", "1", "4" };
         Assert.True(expected.SequenceEqual(walk));
