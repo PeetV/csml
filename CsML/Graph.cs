@@ -33,6 +33,7 @@ public class DirectedWeightedGraph<TNode>
     }
 
     /// <summary>Add a node and expand the adjacency matrix.</summary>
+    // TODO: Decide if duplicate node should be prevented
     public void AddNode(TNode node)
     {
         nodes.Add(node);
@@ -57,14 +58,22 @@ public class DirectedWeightedGraph<TNode>
             AddNode(node);
     }
 
-    // / <summary>
-    // / Get the adjacent nodes of a node, where the nodes can be visited from
-    // / the node.
-    // / </summary>
-    // public void TNodes[] AdjacentNodes(TNode node)
-    // {
-    //     int idx = nodes.IndexOf(node));
-    // }
+    /// <summary>
+    /// Get the adjacent nodes of a node, where the nodes can be visited from
+    /// the node.
+    /// </summary>
+    public TNode[] Neighbours(TNode node)
+    {
+        List<TNode> result = new();
+        int row = nodes.IndexOf(node);
+        if (row == -1) return result.ToArray();
+        for (int col = 0; col < matrix[0].Count; col++)
+        {
+            if (matrix[row][col] != 0)
+                result.Add(nodes[col]);
+        }
+        return result.ToArray();
+    }
 
     /// <summary>Add an edge between nodes.</summary>
     /// <param name="from">Index of from node (row).</param>
@@ -77,6 +86,21 @@ public class DirectedWeightedGraph<TNode>
         if (to > (matrix[from].Count - 1) | to < 0)
             throw new ArgumentException(ErrorMessages.E2);
         matrix[from][to] = weight;
+    }
+
+    /// <summary>Add an edge between nodes.</summary>
+    /// <param name="from">From node.</param>
+    /// <param name="to">To node.</param>
+    /// <param name="weight">Edge weight (defaults to 1).</param>
+    public void UpdateEdge(TNode from, TNode to, double weight = 1.0)
+    {
+        int fromIdx = nodes.IndexOf(from);
+        if (fromIdx > (matrix.Count - 1) | fromIdx < 0)
+            throw new ArgumentException(ErrorMessages.E1);
+        int toIdx = nodes.IndexOf(to);
+        if (toIdx > (matrix[fromIdx].Count - 1) | toIdx < 0)
+            throw new ArgumentException(ErrorMessages.E2);
+        UpdateEdge(fromIdx, toIdx, weight);
     }
 
 }

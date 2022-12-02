@@ -4,6 +4,27 @@ namespace CsML.Tests.Graph;
 
 public class DirectedWeightedGraph
 {
+    // Assume direction is in increasing alphabetical order:
+    //      a
+    //    /  \
+    //   b    c - d
+    //    \  /     \
+    //     e - f -  g
+    public static CsML.Graph.DirectedWeightedGraph<string> TestGraph1()
+    {
+        var graph = new CsML.Graph.DirectedWeightedGraph<string>();
+        graph.AddNode(new string[] { "a", "b", "c", "d", "e", "f", "g" });
+        graph.UpdateEdge("a", "b");
+        graph.UpdateEdge("a", "c");
+        graph.UpdateEdge("b", "e");
+        graph.UpdateEdge("c", "e");
+        graph.UpdateEdge("c", "d");
+        graph.UpdateEdge("d", "g");
+        graph.UpdateEdge("e", "f");
+        graph.UpdateEdge("f", "g");
+        return graph;
+    }
+
     [Fact]
     public void DirectedWeightedGraph_Add_single_node()
     {
@@ -32,6 +53,27 @@ public class DirectedWeightedGraph
         Assert.Equal(2, graph.matrix[0].Count);
         Assert.True(new double[] { 0, 0 }.SequenceEqual(
                 graph.matrix[0]));
+    }
+
+    [Fact]
+    public void DirectedWeightedGraph_Neighbours()
+    {
+        var graph = TestGraph1();
+        Assert.Equal(7, graph.nodes.Count);
+        Assert.Equal(7, graph.matrix.Count);
+        Assert.Equal(7, graph.matrix[0].Count);
+        var result = graph.Neighbours("a");
+        var expected = new string[] { "b", "c" };
+        Assert.True(expected.SequenceEqual(result));
+        result = graph.Neighbours("c");
+        expected = new string[] { "d", "e" };
+        Assert.True(expected.SequenceEqual(result));
+        result = graph.Neighbours("d");
+        expected = new string[] { "g" };
+        Assert.True(expected.SequenceEqual(result));
+        result = graph.Neighbours("g");
+        expected = new string[] { };
+        Assert.True(expected.SequenceEqual(result));
     }
 
     [Fact]
