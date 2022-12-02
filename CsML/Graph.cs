@@ -140,10 +140,9 @@ public class DirectedWeightedGraph<TNode>
         List<int> path = new();
         List<int> visited = new();
         Stack<int> stack = new();
-        bool keepGoing = true;
         int[] unvisitedNeighbours, neighbours;
         int newIdx, pathIdx;
-        while (keepGoing)
+        while (true)
         {
             // Visit the node
             path.Add(idx);

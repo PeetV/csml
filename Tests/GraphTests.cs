@@ -105,7 +105,6 @@ public class DirectedWeightedGraph
         Assert.Equal(1.0, graph.matrix[0][1]);
     }
 
-
     [Fact]
     public void DirectedWeightedGraph_WalkDepthFirst_testgraph1()
     {
