@@ -11,6 +11,9 @@ public static class ErrorMessages
 
     /// <summary>Error message if a node is found to not be unique. </summary>
     public const string E3 = "Nodes must be unique";
+
+    /// <summary>Error message if a node cannot be found. </summary>
+    public const string E4 = "Node not found in graph";
 }
 
 /// <summary>A graph with edges that have direction and weight.</summary>
@@ -157,6 +160,9 @@ public class Graph<TNode> where TNode : notnull
 
     /// <summary>Calculate the sum of weights of a path.</summary>
     /// <param name="path">List of node index values.</param>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if a from or to are outside of bounds.
+    /// </exception>
     public double PathCost(int[] path)
     {
         double cost = 0;
@@ -174,6 +180,25 @@ public class Graph<TNode> where TNode : notnull
             current = next;
         }
         return cost;
+    }
+
+    /// <summary>Calculate the sum of weights of a path.</summary>
+    /// <param name="path">List of node index values.</param>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if a node cannot be found in the graph.
+    /// </exception>
+    public double PathCost(TNode[] path)
+    {
+        List<int> index = new();
+        int idx;
+        foreach (TNode node in path)
+        {
+            idx = nodes.IndexOf(node);
+            if (idx == -1)
+                throw new ArgumentException(ErrorMessages.E4);
+            index.Add(idx);
+        }
+        return PathCost(index.ToArray());
     }
 
     /// <summary>

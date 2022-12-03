@@ -125,7 +125,7 @@ public class Graph
     }
 
     [Fact]
-    public void Graph_PathCost_GraphIntUndirected_SameCost()
+    public void Graph_PathCost_Index_GraphIntUndirected_SameCost()
     {
         var graph = GraphIntUndirected();
         int[] path = { 0, 1, 2, 4, 2, 1, 0, 3 };
@@ -134,7 +134,16 @@ public class Graph
     }
 
     [Fact]
-    public void Graph_PathCost_GraphIntUndirected_DifferentCost()
+    public void Graph_PathCost_Node_GraphIntUndirected_SameCost()
+    {
+        var graph = GraphIntUndirected();
+        string[] path = { "1", "2", "3", "5", "3", "2", "1", "4" };
+        double cost = graph.PathCost(path);
+        Assert.Equal(7, cost);
+    }
+
+    [Fact]
+    public void Graph_PathCost_Index_GraphIntUndirected_DifferentCost()
     {
         var graph = GraphIntUndirected();
         graph.UpdateEdge(2, 4, 10);
@@ -144,7 +153,17 @@ public class Graph
     }
 
     [Fact]
-    public void Graph_PathCost_GraphIntDAG_SameCost()
+    public void Graph_PathCost_Node_GraphIntUndirected_DifferentCost()
+    {
+        var graph = GraphIntUndirected();
+        graph.UpdateEdge(2, 4, 10);
+        string[] path = { "1", "2", "3", "5", "3", "2", "1", "4" };
+        double cost = graph.PathCost(path);
+        Assert.Equal(16, cost);
+    }
+
+    [Fact]
+    public void Graph_PathCost_Index_GraphIntDAG_SameCost()
     {
         var graph = GraphIntDAG();
         var path = new int[] { 0, 1, 2, 4 };
