@@ -68,6 +68,22 @@ public class Graph<TNode> where TNode : notnull
             AddNode(node);
     }
 
+    // public int[] Dijkstra(int from, int to)
+    // {
+    //     if (from > (matrix.Count - 1) | from < 0)
+    //         throw new ArgumentException(ErrorMessages.E1);
+    //     if (to > (matrix[from].Count - 1) | to < 0)
+    //         throw new ArgumentException(ErrorMessages.E2);
+    //     bool[] visited = Enumerable.Repeat(false, nodes.Count).ToArray();
+    //     double[] dist = Enumerable.Repeat(double.PositiveInfinity,
+    //                                       nodes.Count).ToArray();
+    //     dist[from] = 0;
+    //     List<int> queue = Enumerable.Range(0, nodes.Count).ToList();
+
+    //     List<int> path = new();
+    //     return path.ToArray();
+    // }
+
     /// <summary>
     /// Get the adjacent nodes of a node, where the nodes can be visited from
     /// the node.
