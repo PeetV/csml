@@ -8,6 +8,9 @@ public static class ErrorMessages
 
     /// <summary>Error message if to node index is out of bounds.</summary>
     public const string E2 = "To node index out of bounds";
+
+    /// <summary>Error message if a node is found to not be unique. </summary>
+    public const string E3 = "Nodes must be unique";
 }
 
 /// <summary>A graph with edges that have direction and weight.</summary>
@@ -32,9 +35,10 @@ public class Graph<TNode> where TNode : notnull
     }
 
     /// <summary>Add a node and expand the adjacency matrix.</summary>
-    // TODO: Decide if duplicate node should be prevented
     public void AddNode(TNode node)
     {
+        if (nodes.IndexOf(node) != -1)
+            throw new ArgumentException(ErrorMessages.E3);
         nodes.Add(node);
         if (matrix.Count == 0)
         {
@@ -147,7 +151,9 @@ public class Graph<TNode> where TNode : notnull
         int idx = nodes.IndexOf(start);
         if (idx == -1) return new TNode[] { };
         List<int> path = new();
-        List<int> visited = new();
+        // TODO: use a bool array to track visited
+        // List<int> visited = new();
+        bool[] visited = Enumerable.Repeat(false, nodes.Count).ToArray();
         Stack<int> stack = new();
         int[] unvisitedNeighbours, neighbours;
         int newIdx, pathIdx;
@@ -155,12 +161,10 @@ public class Graph<TNode> where TNode : notnull
         {
             // Visit the node
             path.Add(idx);
-            if (!visited.Contains(idx)) visited.Add(idx);
+            if (!visited[idx]) visited[idx] = true;
             // Check the neighbhours
             neighbours = Neighbours(idx);
-            unvisitedNeighbours = neighbours
-                    .Where(x => !visited.Contains(x))
-                    .ToArray();
+            unvisitedNeighbours = neighbours.Where(x => !visited[x]).ToArray();
             if (unvisitedNeighbours.Length == 0 & stack.Count == 0)
                 break;
             // Add unvisited neighbours to the top of stack
