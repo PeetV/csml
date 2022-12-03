@@ -14,15 +14,12 @@ public class DirectedWeightedGraph
     public static CsML.Graph.DirectedWeightedGraph<string> TestGraphStringDAG()
     {
         var graph = new CsML.Graph.DirectedWeightedGraph<string>();
-        graph.AddNode(new string[] { "a", "b", "c", "d", "e", "f", "g" });
-        graph.UpdateEdge("a", "b");
-        graph.UpdateEdge("a", "c");
-        graph.UpdateEdge("b", "e");
-        graph.UpdateEdge("c", "e");
-        graph.UpdateEdge("c", "d");
-        graph.UpdateEdge("d", "g");
-        graph.UpdateEdge("e", "f");
-        graph.UpdateEdge("f", "g");
+        graph.AddNodes(new string[] { "a", "b", "c", "d", "e", "f", "g" });
+        var edges = new (string, string)[] {
+            ("a", "b"), ("a", "c"), ("b", "e"), ("c", "e"), ("c", "d"),
+            ("d", "g"), ("e", "f"), ("f", "g")
+        };
+        graph.UpdateEdges(edges);
         return graph;
     }
 
@@ -35,12 +32,11 @@ public class DirectedWeightedGraph
     public static CsML.Graph.DirectedWeightedGraph<string> TestGraphIntDAG()
     {
         var graph = new CsML.Graph.DirectedWeightedGraph<string>();
-        graph.AddNode(new string[] { "1", "2", "3", "4", "5" });
-        graph.UpdateEdge("1", "2");
-        graph.UpdateEdge("1", "3");
-        graph.UpdateEdge("1", "4");
-        graph.UpdateEdge("2", "3");
-        graph.UpdateEdge("3", "5");
+        graph.AddNodes(new string[] { "1", "2", "3", "4", "5" });
+        var edges = new (string, string)[] {
+            ("1", "2"), ("1", "3"), ("1", "4"),  ("2", "3"), ("3", "5")
+        };
+        graph.UpdateEdges(edges);
         return graph;
     }
 
@@ -66,7 +62,7 @@ public class DirectedWeightedGraph
     {
         var graph = new CsML.Graph.DirectedWeightedGraph<string>();
         Assert.Empty(graph.nodes);
-        graph.AddNode(new string[] { "a", "b" });
+        graph.AddNodes(new string[] { "a", "b" });
         Assert.Equal(2, graph.nodes.Count);
         Assert.Equal(2, graph.matrix.Count);
         Assert.Equal(2, graph.matrix[0].Count);
@@ -99,7 +95,7 @@ public class DirectedWeightedGraph
     {
         var graph = new CsML.Graph.DirectedWeightedGraph<string>();
         Assert.Empty(graph.nodes);
-        graph.AddNode(new string[] { "a", "b", "c" });
+        graph.AddNodes(new string[] { "a", "b", "c" });
         graph.UpdateEdge(0, 1, 1.0);
         Assert.Equal(1.0, graph.matrix[0][1]);
     }

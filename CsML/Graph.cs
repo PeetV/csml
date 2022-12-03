@@ -52,7 +52,7 @@ public class DirectedWeightedGraph<TNode>
     }
 
     /// <summary>Add nodes and expand the adjacency matrix.</summary>
-    public void AddNode(TNode[] nodes)
+    public void AddNodes(TNode[] nodes)
     {
         foreach (TNode node in nodes)
             AddNode(node);
@@ -126,6 +126,21 @@ public class DirectedWeightedGraph<TNode>
             throw new ArgumentException(ErrorMessages.E2);
         UpdateEdge(fromIdx, toIdx, weight);
         if (undirected) UpdateEdge(toIdx, fromIdx, weight);
+    }
+
+    /// <summary>Add an edges between nodes.</summary>
+    /// <param name="fromtos">Array of from and to node tuples.</param>
+    /// <param name="weight">Edge weight (defaults to 1).</param>
+    /// <param name="undirected">
+    /// Update edige in both directions if false.
+    /// </param>
+    public void UpdateEdges((TNode, TNode)[] fromtos,
+        double weight = 1.0, bool undirected = false)
+    {
+        foreach ((TNode from, TNode to) in fromtos)
+        {
+            UpdateEdge(from, to, weight, undirected);
+        }
     }
 
     /// <summary>
