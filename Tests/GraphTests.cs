@@ -125,6 +125,34 @@ public class Graph
     }
 
     [Fact]
+    public void Graph_PathCost_GraphIntUndirected_SameCost()
+    {
+        var graph = GraphIntUndirected();
+        int[] path = { 0, 1, 2, 4, 2, 1, 0, 3 };
+        double cost = graph.PathCost(path);
+        Assert.Equal(7, cost);
+    }
+
+    [Fact]
+    public void Graph_PathCost_GraphIntUndirected_DifferentCost()
+    {
+        var graph = GraphIntUndirected();
+        graph.UpdateEdge(2, 4, 10);
+        int[] path = { 0, 1, 2, 4, 2, 1, 0, 3 };
+        double cost = graph.PathCost(path);
+        Assert.Equal(16, cost);
+    }
+
+    [Fact]
+    public void Graph_PathCost_GraphIntDAG_SameCost()
+    {
+        var graph = GraphIntDAG();
+        var path = new int[] { 0, 1, 2, 4 };
+        double cost = graph.PathCost(path);
+        Assert.Equal(3, cost);
+    }
+
+    [Fact]
     public void Graph_UpdateEdge_ByIndex()
     {
         var graph = new Graph<string>();

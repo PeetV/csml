@@ -155,7 +155,6 @@ public class Graph<TNode> where TNode : notnull
 
     }
 
-    // TODO: unit tesst this
     /// <summary>Calculate the sum of weights of a path.</summary>
     /// <param name="path">List of node index values.</param>
     public double PathCost(int[] path)
@@ -166,7 +165,7 @@ public class Graph<TNode> where TNode : notnull
         if (current < 0 | current > nodes.Count - 1)
             throw new ArgumentException(ErrorMessages.E1);
         List<double> row;
-        foreach (int next in path[1..path.Length])
+        foreach (int next in path)
         {
             row = matrix[current];
             if (next < 0 | next > row.Count - 1)
@@ -174,7 +173,7 @@ public class Graph<TNode> where TNode : notnull
             cost += row[next];
             current = next;
         }
-        return 0;
+        return cost;
     }
 
     /// <summary>
