@@ -35,6 +35,10 @@ public class Graph<TNode> where TNode : notnull
     }
 
     /// <summary>Add a node and expand the adjacency matrix.</summary>
+    /// <param name="node">The node to add.</param>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if the node is already in the graph.
+    /// </exception>
     public void AddNode(TNode node)
     {
         if (nodes.IndexOf(node) != -1)
@@ -51,6 +55,10 @@ public class Graph<TNode> where TNode : notnull
     }
 
     /// <summary>Add nodes and expand the adjacency matrix.</summary>
+    /// <param name="nodes">The nodes to add.</param>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if a node is already in the graph.
+    /// </exception>
     public void AddNodes(TNode[] nodes)
     {
         foreach (TNode node in nodes)
@@ -78,12 +86,12 @@ public class Graph<TNode> where TNode : notnull
     /// Get the adjacent nodes index of a node, where the nodes can be visited
     /// from the node.
     /// </summary>
-    public int[] Neighbours(int row)
+    public int[] Neighbours(int nodeIndex)
     {
         List<int> result = new();
         for (int col = 0; col < matrix[0].Count; col++)
         {
-            if (matrix[row][col] != 0)
+            if (matrix[nodeIndex][col] != 0)
                 result.Add(col);
         }
         return result.ToArray();
@@ -96,8 +104,14 @@ public class Graph<TNode> where TNode : notnull
     /// <param name="undirected">
     /// Update edige in both directions if false.
     /// </param>
-    public void UpdateEdge(int from, int to,
-    double weight = 1.0, bool undirected = false)
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if a from or to are outside of bounds.
+    /// </exception>
+    public void UpdateEdge(
+        int from, int to,
+        double weight = 1.0,
+        bool undirected = false
+    )
     {
         if (from > (matrix.Count - 1) | from < 0)
             throw new ArgumentException(ErrorMessages.E1);
@@ -131,7 +145,7 @@ public class Graph<TNode> where TNode : notnull
     /// <param name="fromtos">Array of from and to node tuples.</param>
     /// <param name="weight">Edge weight (defaults to 1).</param>
     /// <param name="undirected">
-    /// Update edige in both directions if false.
+    /// Update edge in both directions if false.
     /// </param>
     public void UpdateEdges((TNode, TNode)[] fromtos,
         double weight = 1.0, bool undirected = false)
@@ -141,22 +155,45 @@ public class Graph<TNode> where TNode : notnull
 
     }
 
+    // TODO: unit tesst this
+    /// <summary>Calculate the sum of weights of a path.</summary>
+    /// <param name="path">List of node index values.</param>
+    public double PathCost(int[] path)
+    {
+        double cost = 0;
+        if (path.Length == 0) return cost;
+        int current = path[0];
+        if (current < 0 | current > nodes.Count - 1)
+            throw new ArgumentException(ErrorMessages.E1);
+        List<double> row;
+        foreach (int next in path[1..path.Length])
+        {
+            row = matrix[current];
+            if (next < 0 | next > row.Count - 1)
+                throw new ArgumentException(ErrorMessages.E2);
+            cost += row[next];
+            current = next;
+        }
+        return 0;
+    }
+
     /// <summary>
     /// Walk along edges to all nodes possible using a depth first approach.
     /// </summary>
-    /// <param name="start">The node to start walking from.</param>
+    /// <param name="start">The index of the node to start walking from.</param>
     /// <param name ="includeBacktrack">Include backtracking steps.</param>
     /// <param name ="maxSteps">
     /// Maximum number steps before stopping (default 1 million).
     /// </param>
-    public TNode[] WalkDepthFirst(
-        TNode start,
+    /// <returns>Array of node index values as steps.</returns>
+    public int[] WalkDepthFirst(
+        int start,
         bool includeBacktrack = true,
         int maxSteps = 1000000
     )
     {
-        int idx = nodes.IndexOf(start);
-        if (idx == -1) return new TNode[] { };
+        int idx = start;
+        if (idx < 0 | idx > nodes.Count - 1) return new int[] { };
         List<int> path = new();
         bool[] visited = Enumerable.Repeat(false, nodes.Count).ToArray();
         Stack<int> stack = new();
@@ -192,6 +229,27 @@ public class Graph<TNode> where TNode : notnull
             idx = newIdx;
             steps++;
         }
+        return path.ToArray();
+    }
+
+    /// <summary>
+    /// Walk along edges to all nodes possible using a depth first approach.
+    /// </summary>
+    /// <param name="start">The node to start walking from.</param>
+    /// <param name ="includeBacktrack">Include backtracking steps.</param>
+    /// <param name ="maxSteps">
+    /// Maximum number steps before stopping (default 1 million).
+    /// </param>
+    /// <returns>Array of nodes as steps.</returns>
+    public TNode[] WalkDepthFirst(
+        TNode start,
+        bool includeBacktrack = true,
+        int maxSteps = 1000000
+    )
+    {
+        int idx = nodes.IndexOf(start);
+        if (idx == -1) return new TNode[] { };
+        int[] path = WalkDepthFirst(idx, includeBacktrack, maxSteps);
         return path.Select(x => nodes[x]).ToArray();
     }
 
