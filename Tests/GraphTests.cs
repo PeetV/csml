@@ -182,6 +182,40 @@ public class Graph
     }
 
     [Fact]
+    public void Graph_ShortestPathDijkstra()
+    {
+        var graph = new Graph<string>();
+        graph.AddNodes(new string[] { "A", "r11", "r12", "r13", "r21", "r22",
+        "r31", "r32", "B" });
+        graph.UpdateEdge("A", "r11", weight: 3, undirected: true);
+        graph.UpdateEdge("A", "r21", weight: 7, undirected: true);
+        graph.UpdateEdge("A", "r31", weight: 5, undirected: true);
+
+        graph.UpdateEdge("r11", "r12", weight: 7, undirected: true);
+        graph.UpdateEdge("r11", "r21", weight: 1, undirected: true);
+
+        graph.UpdateEdge("r12", "r21", weight: 2, undirected: true);
+        graph.UpdateEdge("r12", "r22", weight: 2, undirected: true);
+        graph.UpdateEdge("r12", "r13", weight: 1, undirected: true);
+
+        graph.UpdateEdge("r13", "B", weight: 5, undirected: true);
+        graph.UpdateEdge("r13", "r22", weight: 3, undirected: true);
+
+        graph.UpdateEdge("r21", "r31", weight: 3, undirected: true);
+        graph.UpdateEdge("r21", "r32", weight: 3, undirected: true);
+        graph.UpdateEdge("r21", "r22", weight: 1, undirected: true);
+
+        graph.UpdateEdge("r22", "B", weight: 2, undirected: true);
+        graph.UpdateEdge("r22", "r32", weight: 3, undirected: true);
+
+        graph.UpdateEdge("r31", "r32", weight: 2, undirected: true);
+
+        graph.UpdateEdge("r32", "B", weight: 4, undirected: true);
+
+        Assert.Equal("", graph.ShortestPathDijkstra(0, 8));
+    }
+
+    [Fact]
     public void Graph_WalkDepthFirst_GraphStringDAG()
     {
         var graph = GraphStringDAG();
