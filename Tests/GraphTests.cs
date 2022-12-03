@@ -1,8 +1,9 @@
 using Xunit;
+using CsML.Graph;
 
 namespace CsML.Tests.Graph;
 
-public class DirectedWeightedGraph
+public class Graph
 {
 
     // Assume direction is in increasing alphabetical order:
@@ -11,9 +12,9 @@ public class DirectedWeightedGraph
     //   b    c - d
     //    \  /     \
     //     e - f -  g
-    public static CsML.Graph.DirectedWeightedGraph<string> TestGraphStringDAG()
+    public static Graph<string> GraphStringDAG()
     {
-        var graph = new CsML.Graph.DirectedWeightedGraph<string>();
+        var graph = new Graph<string>();
         graph.AddNodes(new string[] { "a", "b", "c", "d", "e", "f", "g" });
         var edges = new (string, string)[] {
             ("a", "b"), ("a", "c"), ("b", "e"), ("c", "e"), ("c", "d"),
@@ -23,15 +24,32 @@ public class DirectedWeightedGraph
         return graph;
     }
 
+    //      a
+    //    /  \
+    //   b    c - d
+    //    \  /     \
+    //     e - f -  g
+    public static Graph<string> GraphStringUndirected()
+    {
+        var graph = new Graph<string>();
+        graph.AddNodes(new string[] { "a", "b", "c", "d", "e", "f", "g" });
+        var edges = new (string, string)[] {
+            ("a", "b"), ("a", "c"), ("b", "e"), ("c", "e"), ("c", "d"),
+            ("d", "g"), ("e", "f"), ("f", "g")
+        };
+        graph.UpdateEdges(edges, undirected: true);
+        return graph;
+    }
+
     // Assume direction is in increasing numerical order:
     //      1  -  4
     //      |  \
     //      2 - 3
     //           \
     //            5
-    public static CsML.Graph.DirectedWeightedGraph<string> TestGraphIntDAG()
+    public static Graph<string> GraphIntDAG()
     {
-        var graph = new CsML.Graph.DirectedWeightedGraph<string>();
+        var graph = new Graph<string>();
         graph.AddNodes(new string[] { "1", "2", "3", "4", "5" });
         var edges = new (string, string)[] {
             ("1", "2"), ("1", "3"), ("1", "4"),  ("2", "3"), ("3", "5")
@@ -40,10 +58,26 @@ public class DirectedWeightedGraph
         return graph;
     }
 
+    //      1  -  4
+    //      |  \
+    //      2 - 3
+    //           \
+    //            5
+    public static Graph<string> GraphIntUndirected()
+    {
+        var graph = new Graph<string>();
+        graph.AddNodes(new string[] { "1", "2", "3", "4", "5" });
+        var edges = new (string, string)[] {
+            ("1", "2"), ("1", "3"), ("1", "4"),  ("2", "3"), ("3", "5")
+        };
+        graph.UpdateEdges(edges, undirected: true);
+        return graph;
+    }
+
     [Fact]
     public void DirectedWeightedGraph_Add_single_node()
     {
-        var graph = new CsML.Graph.DirectedWeightedGraph<string>();
+        var graph = new Graph<string>();
         Assert.Empty(graph.nodes);
         graph.AddNode("a");
         Assert.Single(graph.nodes);
@@ -60,7 +94,7 @@ public class DirectedWeightedGraph
     [Fact]
     public void DirectedWeightedGraph_AddNode_multiple()
     {
-        var graph = new CsML.Graph.DirectedWeightedGraph<string>();
+        var graph = new Graph<string>();
         Assert.Empty(graph.nodes);
         graph.AddNodes(new string[] { "a", "b" });
         Assert.Equal(2, graph.nodes.Count);
@@ -72,7 +106,7 @@ public class DirectedWeightedGraph
     [Fact]
     public void DirectedWeightedGraph_Neighbours()
     {
-        var graph = TestGraphStringDAG();
+        var graph = GraphStringDAG();
         Assert.Equal(7, graph.nodes.Count);
         Assert.Equal(7, graph.matrix.Count);
         Assert.Equal(7, graph.matrix[0].Count);
@@ -93,7 +127,7 @@ public class DirectedWeightedGraph
     [Fact]
     public void DirectedWeightedGraph_UpdateEdge()
     {
-        var graph = new CsML.Graph.DirectedWeightedGraph<string>();
+        var graph = new Graph<string>();
         Assert.Empty(graph.nodes);
         graph.AddNodes(new string[] { "a", "b", "c" });
         graph.UpdateEdge(0, 1, 1.0);
@@ -101,9 +135,9 @@ public class DirectedWeightedGraph
     }
 
     [Fact]
-    public void DirectedWeightedGraph_WalkDepthFirst_TestGraphStringDAG()
+    public void DirectedWeightedGraph_WalkDepthFirst_GraphStringDAG()
     {
-        var graph = TestGraphStringDAG();
+        var graph = GraphStringDAG();
         string[] walk = graph.WalkDepthFirst("a");
         string[] expected = { "a", "b", "e", "f", "g", "f", "e", "b", "a",
                               "c", "d" };
@@ -114,9 +148,29 @@ public class DirectedWeightedGraph
     }
 
     [Fact]
-    public void DirectedWeightedGraph_WalkDepthFirst_TestGraphIntDAG()
+    public void DirectedWeightedGraph_WalkDepthFirst_GraphStringUndirected()
     {
-        var graph = TestGraphIntDAG();
+        var graph = GraphStringUndirected();
+        string[] walk = graph.WalkDepthFirst("a");
+        string[] expected = { "a", "b", "e", "f", "g", "d", "c" };
+        Assert.True(expected.SequenceEqual(walk));
+    }
+
+    [Fact]
+    public void DirectedWeightedGraph_WalkDepthFirst_GraphIntDAG()
+    {
+        var graph = GraphIntDAG();
+        string[] walk = graph.WalkDepthFirst("1");
+        string[] expected = { "1", "2", "3", "5", "3", "2", "1", "4" };
+        Assert.True(expected.SequenceEqual(walk));
+        walk = graph.WalkDepthFirst("1", false);
+        expected = new string[] { "1", "2", "3", "5", "4" };
+    }
+
+    [Fact]
+    public void DirectedWeightedGraph_WalkDepthFirst_GraphIntUndirected()
+    {
+        var graph = GraphIntUndirected();
         string[] walk = graph.WalkDepthFirst("1");
         string[] expected = { "1", "2", "3", "5", "3", "2", "1", "4" };
         Assert.True(expected.SequenceEqual(walk));

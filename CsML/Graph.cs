@@ -11,7 +11,7 @@ public static class ErrorMessages
 }
 
 /// <summary>A graph with edges that have direction and weight.</summary>
-public class DirectedWeightedGraph<TNode>
+public class Graph<TNode>
     where TNode : notnull
 {
     ///<summary>Graph nodes.</summary>
@@ -26,7 +26,7 @@ public class DirectedWeightedGraph<TNode>
     public List<List<double>> matrix;
 
     /// <summary>Create a new empty graph.</summary>
-    public DirectedWeightedGraph()
+    public Graph()
     {
         nodes = new List<TNode>();
         matrix = new List<List<double>>();
