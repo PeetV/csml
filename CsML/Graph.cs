@@ -146,18 +146,23 @@ public class Graph<TNode> where TNode : notnull
     /// </summary>
     /// <param name="start">The node to start walking from.</param>
     /// <param name ="includeBacktrack">Include backtracking steps.</param>
-    public TNode[] WalkDepthFirst(TNode start, bool includeBacktrack = true)
+    /// <param name ="maxSteps">
+    /// Maximum number steps before stopping (default 1 million).
+    /// </param>
+    public TNode[] WalkDepthFirst(
+        TNode start,
+        bool includeBacktrack = true,
+        int maxSteps = 1000000
+    )
     {
         int idx = nodes.IndexOf(start);
         if (idx == -1) return new TNode[] { };
         List<int> path = new();
-        // TODO: use a bool array to track visited
-        // List<int> visited = new();
         bool[] visited = Enumerable.Repeat(false, nodes.Count).ToArray();
         Stack<int> stack = new();
         int[] unvisitedNeighbours, neighbours;
-        int newIdx, pathIdx;
-        while (true)
+        int newIdx, pathIdx, steps = 0;
+        while (steps <= maxSteps)
         {
             // Visit the node
             path.Add(idx);
@@ -185,6 +190,7 @@ public class Graph<TNode> where TNode : notnull
                 }
             }
             idx = newIdx;
+            steps++;
         }
         return path.Select(x => nodes[x]).ToArray();
     }

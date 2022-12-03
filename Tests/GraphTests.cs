@@ -75,7 +75,7 @@ public class Graph
     }
 
     [Fact]
-    public void DirectedWeightedGraph_Add_single_node()
+    public void Graph_AddNode_single()
     {
         var graph = new Graph<string>();
         Assert.Empty(graph.nodes);
@@ -92,7 +92,7 @@ public class Graph
     }
 
     [Fact]
-    public void DirectedWeightedGraph_AddNode_multiple()
+    public void Graph_AddNode_multiple()
     {
         var graph = new Graph<string>();
         Assert.Empty(graph.nodes);
@@ -104,7 +104,7 @@ public class Graph
     }
 
     [Fact]
-    public void DirectedWeightedGraph_Neighbours()
+    public void Graph_Neighbours()
     {
         var graph = GraphStringDAG();
         Assert.Equal(7, graph.nodes.Count);
@@ -125,7 +125,7 @@ public class Graph
     }
 
     [Fact]
-    public void DirectedWeightedGraph_UpdateEdge()
+    public void Graph_UpdateEdge_ByIndex()
     {
         var graph = new Graph<string>();
         Assert.Empty(graph.nodes);
@@ -135,7 +135,7 @@ public class Graph
     }
 
     [Fact]
-    public void DirectedWeightedGraph_WalkDepthFirst_GraphStringDAG()
+    public void Graph_WalkDepthFirst_GraphStringDAG()
     {
         var graph = GraphStringDAG();
         string[] walk = graph.WalkDepthFirst("a");
@@ -148,7 +148,7 @@ public class Graph
     }
 
     [Fact]
-    public void DirectedWeightedGraph_WalkDepthFirst_GraphStringUndirected()
+    public void Graph_WalkDepthFirst_GraphStringUndirected()
     {
         var graph = GraphStringUndirected();
         string[] walk = graph.WalkDepthFirst("a");
@@ -157,7 +157,7 @@ public class Graph
     }
 
     [Fact]
-    public void DirectedWeightedGraph_WalkDepthFirst_GraphIntDAG()
+    public void Graph_WalkDepthFirst_GraphIntDAG()
     {
         var graph = GraphIntDAG();
         string[] walk = graph.WalkDepthFirst("1");
@@ -168,7 +168,7 @@ public class Graph
     }
 
     [Fact]
-    public void DirectedWeightedGraph_WalkDepthFirst_GraphIntUndirected()
+    public void Graph_WalkDepthFirst_GraphIntUndirected()
     {
         var graph = GraphIntUndirected();
         string[] walk = graph.WalkDepthFirst("1");
