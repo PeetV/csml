@@ -11,8 +11,7 @@ public static class ErrorMessages
 }
 
 /// <summary>A graph with edges that have direction and weight.</summary>
-public class Graph<TNode>
-    where TNode : notnull
+public class Graph<TNode> where TNode : notnull
 {
     ///<summary>Graph nodes.</summary>
     public List<TNode> nodes;
@@ -44,11 +43,7 @@ public class Graph<TNode>
         }
         foreach (List<double> row in matrix)
             row.Add(0.0);
-        matrix.Add(
-            Enumerable
-                .Repeat(0.0, matrix[0].Count)
-                .ToList()
-        );
+        matrix.Add(Enumerable.Repeat(0.0, matrix[0].Count).ToList());
     }
 
     /// <summary>Add nodes and expand the adjacency matrix.</summary>
@@ -138,9 +133,8 @@ public class Graph<TNode>
         double weight = 1.0, bool undirected = false)
     {
         foreach ((TNode from, TNode to) in fromtos)
-        {
             UpdateEdge(from, to, weight, undirected);
-        }
+
     }
 
     /// <summary>
