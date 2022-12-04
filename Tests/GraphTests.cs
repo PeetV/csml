@@ -20,9 +20,9 @@ public class Graph
             var graph = new Graph<string>();
             graph.AddNodes(new string[] { "a", "b", "c", "d", "e", "f", "g" });
             var edges = new (string, string)[] {
-            ("a", "b"), ("a", "c"), ("b", "e"), ("c", "e"), ("c", "d"),
-            ("d", "g"), ("e", "f"), ("f", "g")
-        };
+                ("a", "b"), ("a", "c"), ("b", "e"), ("c", "e"), ("c", "d"),
+                ("d", "g"), ("e", "f"), ("f", "g")
+             };
             graph.UpdateEdges(edges);
             return graph;
         }
@@ -37,9 +37,9 @@ public class Graph
             var graph = new Graph<string>();
             graph.AddNodes(new string[] { "a", "b", "c", "d", "e", "f", "g" });
             var edges = new (string, string)[] {
-            ("a", "b"), ("a", "c"), ("b", "e"), ("c", "e"), ("c", "d"),
-            ("d", "g"), ("e", "f"), ("f", "g")
-        };
+                ("a", "b"), ("a", "c"), ("b", "e"), ("c", "e"), ("c", "d"),
+                ("d", "g"), ("e", "f"), ("f", "g")
+             };
             graph.UpdateEdges(edges, undirected: true);
             return graph;
         }
@@ -47,8 +47,8 @@ public class Graph
         public static Graph<string> GraphStringUndirectedWeighted()
         {
             var graph = new Graph<string>();
-            graph.AddNodes(new string[] { "A", "r11", "r12", "r13", "r21", "r22",
-        "r31", "r32", "B" });
+            graph.AddNodes(new string[] { "A", "r11", "r12", "r13", "r21",
+                                          "r22", "r31", "r32", "B" });
             graph.UpdateEdge("A", "r11", weight: 3, undirected: true);
             graph.UpdateEdge("A", "r21", weight: 7, undirected: true);
             graph.UpdateEdge("A", "r31", weight: 5, undirected: true);
@@ -80,8 +80,8 @@ public class Graph
             var graph = new Graph<string>();
             graph.AddNodes(new string[] { "1", "2", "3", "4", "5" });
             var edges = new (string, string)[] {
-            ("1", "2"), ("1", "3"), ("1", "4"),  ("2", "3"), ("3", "5")
-        };
+                ("1", "2"), ("1", "3"), ("1", "4"),  ("2", "3"), ("3", "5")
+            };
             graph.UpdateEdges(edges);
             return graph;
         }
@@ -96,8 +96,8 @@ public class Graph
             var graph = new Graph<string>();
             graph.AddNodes(new string[] { "1", "2", "3", "4", "5" });
             var edges = new (string, string)[] {
-            ("1", "2"), ("1", "3"), ("1", "4"),  ("2", "3"), ("3", "5")
-        };
+                ("1", "2"), ("1", "3"), ("1", "4"),  ("2", "3"), ("3", "5")
+             };
             graph.UpdateEdges(edges, undirected: true);
             return graph;
         }
@@ -228,7 +228,8 @@ public class Graph
         public void ShortestPathDijkstra_Nodes_StringUndirectedWeighted()
         {
             var graph = GraphStringUndirectedWeighted();
-            (double result, string[] path) = graph.ShortestPathDijkstra("A", "B");
+            (double result, string[] path) = graph
+                        .ShortestPathDijkstra("A", "B");
             string[] expected = new string[] { "A", "r11", "r21", "r22", "B" };
             Assert.Equal(7, result);
             Assert.True(path.SequenceEqual(expected));
