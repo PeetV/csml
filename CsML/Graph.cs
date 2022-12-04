@@ -243,7 +243,9 @@ public class Graph<TNode> where TNode : notnull
             queue.Remove(current);
             // Check each neighbhour and update the distance table with the
             // shortest distance
-            foreach (int neighbour in Neighbours(current))
+            int[] neighbours = Neighbours(current);
+            if (neighbours.Length == 0) break;
+            foreach (int neighbour in neighbours)
             {
                 workingDist = dist[current] + matrix[current][neighbour];
                 if (workingDist < dist[neighbour])
@@ -254,6 +256,7 @@ public class Graph<TNode> where TNode : notnull
             }
         }
         // Extract path from closes node list (prev)
+        if (dist[to] == double.PositiveInfinity) return (0, new int[] { });
         List<int> path = new() { to };
         current = to;
         while (current != from)
