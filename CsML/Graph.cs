@@ -201,6 +201,16 @@ public class Graph<TNode> where TNode : notnull
         return PathCost(index.ToArray());
     }
 
+    /// <summary>
+    /// Find the shortest path between two nodes, taking into account edge
+    /// weights.
+    /// </summary>
+    /// <param name="from">Index of start node.</param>
+    /// <param name="to">Index of end node.</param>
+    /// <returns>
+    /// A tuple containing the sum of edge weights along the path (path cost)
+    /// and path index list.
+    /// </returns>
     public (double, int[]) ShortestPathDijkstra(int from, int to)
     {
         if (from > (matrix.Count - 1) | from < 0)
@@ -253,6 +263,26 @@ public class Graph<TNode> where TNode : notnull
         }
         path.Reverse();
         return (dist[to], path.ToArray());
+    }
+
+    /// <summary>
+    /// Find the shortest path between two nodes, taking into account edge
+    /// weights.
+    /// </summary>
+    /// <param name="from">Start node.</param>
+    /// <param name="to">End node.</param>
+    /// <returns>
+    /// A tuple containing the sum of edge weights along the path (path cost)
+    /// and path as a node list.
+    /// </returns>
+    public (double, TNode[]) ShortestPathDijkstra(TNode from, TNode to)
+    {
+        int fromIdx = nodes.IndexOf(from);
+        if (fromIdx == -1) throw new ArgumentException(ErrorMessages.E4);
+        int toIdx = nodes.IndexOf(to);
+        if (toIdx == -1) throw new ArgumentException(ErrorMessages.E4);
+        (double distance, int[] path) = ShortestPathDijkstra(fromIdx, toIdx);
+        return (distance, path.Select(x => nodes[x]).ToArray());
     }
 
     /// <summary>

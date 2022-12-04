@@ -29,7 +29,7 @@ public class Graph
     //   b    c - d
     //    \  /     \
     //     e - f -  g
-    public static Graph<string> GraphStringUndirected()
+    public static Graph<string> GraphStringUndirectedEqualWeights()
     {
         var graph = new Graph<string>();
         graph.AddNodes(new string[] { "a", "b", "c", "d", "e", "f", "g" });
@@ -38,6 +38,31 @@ public class Graph
             ("d", "g"), ("e", "f"), ("f", "g")
         };
         graph.UpdateEdges(edges, undirected: true);
+        return graph;
+    }
+
+    public static Graph<string> GraphStringUndirectedWeighted()
+    {
+        var graph = new Graph<string>();
+        graph.AddNodes(new string[] { "A", "r11", "r12", "r13", "r21", "r22",
+        "r31", "r32", "B" });
+        graph.UpdateEdge("A", "r11", weight: 3, undirected: true);
+        graph.UpdateEdge("A", "r21", weight: 7, undirected: true);
+        graph.UpdateEdge("A", "r31", weight: 5, undirected: true);
+        graph.UpdateEdge("r11", "r12", weight: 7, undirected: true);
+        graph.UpdateEdge("r11", "r21", weight: 1, undirected: true);
+        graph.UpdateEdge("r12", "r21", weight: 2, undirected: true);
+        graph.UpdateEdge("r12", "r22", weight: 2, undirected: true);
+        graph.UpdateEdge("r12", "r13", weight: 1, undirected: true);
+        graph.UpdateEdge("r13", "B", weight: 5, undirected: true);
+        graph.UpdateEdge("r13", "r22", weight: 3, undirected: true);
+        graph.UpdateEdge("r21", "r31", weight: 3, undirected: true);
+        graph.UpdateEdge("r21", "r32", weight: 3, undirected: true);
+        graph.UpdateEdge("r21", "r22", weight: 1, undirected: true);
+        graph.UpdateEdge("r22", "B", weight: 2, undirected: true);
+        graph.UpdateEdge("r22", "r32", weight: 3, undirected: true);
+        graph.UpdateEdge("r31", "r32", weight: 2, undirected: true);
+        graph.UpdateEdge("r32", "B", weight: 4, undirected: true);
         return graph;
     }
 
@@ -182,33 +207,24 @@ public class Graph
     }
 
     [Fact]
-    public void Graph_ShortestPathDijkstra()
+    public void Graph_ShortestPathDijkstra_Indexed()
     {
-        var graph = new Graph<string>();
-        graph.AddNodes(new string[] { "A", "r11", "r12", "r13", "r21", "r22",
-        "r31", "r32", "B" });
-        graph.UpdateEdge("A", "r11", weight: 3, undirected: true);
-        graph.UpdateEdge("A", "r21", weight: 7, undirected: true);
-        graph.UpdateEdge("A", "r31", weight: 5, undirected: true);
-        graph.UpdateEdge("r11", "r12", weight: 7, undirected: true);
-        graph.UpdateEdge("r11", "r21", weight: 1, undirected: true);
-        graph.UpdateEdge("r12", "r21", weight: 2, undirected: true);
-        graph.UpdateEdge("r12", "r22", weight: 2, undirected: true);
-        graph.UpdateEdge("r12", "r13", weight: 1, undirected: true);
-        graph.UpdateEdge("r13", "B", weight: 5, undirected: true);
-        graph.UpdateEdge("r13", "r22", weight: 3, undirected: true);
-        graph.UpdateEdge("r21", "r31", weight: 3, undirected: true);
-        graph.UpdateEdge("r21", "r32", weight: 3, undirected: true);
-        graph.UpdateEdge("r21", "r22", weight: 1, undirected: true);
-        graph.UpdateEdge("r22", "B", weight: 2, undirected: true);
-        graph.UpdateEdge("r22", "r32", weight: 3, undirected: true);
-        graph.UpdateEdge("r31", "r32", weight: 2, undirected: true);
-        graph.UpdateEdge("r32", "B", weight: 4, undirected: true);
-        double result;
-        int[] path;
-        (result, path) = graph.ShortestPathDijkstra(0, 8);
+        var graph = GraphStringUndirectedWeighted();
+        (double result, int[] path) = graph.ShortestPathDijkstra(0, 8);
+        int[] expected = new int[] { 0, 1, 4, 5, 8 };
         Assert.Equal(7, result);
-        Assert.True(path.SequenceEqual(new int[] { 0, 1, 4, 5, 8 }));
+        Assert.True(path.SequenceEqual(expected));
+        Assert.Equal(7, graph.PathCost(expected));
+    }
+
+    [Fact]
+    public void Graph_ShortestPathDijkstra_Nodes()
+    {
+        var graph = GraphStringUndirectedWeighted();
+        (double result, string[] path) = graph.ShortestPathDijkstra("A", "B");
+        string[] expected = new string[] { "A", "r11", "r21", "r22", "B" };
+        Assert.Equal(7, result);
+        Assert.True(path.SequenceEqual(expected));
     }
 
     [Fact]
@@ -227,7 +243,7 @@ public class Graph
     [Fact]
     public void Graph_WalkDepthFirst_GraphStringUndirected()
     {
-        var graph = GraphStringUndirected();
+        var graph = GraphStringUndirectedEqualWeights();
         string[] walk = graph.WalkDepthFirst("a");
         string[] expected = { "a", "b", "e", "f", "g", "d", "c" };
         Assert.True(expected.SequenceEqual(walk));
