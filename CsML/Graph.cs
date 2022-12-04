@@ -201,7 +201,7 @@ public class Graph<TNode> where TNode : notnull
         return PathCost(index.ToArray());
     }
 
-    public string ShortestPathDijkstra(int from, int to)
+    public (double, int[]) ShortestPathDijkstra(int from, int to)
     {
         if (from > (matrix.Count - 1) | from < 0)
             throw new ArgumentException(ErrorMessages.E1);
@@ -212,6 +212,7 @@ public class Graph<TNode> where TNode : notnull
                                           nodes.Count).ToArray();
         dist[from] = 0;
         List<int> queue = Enumerable.Range(0, nodes.Count).ToList();
+        List<int> prev = Enumerable.Repeat(0, nodes.Count).ToList();
         int current = 0;
         double workingDist;
         while (queue.Count != 0)
@@ -236,10 +237,22 @@ public class Graph<TNode> where TNode : notnull
             {
                 workingDist = dist[current] + matrix[current][neighbour];
                 if (workingDist < dist[neighbour])
+                {
                     dist[neighbour] = workingDist;
+                    prev[neighbour] = current;
+                }
             }
         }
-        return string.Join(", ", dist);
+        // Extract path from closes node list (prev)
+        List<int> path = new() { to };
+        current = to;
+        while (current != from)
+        {
+            path.Add(prev[current]);
+            current = prev[current];
+        }
+        path.Reverse();
+        return (dist[to], path.ToArray());
     }
 
     /// <summary>
