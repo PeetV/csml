@@ -144,7 +144,7 @@ public class Graph<TNode> where TNode : notnull
         if (undirected) UpdateEdge(toIdx, fromIdx, weight);
     }
 
-    /// <summary>Add an edges between nodes.</summary>
+    /// <summary>Add edges between nodes.</summary>
     /// <param name="fromtos">Array of from and to node tuples.</param>
     /// <param name="weight">Edge weight (defaults to 1).</param>
     /// <param name="undirected">
@@ -155,7 +155,6 @@ public class Graph<TNode> where TNode : notnull
     {
         foreach ((TNode from, TNode to) in fromtos)
             UpdateEdge(from, to, weight, undirected);
-
     }
 
     /// <summary>Calculate the sum of weights of a path.</summary>
@@ -211,6 +210,8 @@ public class Graph<TNode> where TNode : notnull
     /// A tuple containing the sum of edge weights along the path (path cost)
     /// and path index list.
     /// </returns>
+    // TODO: Add a check for negative edge weights which
+    // breaks the algorithm 
     public (double, int[]) ShortestPathDijkstra(int from, int to)
     {
         if (from > (matrix.Count - 1) | from < 0)
