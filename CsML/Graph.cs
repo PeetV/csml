@@ -226,20 +226,21 @@ public class Graph<TNode> where TNode : notnull
         List<int> prev = Enumerable.Repeat(0, nodes.Count).ToList();
         int current = 0;
         double workingDist;
-        while (queue.Count != 0)
+        while (queue.Count() != 0)
         {
-            // Find the node with lowest distance excluding visited nodes
-            // and visit it
-            workingDist = double.PositiveInfinity;
-            for (int i = 0; i < dist.Length; i++)
-            {
-                if (visited[i]) continue;
-                if (dist[i] < workingDist)
-                {
-                    workingDist = dist[i];
-                    current = i;
-                }
-            }
+            // Find the node in queue with lowest distance 
+            (current, _) = queue.Zip(queue.Select(x => dist[x]))
+                                .OrderBy(x => x.Second).First();
+            // workingDist = double.PositiveInfinity;
+            // for (int i = 0; i < dist.Length; i++)
+            // {
+            //     if (visited[i]) continue;
+            //     if (dist[i] < workingDist)
+            //     {
+            //         workingDist = dist[i];
+            //         current = i;
+            //     }
+            // }
             visited[current] = true;
             queue.Remove(current);
             // Check each neighbhour and update the distance table with the
@@ -248,6 +249,7 @@ public class Graph<TNode> where TNode : notnull
             if (neighbours.Length == 0) break;
             foreach (int neighbour in neighbours)
             {
+                if (!queue.Contains(neighbour)) continue;
                 workingDist = dist[current] + matrix[current][neighbour];
                 if (workingDist < dist[neighbour])
                 {
@@ -256,7 +258,7 @@ public class Graph<TNode> where TNode : notnull
                 }
             }
         }
-        // Extract path from closes node list (prev)
+        // Extract path from closest node list (prev)
         if (dist[to] == double.PositiveInfinity) return (0, new int[] { });
         List<int> path = new() { to };
         current = to;
