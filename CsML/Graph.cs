@@ -231,16 +231,6 @@ public class Graph<TNode> where TNode : notnull
             // Find the node in queue with lowest distance 
             (current, _) = queue.Zip(queue.Select(x => dist[x]))
                                 .OrderBy(x => x.Second).First();
-            // workingDist = double.PositiveInfinity;
-            // for (int i = 0; i < dist.Length; i++)
-            // {
-            //     if (visited[i]) continue;
-            //     if (dist[i] < workingDist)
-            //     {
-            //         workingDist = dist[i];
-            //         current = i;
-            //     }
-            // }
             visited[current] = true;
             queue.Remove(current);
             // Check each neighbhour and update the distance table with the
