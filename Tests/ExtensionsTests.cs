@@ -16,6 +16,14 @@ public class IEnumerable
     }
 
     [Fact]
+    public void Delimted()
+    {
+        int[] x = { 1, 2, 3, 4, 5 };
+        Assert.Equal("1,2,3,4,5", x.Delimited());
+        Assert.Equal("1|2|3|4|5", x.Delimited(delimeter: "|"));
+    }
+
+    [Fact]
     public void ElementCounts_int()
     {
         var vector = new double[] { 1, 1, 1, 2, 2 };

@@ -20,6 +20,16 @@ public static class IEnumerable
         }
     }
 
+    /// <summary>Create a delimited string from an enumerable.</summary>
+    public static string Delimited<T>(
+        this IEnumerable<T> sequence,
+        string delimeter = ","
+    )
+    where T : notnull
+    {
+        return $"{string.Join(delimeter, sequence)}";
+    }
+
     /// <summary>Count ocurrences of each array element.</summary>
     /// <returns>
     /// A dictionary containing distinct array elements as keys and counts
