@@ -14,6 +14,9 @@ public static class ErrorMessages
 
     /// <summary>Error message if a node cannot be found. </summary>
     public const string E4 = "Node not found in graph";
+
+    /// <summary>Error message if edge weight cannot be negative. </summary>
+    public const string E5 = "Edge weight can not be negative";
 }
 
 /// <summary>A graph with edges that have direction and weight.</summary>
@@ -210,8 +213,10 @@ public class Graph<TNode> where TNode : notnull
     /// A tuple containing the sum of edge weights along the path (path cost)
     /// and path index list.
     /// </returns>
-    // TODO: Add a check for negative edge weights which
-    // breaks the algorithm 
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if a negative edge weight is found, which breaks the Dijkstra
+    /// algorithm.
+    /// </exception>
     public (double, int[]) ShortestPathDijkstra(int from, int to)
     {
         if (from > (matrix.Count - 1) | from < 0)
@@ -225,7 +230,7 @@ public class Graph<TNode> where TNode : notnull
         List<int> queue = Enumerable.Range(0, nodes.Count).ToList();
         List<int> prev = Enumerable.Repeat(0, nodes.Count).ToList();
         int current = 0;
-        double workingDist;
+        double workingDist, neighbDist;
         while (queue.Count() != 0)
         {
             // Find the node in queue with lowest distance 
@@ -240,7 +245,9 @@ public class Graph<TNode> where TNode : notnull
             foreach (int neighbour in neighbours)
             {
                 if (!queue.Contains(neighbour)) continue;
-                workingDist = dist[current] + matrix[current][neighbour];
+                neighbDist = matrix[current][neighbour];
+                if (neighbDist < 0) throw new ArgumentException(ErrorMessages.E5);
+                workingDist = dist[current] + neighbDist;
                 if (workingDist < dist[neighbour])
                 {
                     dist[neighbour] = workingDist;
@@ -271,6 +278,10 @@ public class Graph<TNode> where TNode : notnull
     /// A tuple containing the sum of edge weights along the path (path cost)
     /// and path as a node list.
     /// </returns>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if a negative edge weight is found, which breaks the Dijkstra
+    /// algorithm.
+    /// </exception>
     public (double, TNode[]) ShortestPathDijkstra(TNode from, TNode to)
     {
         int fromIdx = nodes.IndexOf(from);

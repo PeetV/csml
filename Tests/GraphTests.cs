@@ -44,6 +44,26 @@ public class Graph
             return graph;
         }
 
+        //      a
+        //   1/ 1\  -1
+        //   b    c - d
+        //   1\ 1/    1\
+        //     e - f -  g
+        //       1   -1
+        public static Graph<string> GraphStringUndirectedNegativeWeights()
+        {
+            var graph = new Graph<string>();
+            graph.AddNodes(new string[] { "a", "b", "c", "d", "e", "f", "g" });
+            var edges = new (string, string)[] {
+                ("a", "b"), ("a", "c"), ("b", "e"), ("c", "e"), ("c", "d"),
+                ("d", "g"), ("e", "f"), ("f", "g")
+             };
+            graph.UpdateEdges(edges, undirected: true);
+            graph.UpdateEdge("c", "d", -1, undirected: true);
+            graph.UpdateEdge("f", "g", -1, undirected: true);
+            return graph;
+        }
+
         public static Graph<string> GraphStringUndirectedWeighted()
         {
             var graph = new Graph<string>();
@@ -289,6 +309,17 @@ public class Graph
                 .ShortestPathDijkstra("a", "d");
             Assert.Equal(0, result);
             Assert.Empty(path);
+        }
+
+        [Fact]
+        public void ShortestPathDijkstra_ByNode_GraphStringUndirectedNegativeWeights()
+        {
+            var graph = GraphStringUndirectedNegativeWeights();
+            Assert.Throws<ArgumentException>(() =>
+            {
+                (double result, string[] path) = graph
+                                    .ShortestPathDijkstra("a", "d");
+            });
         }
 
         [Fact]
