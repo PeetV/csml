@@ -328,8 +328,10 @@ public static class Distributions
         /// Array of k values representing number of successes.
         /// </param>
         /// <param name="p">Probability of experiment success.</param>
-        public static ProbabilityMassFunction<int> FromBinomial(
-            int n, int[] ks, double p)
+        public static ProbabilityMassFunction<int>
+        FromBinomial(
+            int n, int[] ks, double p
+        )
         {
             var intPMF = new ProbabilityMassFunction<int>();
             double[] probs = ks.Select(k => ProbabilityBinomial(n, k, p))
@@ -345,8 +347,12 @@ public static class Distributions
         /// Create a Normal distribution based PMF from a series of hypotheses
         /// values, mean and variance.
         /// </summary>
-        public static ProbabilityMassFunction<double> FromNormal(
-            double[] hypotheses, double mean, double variance)
+        public static ProbabilityMassFunction<double>
+        FromNormal(
+            double[] hypotheses,
+            double mean,
+            double variance
+        )
         {
             var doublePMF = new ProbabilityMassFunction<double>();
             for (int i = 0; i < hypotheses.Length; i++)
@@ -376,7 +382,8 @@ public static class Distributions
         /// <summary>Add two PMFs.</summary>
         /// <returns>A PMF with hypotheses summed.</returns>
         /// <param name="pmf">A PMF with hypotheses double type.</param>
-        public ProbabilityMassFunction<double> Add(
+        public ProbabilityMassFunction<double>
+        Add(
             ProbabilityMassFunction<double> pmf)
         {
             var newPmf = new ProbabilityMassFunction<double>();
