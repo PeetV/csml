@@ -357,7 +357,7 @@ public class Features
             var col = CsML.Utility.Matrix.GetColumn(matrix, 0);
             Assert.True(col.SequenceEqual(new double[] { 1, 2, 3, 100 }));
             var result = profiler.OutlierIndex(col, 0);
-            Assert.True(new int[]{ 3 }.SequenceEqual(result));
+            Assert.True(new int[] { 3 }.SequenceEqual(result));
         }
 
         [Fact]
