@@ -7,12 +7,23 @@ public class IEnumerable
 {
 
     [Fact]
-    public void CumulativeSum()
+    public void CumulativeSum_int()
     {
-        var input = new double[] { 1, 2, 3 };
-        var expected = new double[] { 1, 3, 6 };
-        double[] result = input.Cumulative().ToArray();
+        var input = new int[] { 1, 2, 3 };
+        var expected = new int[] { 1, 3, 6 };
+        int[] result = input.Cumulative().ToArray();
         Assert.True(expected.SequenceEqual(result));
+    }
+
+    [Fact]
+    public void CumulativeSum_double()
+    {
+        var input = new double[] { 1.1, 2.2, 3.3 };
+        var expected = new double[] { 1.1, 3.3, 6.6 };
+        double[] result = input.Cumulative().ToArray();
+        Assert.True(Math.Abs(result[0] - expected[0]) < 0.00000001);
+        Assert.True(Math.Abs(result[1] - expected[1]) < 0.00000001);
+        Assert.True(Math.Abs(result[2] - expected[2]) < 0.00000001);
     }
 
     [Fact]

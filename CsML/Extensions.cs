@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace CsML.Extensions;
 
 /// <summary>
@@ -6,13 +8,14 @@ namespace CsML.Extensions;
 public static class IEnumerable
 {
     /// <summary>
-    /// Turn a double enumerable into cumulative sums. [1, 2, 3 ...] becomes
+    /// Turn a numeric enumerable into cumulative sums. [1, 2, 3 ...] becomes
     /// [1, 3, 6 ...].
     /// </summary>
-    public static IEnumerable<double> Cumulative(
-        this IEnumerable<double> sequence)
+    public static IEnumerable<T> Cumulative<T>(
+        this IEnumerable<T> sequence)
+    where T : INumber<T>
     {
-        double sum = 0;
+        T sum = T.Zero;
         foreach (var item in sequence)
         {
             sum += item;
