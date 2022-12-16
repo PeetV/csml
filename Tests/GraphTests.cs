@@ -102,6 +102,16 @@ public class Graph
             return graph;
         }
 
+        // a - b - c  d
+        public static Graph<string> GraphDirectedNodeUnreachable()
+        {
+            var graph = new Graph<string>();
+            graph.AddNodes(new string[] { "a", "b", "c", "d" });
+            var edges = new (string, string)[] { ("a", "b"), ("b", "c") };
+            graph.UpdateEdges(edges, undirected: true);
+            return graph;
+        }
+
         [Fact]
         public void AddNode_single()
         {
@@ -153,7 +163,7 @@ public class Graph
         }
 
         [Fact]
-        public void PathCost_Index_GraphIntUndirected_SameCost()
+        public void PathCost_ByIndex_GraphIntUndirected_SameCost()
         {
             var graph = GraphIntUndirected();
             int[] path = { 0, 1, 2, 4, 2, 1, 0, 3 };
@@ -162,7 +172,7 @@ public class Graph
         }
 
         [Fact]
-        public void PathCost_Node_GraphIntUndirected_SameCost()
+        public void PathCost_ByNode_GraphIntUndirected_SameCost()
         {
             var graph = GraphIntUndirected();
             string[] path = { "1", "2", "3", "5", "3", "2", "1", "4" };
@@ -171,7 +181,7 @@ public class Graph
         }
 
         [Fact]
-        public void PathCost_Index_GraphIntUndirected_DifferentCost()
+        public void PathCost_ByIndex_GraphIntUndirected_DifferentCost()
         {
             var graph = GraphIntUndirected();
             graph.UpdateEdge(2, 4, 10);
@@ -181,7 +191,7 @@ public class Graph
         }
 
         [Fact]
-        public void PathCost_Node_GraphIntUndirected_DifferentCost()
+        public void PathCost_ByNode_GraphIntUndirected_DifferentCost()
         {
             var graph = GraphIntUndirected();
             graph.UpdateEdge(2, 4, 10);
@@ -191,7 +201,7 @@ public class Graph
         }
 
         [Fact]
-        public void PathCost_Index_GraphIntDAG_SameCost()
+        public void PathCost_ByIndex_GraphIntDAG_SameCost()
         {
             var graph = GraphIntDAG();
             int[] path = { 0, 1, 2, 4 };
@@ -210,7 +220,7 @@ public class Graph
         }
 
         [Fact]
-        public void ShortestPathDijkstra_Indexed_StringUndirectedWeighted()
+        public void ShortestPathDijkstra_ByIndex_StringUndirectedWeighted()
         {
             var graph = GraphStringUndirectedWeighted();
             (double result, int[] path) = graph.ShortestPathDijkstra(0, 8);
@@ -225,7 +235,7 @@ public class Graph
         }
 
         [Fact]
-        public void ShortestPathDijkstra_Nodes_StringUndirectedWeighted()
+        public void ShortestPathDijkstra_ByNode_StringUndirectedWeighted()
         {
             var graph = GraphStringUndirectedWeighted();
             (double result, string[] path) = graph
@@ -240,7 +250,7 @@ public class Graph
         }
 
         [Fact]
-        public void ShortestPathDijkstra_Indexed_StringDAG()
+        public void ShortestPathDijkstra_ByIndex_GraphStringDAG()
         {
             var graph = GraphStringDAG();
             (double result, int[] path) = graph.ShortestPathDijkstra(0, 6);
@@ -250,7 +260,7 @@ public class Graph
         }
 
         [Fact]
-        public void ShortestPathDijkstra_Nodes_StringDAG()
+        public void ShortestPathDijkstra_ByNode_GraphStringDAG()
         {
             var graph = GraphStringDAG();
             (double result, string[] path) = graph
@@ -261,7 +271,7 @@ public class Graph
         }
 
         [Fact]
-        public void ShortestPathDijkstra_Nodes_NotConnected()
+        public void ShortestPathDijkstra_ByNode_NotConnected()
         {
             var graph = GraphStringDAG();
             (double result, string[] path) = graph
@@ -272,7 +282,17 @@ public class Graph
         }
 
         [Fact]
-        public void WalkDepthFirst_GraphStringDAG()
+        public void ShortestPathDijkstra_ByNode_GraphDirectedNodeUnreachable()
+        {
+            var graph = GraphDirectedNodeUnreachable();
+            (double result, string[] path) = graph
+                .ShortestPathDijkstra("a", "d");
+            Assert.Equal(0, result);
+            Assert.Empty(path);
+        }
+
+        [Fact]
+        public void WalkDepthFirst_ByNode_GraphStringDAG()
         {
             var graph = GraphStringDAG();
             string[] walk = graph.WalkDepthFirst("a");
@@ -285,7 +305,7 @@ public class Graph
         }
 
         [Fact]
-        public void WalkDepthFirst_GraphStringUndirected()
+        public void WalkDepthFirst_ByNode_GraphStringUndirected()
         {
             var graph = GraphStringUndirectedEqualWeights();
             string[] walk = graph.WalkDepthFirst("a");
@@ -294,7 +314,7 @@ public class Graph
         }
 
         [Fact]
-        public void WalkDepthFirst_GraphIntDAG()
+        public void WalkDepthFirst_ByNode_GraphIntDAG()
         {
             var graph = GraphIntDAG();
             string[] walk = graph.WalkDepthFirst("1");
@@ -305,7 +325,7 @@ public class Graph
         }
 
         [Fact]
-        public void WalkDepthFirst_GraphIntUndirected()
+        public void WalkDepthFirst_ByNode_GraphIntUndirected()
         {
             var graph = GraphIntUndirected();
             string[] walk = graph.WalkDepthFirst("1");
