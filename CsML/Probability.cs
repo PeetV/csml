@@ -15,15 +15,17 @@ public static class Classification
         where T : IComparable<T>
     {
         /// <summary>
-        /// The probability of each class, estimated from data in model training.
+        /// The probability of each class, estimated from data in model
+        /// training.
         /// </summary>
         public Dictionary<T, double> classProbabilities;
 
         /// <summary>
         /// Mean values calculated from each column. The outer dictionary maps
         /// column indices to inner dictionaries. Inner dictionaries contain
-        /// tuples with mean and variance as dictionary values, and class labels
-        /// as keys (i.e. for column values related to each class label).
+        /// tuples with mean and variance as dictionary values, and class
+        /// labels as keys (i.e. for column values related to each class
+        /// label).
         /// </summary>
         public Dictionary<int, Dictionary<T, (double, double)>> columnMeans;
 
@@ -64,8 +66,8 @@ public static class Classification
         /// <summary>Make predictions using the model.</summary>
         /// <param name="matrix">New data to infer predictions from.</param>
         /// <exception cref="System.ArgumentException">
-        /// Thrown if input empty, or if the model has not been trained or if it
-        /// has been trained on a different number of columns.
+        /// Thrown if input empty, or if the model has not been trained or if
+        /// it has been trained on a different number of columns.
         /// </exception>
         public T[] Predict(double[,] matrix)
         {
@@ -84,7 +86,8 @@ public static class Classification
             for (int i = 0; i < inputRecordCount; i++)
             {
                 double[] row = matrixSpan.GetRow(i).ToArray();
-                probs = classProbabilities.ToDictionary(e => e.Key, e => e.Value);
+                probs = classProbabilities.ToDictionary(e => e.Key,
+                                                        e => e.Value);
                 for (int c = 0; c < minColumns; c++)
                 {
                     foreach (var classLabel in probs.Keys)
@@ -97,8 +100,8 @@ public static class Classification
                                                 row[c], mn, var);
                         }
                         else prob = 0.0001;
-                        // Some underflow protection given values can get really
-                        // small
+                        // Some underflow protection given values can get
+                        // really small
                         if (probs[classLabel] < 2.2250738585072014e-50)
                             probs[classLabel] = 2.2250738585072014e-50;
                         else
@@ -115,14 +118,16 @@ public static class Classification
             int lenTarget = target.Length;
             var counts = target.ElementCounts();
             foreach (var key in counts.Keys)
-                classProbabilities[key] = (double)counts[key] / (double)lenTarget;
+                classProbabilities[key] = (double)counts[key] /
+                                          (double)lenTarget;
         }
 
         private void CalculateColumnMeans(
             double[,] matrix, T[] target, int columnIndex)
         {
             Span2D<double> matrixSpan = matrix;
-            double[] workingColumn = matrixSpan.GetColumn(columnIndex).ToArray();
+            double[] workingColumn = matrixSpan.GetColumn(columnIndex)
+                                               .ToArray();
             double[] values;
             double mean, variance;
             var valuesDict = new Dictionary<T, (double, double)> { };
@@ -153,8 +158,8 @@ public static class Classification
         public T[] classes;
 
         /// <summary>
-        /// Weights to apply to class labels. As the size of the sample increases,
-        /// class proportions will get closer to the weights.
+        /// Weights to apply to class labels. As the size of the sample
+        /// increases, class proportions will get closer to the weights.
         /// </summary>
         public double[] weights;
 
@@ -242,8 +247,8 @@ public static class Distributions
     }
 
     /// <summary>
-    /// A Probability Mass Function for modelling discrete outcomes. Adapted from
-    /// Think Bayes by Allen B. Downey.
+    /// A Probability Mass Function for modelling discrete outcomes. Adapted
+    /// from Think Bayes by Allen B. Downey.
     /// </summary>
     public class ProbabilityMassFunction<T>
         where T : IComparable
@@ -321,8 +326,9 @@ public static class Distributions
         /// and p value.
         /// </summary>
         /// <param name="n">
-        /// Number of independent experiments, each asking a yes–no question, and 
-        /// each with its own Boolean-valued outcome: success (with probability p).
+        /// Number of independent experiments, each asking a yes–no question,
+        /// and each with its own Boolean-valued outcome: success (with
+        /// probability p).
         /// </param>
         /// <param name="ks">
         /// Array of k values representing number of successes.
@@ -336,7 +342,6 @@ public static class Distributions
             var intPMF = new ProbabilityMassFunction<int>();
             double[] probs = ks.Select(k => ProbabilityBinomial(n, k, p))
                                .ToArray();
-            // double[] probs = CsML.Probability.Distributions.Binomial(n, ks, p);
             for (int i = 0; i < ks.Length; i++)
                 intPMF[ks[i]] = probs[i];
             intPMF.Normalise();
@@ -454,7 +459,8 @@ public static class Distributions
         }
 
         /// <summary>
-        /// Normalise the hypotheses table, making the probabilities add up to 1.
+        /// Normalise the hypotheses table, making the probabilities add up to
+        /// 1.
         /// </summary>
         public void Normalise()
         {
@@ -466,19 +472,25 @@ public static class Distributions
         }
 
         /// <summary>
-        /// Sum the probablities across a range of hypotheses. Include all values
-        /// less than, or greater than range boundaries.
+        /// Sum the probablities across a range of hypotheses. Include all
+        /// values less than, or greater than range boundaries.
         /// </summary>
         /// <param name="lower">Lower range boundary. Can be null.</param>
         /// <param name="upper">Upper range boundary. Can be null.</param>
         /// <param name="includeLower">
-        /// Inlude lower bounderay i.e. greater than or equal. Defaults to true.
+        /// Inlude lower bounderay i.e. greater than or equal. Defaults to
+        /// true.
         /// </param>
         /// <param name="includeUpper">
-        /// Include the upper bounderay i.e. less than or equal. Defaults to false.
+        /// Include the upper bounderay i.e. less than or equal. Defaults to
+        /// false.
         /// </param>
         public double SumProbabilities(
-            T? lower, T? upper, bool includeLower = true, bool includeUpper = false)
+            T? lower,
+            T? upper,
+            bool includeLower = true,
+            bool includeUpper = false
+        )
         {
             if (lower == null & upper == null)
                 return 0.0;
@@ -512,8 +524,8 @@ public static class Distributions
         }
 
         /// <summary>
-        /// Convert the PMF into a weighted random sampler, sampling the hypotheses
-        /// using the probabilities as weights.
+        /// Convert the PMF into a weighted random sampler, sampling the
+        /// hypotheses using the probabilities as weights.
         /// </summary>
         public Sampling.WeightedSampler<T> ToSampler()
         {
@@ -658,9 +670,9 @@ public static class Sampling
         /// <summary>Create a new sampler.</summary>
         /// <param name="target">The array to draw samples from.</param>
         /// <param name="weights">
-        /// The corresponding weights to apply when sampling. As the size of the
-        /// sample increases the proportion will become closer to the weights
-        /// proportions.
+        /// The corresponding weights to apply when sampling. As the size of
+        /// the sample increases the proportion will become closer to the
+        /// weights proportions.
         /// </param>
         /// <exception cref="System.ArgumentException">
         /// Thrown if inputs aren't the same length or empty.

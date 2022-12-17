@@ -246,7 +246,8 @@ public class Graph<TNode> where TNode : notnull
             {
                 if (!queue.Contains(neighbour)) continue;
                 neighbDist = matrix[current][neighbour];
-                if (neighbDist < 0) throw new ArgumentException(ErrorMessages.E5);
+                if (neighbDist < 0)
+                    throw new ArgumentException(ErrorMessages.E5);
                 workingDist = dist[current] + neighbDist;
                 if (workingDist < dist[neighbour])
                 {
@@ -295,7 +296,9 @@ public class Graph<TNode> where TNode : notnull
     /// <summary>
     /// Walk along edges to all nodes possible using a depth first approach.
     /// </summary>
-    /// <param name="start">The index of the node to start walking from.</param>
+    /// <param name="start">
+    /// The index of the node to start walking from.
+    /// </param>
     /// <param name ="includeBacktrack">Include backtracking steps.</param>
     /// <param name ="maxSteps">
     /// Maximum number steps before stopping (default 1 million).

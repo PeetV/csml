@@ -8,8 +8,9 @@ namespace CsML.Utility;
 public static class Array
 {
     /// <summary>
-    /// Determine which value to split an array on to maximise the weighted gain 
-    /// in purity when the split is applied to a corresponding target array.
+    /// Determine which value to split an array on to maximise the weighted
+    /// gain in purity when the split is applied to a corresponding target
+    /// array.
     /// </summary>
     /// <param name="vector">Numeric array to test split points on.</param>
     /// <param name="target">
@@ -310,8 +311,8 @@ public static class Features
     }
 
     /// <summary>
-    /// Shuffle a matrix containing features and a target array maintaining the
-    /// relationship between matrix rows and array items.
+    /// Shuffle a matrix containing features and a target array maintaining
+    /// the relationship between matrix rows and array items.
     /// </summary>
     /// <exception cref="System.ArgumentException">
     /// Thrown if inputs aren't the same length.
@@ -552,8 +553,9 @@ public static class Matrix
     /// Function that calculates purity of an array.
     /// </param>
     /// <param name="randomFeatures">
-    /// If randomFeatures is greater than 0, select a random number of specified
-    /// columns to include (used to add randomisation to a Random Forest).
+    /// If randomFeatures is greater than 0, select a random number of
+    /// specified columns to include (used to add randomisation to a Random
+    /// Forest).
     /// </param>
     /// <returns>
     /// A tuple containing the index of the column with best gain, the split
@@ -658,7 +660,9 @@ public static class Matrix
         return result;
     }
 
-    /// <summary>Create a two dimensional array from a List of columns.</summary>
+    /// <summary>
+    /// Create a two dimensional array from a List of columns.
+    /// </summary>
     public static T[,] FromListColumns<T>(List<T[]> matrix)
     {
         int cols = matrix.Count;
@@ -964,8 +968,8 @@ public static class Statistics
 
 /// <summary>
 /// A class that yields a boolean filter containing train vs test splits for
-/// k-fold  cross validation. E.g. a 10 fold iterator will iteratively yield 10
-/// train / 90 test, 10 test / 10 train / 80 test etc in folds.
+/// k-fold  cross validation. E.g. a 10 fold iterator will iteratively yield
+/// 10 train / 90 test, 10 test / 10 train / 80 test etc in folds.
 /// </summary>
 public class KFoldIterator : IEnumerable<bool[]>
 {
