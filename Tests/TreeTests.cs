@@ -97,7 +97,7 @@ public class BinaryTree
                             CsML.Utility.Statistics.Gini);
         Assert.Throws<ArgumentException>(() =>
         {
-            tree.Train(new double[,] { }, new double[] { });
+            tree.Train(new double[,] { }, Array.Empty<double>());
         });
         Assert.Throws<ArgumentException>(() =>
         {
@@ -332,7 +332,7 @@ public class BinaryTree
 }
 public class RandomForest
 {
-    private CsML.Tree.RandomForest BuildForestManually()
+    private static CsML.Tree.RandomForest BuildForestManually()
     {
         var tree = new CsML.Tree.BinaryTree("classify",
                                             CsML.Utility.Statistics.Gini);

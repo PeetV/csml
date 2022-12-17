@@ -178,7 +178,7 @@ public class GraphTNode
         expected = new string[] { "g" };
         Assert.True(expected.SequenceEqual(result));
         result = graph.Neighbours("g");
-        expected = new string[] { };
+        expected = Array.Empty<string>();
         Assert.True(expected.SequenceEqual(result));
     }
 
@@ -296,7 +296,7 @@ public class GraphTNode
         var graph = TestCases.DirectedAcyclicString();
         (double result, string[] path) = graph
                     .ShortestPathDijkstra("g", "a");
-        string[] expected = { };
+        string[] expected = Array.Empty<string>();
         Assert.Equal(0, result);
         Assert.True(path.SequenceEqual(expected));
     }

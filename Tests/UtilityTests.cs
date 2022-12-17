@@ -141,7 +141,7 @@ public class Array
     public void ClassificationMetrics_empty()
     {
         var result = CsML.Utility.Array.ClassificationMetrics(
-            new string[] { }, new string[] { });
+            System.Array.Empty<string>(), System.Array.Empty<string>());
         Assert.True(result.Keys.Count == 0);
     }
 
@@ -601,7 +601,7 @@ public class Statistics
     [Fact]
     public void Gini_empty()
     {
-        int[] emptyvals = new int[] { };
+        int[] emptyvals = System.Array.Empty<int>();
         double result = CsML.Utility.Statistics.Gini(emptyvals);
         Assert.Equal(0.0, result);
     }

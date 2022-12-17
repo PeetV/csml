@@ -474,7 +474,8 @@ public class Sampling
     public void ArrayWithoutReplacement()
     {
         var input = new string[] { "a", "b", "c" };
-        var result = CsML.Probability.Sampling.ArrayWithoutReplacement(input, 2);
+        var result = CsML.Probability.Sampling
+                .ArrayWithoutReplacement(input, 2);
         Assert.Equal(2, result.Length);
         Assert.True(result.All(x => input.Contains(x)));
         Assert.Equal(2, result.Distinct().ToArray().Length);
