@@ -9,14 +9,17 @@ public static class ErrorMessages
     /// <summary>Error message if to node index is out of bounds.</summary>
     public const string E2 = "To node index out of bounds";
 
-    /// <summary>Error message if a node is found to not be unique. </summary>
+    /// <summary>Error message if a node is found to not be unique.</summary>
     public const string E3 = "Nodes must be unique";
 
-    /// <summary>Error message if a node cannot be found. </summary>
+    /// <summary>Error message if a node cannot be found.</summary>
     public const string E4 = "Node not found in graph";
 
-    /// <summary>Error message if edge weight cannot be negative. </summary>
+    /// <summary>Error message if edge weight cannot be negative.</summary>
     public const string E5 = "Edge weight can not be negative";
+
+    /// <summary>Error message if maximum search steps is exceeded.</summary>
+    public const string E6 = "Maximum search steps exceeded";
 }
 
 /// <summary>A graph with edges that have direction and weight.</summary>
@@ -300,14 +303,17 @@ public class Graph<TNode> where TNode : notnull
     /// The index of the node to start walking from.
     /// </param>
     /// <param name ="includeBacktrack">Include backtracking steps.</param>
-    /// <param name ="maxSteps">
+    /// <param name ="maxSearchSteps">
     /// Maximum number steps before stopping (default 1 million).
     /// </param>
     /// <returns>Array of node index values as steps.</returns>
+    /// <exception cref="System.IndexOutOfRangeException">
+    /// Thrown if maxSearchSteps parameter is exceeded.
+    /// </exception>
     public int[] WalkDepthFirst(
         int start,
         bool includeBacktrack = true,
-        int maxSteps = 1000000
+        int maxSearchSteps = 1_000_000
     )
     {
         int idx = start;
@@ -317,7 +323,7 @@ public class Graph<TNode> where TNode : notnull
         Stack<int> stack = new();
         int[] unvisitedNeighbours, neighbours;
         int newIdx, pathIdx, steps = 0;
-        while (steps <= maxSteps)
+        while (steps <= maxSearchSteps)
         {
             // Visit the node
             path.Add(idx);
@@ -347,6 +353,8 @@ public class Graph<TNode> where TNode : notnull
             idx = newIdx;
             steps++;
         }
+        if (steps == maxSearchSteps)
+            throw new IndexOutOfRangeException(ErrorMessages.E6);
         return path.ToArray();
     }
 
@@ -359,10 +367,13 @@ public class Graph<TNode> where TNode : notnull
     /// Maximum number steps before stopping (default 1 million).
     /// </param>
     /// <returns>Array of nodes as steps.</returns>
+    /// <exception cref="System.IndexOutOfRangeException">
+    /// Thrown if maxSearchSteps parameter is exceeded.
+    /// </exception>
     public TNode[] WalkDepthFirst(
         TNode start,
         bool includeBacktrack = true,
-        int maxSteps = 1000000
+        int maxSteps = 1_000_000
     )
     {
         int idx = nodes.IndexOf(start);
