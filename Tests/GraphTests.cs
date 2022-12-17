@@ -325,6 +325,12 @@ public class GraphTNode
     [Fact]
     public void WalkDepthFirst_ByNode_DirectedAcyclicString()
     {
+        // Assume direction is in increasing alphabetical order:
+        //      a
+        //    /  \
+        //   b    c - d
+        //    \  /     \
+        //     e - f -  g
         var graph = TestCases.DirectedAcyclicString();
         string[] walk = graph.WalkDepthFirst("a");
         string[] expected = { "a", "b", "e", "f", "g", "f", "e", "b", "a",
@@ -338,6 +344,11 @@ public class GraphTNode
     [Fact]
     public void WalkDepthFirst_ByNode_UndirectedString()
     {
+        //      a
+        //    /  \
+        //   b    c - d
+        //    \  /     \
+        //     e - f -  g
         var graph = TestCases.UndirectedString();
         string[] walk = graph.WalkDepthFirst("a");
         string[] expected = { "a", "b", "e", "f", "g", "d", "c" };
@@ -347,6 +358,12 @@ public class GraphTNode
     [Fact]
     public void WalkDepthFirst_ByNode_DirectedAcyclicInt()
     {
+        // Assume direction is in increasing numerical order:
+        //      1  -  4
+        //      |  \
+        //      2 - 3
+        //           \
+        //            5
         var graph = TestCases.DirectedAcyclicInt();
         string[] walk = graph.WalkDepthFirst("1");
         string[] expected = { "1", "2", "3", "5", "3", "2", "1", "4" };
@@ -358,6 +375,11 @@ public class GraphTNode
     [Fact]
     public void WalkDepthFirst_ByNode_UndirectedInt()
     {
+        //      1  -  4
+        //      |  \
+        //      2 - 3
+        //           \
+        //            5
         var graph = TestCases.UndirectedInt();
         string[] walk = graph.WalkDepthFirst("1");
         string[] expected = { "1", "2", "3", "5", "3", "2", "1", "4" };
