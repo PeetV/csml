@@ -645,9 +645,9 @@ public static class Matrix
                 rawval = rawdata[rowidx][colidx];
                 if (mapping != null)
                 {
-                    if (mapping.ContainsKey(colidx))
+                    if (mapping.TryGetValue(colidx, out var value))
                     {
-                        cell = mapping[colidx][rawval];
+                        cell = value[rawval];
                         result[rowidx - loadFromRow, colidx] = cell;
                         continue;
                     }

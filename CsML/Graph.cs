@@ -231,7 +231,7 @@ public class Graph<TNode> where TNode : notnull
         List<int> prev = Enumerable.Repeat(0, nodes.Count).ToList();
         int current = 0;
         double workingDist, neighbDist;
-        while (queue.Count() != 0)
+        while (queue.Count != 0)
         {
             // Find the node in queue with lowest distance 
             (current, _) = queue.Zip(queue.Select(x => dist[x]))
@@ -257,7 +257,7 @@ public class Graph<TNode> where TNode : notnull
             }
         }
         // Extract path from closest node list (prev)
-        if (dist[to] == double.PositiveInfinity) return (0, new int[] { });
+        if (dist[to] == double.PositiveInfinity) return (0, Array.Empty<int>());
         List<int> path = new() { to };
         current = to;
         while (current != from)
@@ -311,7 +311,7 @@ public class Graph<TNode> where TNode : notnull
     )
     {
         int idx = start;
-        if (idx < 0 | idx > nodes.Count - 1) return new int[] { };
+        if (idx < 0 | idx > nodes.Count - 1) return Array.Empty<int>();
         List<int> path = new();
         bool[] visited = Enumerable.Repeat(false, nodes.Count).ToArray();
         Stack<int> stack = new();
@@ -366,7 +366,7 @@ public class Graph<TNode> where TNode : notnull
     )
     {
         int idx = nodes.IndexOf(start);
-        if (idx == -1) return new TNode[] { };
+        if (idx == -1) return Array.Empty<TNode>();
         int[] path = WalkDepthFirst(idx, includeBacktrack, maxSteps);
         return path.Select(x => nodes[x]).ToArray();
     }
