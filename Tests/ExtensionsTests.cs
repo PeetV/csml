@@ -31,7 +31,7 @@ public class IEnumerable
     {
         int[] x = { 1, 2, 3, 4, 5 };
         Assert.Equal("1,2,3,4,5", x.Delimited());
-        Assert.Equal("1|2|3|4|5", x.Delimited(delimeter: "|"));
+        Assert.Equal("1|2|3|4|5", x.Delimited(delimiter: "|"));
     }
 
     [Fact]

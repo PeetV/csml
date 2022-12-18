@@ -145,8 +145,7 @@ public class GraphTNode
         Assert.Equal(2, graph.nodes.Count);
         Assert.Equal(2, graph.matrix.Count);
         Assert.Equal(2, graph.matrix[0].Count);
-        Assert.True(new double[] { 0, 0 }.SequenceEqual(
-                graph.matrix[0]));
+        Assert.True(new double[] { 0, 0 }.SequenceEqual(graph.matrix[0]));
     }
 
     [Fact]
