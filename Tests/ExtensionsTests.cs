@@ -53,6 +53,14 @@ public class IEnumerable
     }
 
     [Fact]
+    public void Product()
+    {
+        var vector = new int[] { 1, 2, 3 };
+        var result = vector.Product();
+        Assert.Equal(6, result);
+    }
+
+    [Fact]
     public void Split()
     {
         var vector = new double[] { 1, 1, 1, 2, 2 };

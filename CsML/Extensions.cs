@@ -46,7 +46,16 @@ public static class IEnumerable
     }
 
     /// <summary>
-    /// Split an array using a boolean filter array, with related true values 
+    /// Calculate the product of all elements in an enumerable.
+    /// </summary>
+    public static T Product<T>(this IEnumerable<T> values)
+     where T : INumber<T>
+    {
+        return values.Aggregate((a, b) => a * b);
+    }
+
+    /// <summary>
+    /// Split a sequence using a boolean filter array, with related true values 
     /// going to the left and false values going to the right.
     /// </summary>
     /// <exception cref="System.ArgumentException">
