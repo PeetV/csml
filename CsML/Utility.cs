@@ -88,12 +88,10 @@ public static class Array
         if (lenActuals != lenPredictions)
             throw new ArgumentException(ErrorMessages.E2);
         if (lenActuals == 0) return 0.0;
-        double tptn = 0;
-        for (int idx = 0; idx < lenActuals; idx++)
-        {
-            if (actuals[idx].CompareTo(predictions[idx]) == 0) tptn += 1;
-        }
-        return tptn / lenActuals;
+        return actuals.Zip(predictions)
+                      .Select(x => x.First.CompareTo(x.Second) == 0
+                                   ? 1.0 : 0.0)
+                      .Sum() / lenActuals;
     }
 
     /// <summary>
