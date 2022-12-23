@@ -2,7 +2,7 @@ using Xunit;
 using CsML.Graph;
 
 namespace CsML.Tests.Graph;
-
+using CsML.Extensions;
 
 public class GraphTNode
 {
@@ -94,12 +94,12 @@ public class GraphTNode
         //      2 - 3
         //           \
         //            5
-        public static Graph<string> DirectedAcyclicInt()
+        public static Graph<int> DirectedAcyclicInt()
         {
-            var graph = new Graph<string>();
-            graph.AddNodes(new string[] { "1", "2", "3", "4", "5" });
-            var edges = new (string, string)[] {
-                ("1", "2"), ("1", "3"), ("1", "4"),  ("2", "3"), ("3", "5")
+            var graph = new Graph<int>();
+            graph.AddNodes(new int[] { 1, 2, 3, 4, 5 });
+            var edges = new (int, int)[] {
+                (1, 2), (1, 3), (1, 4), (2, 3), (3, 5)
             };
             graph.UpdateEdges(edges);
             return graph;
@@ -110,12 +110,12 @@ public class GraphTNode
         //      2 - 3
         //           \
         //            5
-        public static Graph<string> UndirectedInt()
+        public static Graph<int> UndirectedInt()
         {
-            var graph = new Graph<string>();
-            graph.AddNodes(new string[] { "1", "2", "3", "4", "5" });
-            var edges = new (string, string)[] {
-                ("1", "2"), ("1", "3"), ("1", "4"),  ("2", "3"), ("3", "5")
+            var graph = new Graph<int>();
+            graph.AddNodes(new int[] { 1, 2, 3, 4, 5 });
+            var edges = new (int, int)[] {
+                (1, 2), (1, 3), (1, 4),  (2, 3), (3, 5)
              };
             graph.UpdateEdges(edges, undirected: true);
             return graph;
@@ -130,6 +130,41 @@ public class GraphTNode
             graph.UpdateEdges(edges, undirected: true);
             return graph;
         }
+    }
+
+    [Fact]
+    public void Order_DirectedAcyclicString()
+    {
+        var graph = TestCases.DirectedAcyclicString();
+        Assert.Equal(7, graph.Order);
+    }
+
+    [Fact]
+    public void Order_UndirectedInt()
+    {
+        var graph = TestCases.UndirectedInt();
+        Assert.Equal(5, graph.Order);
+    }
+
+    [Fact]
+    public void Size_DirectedAcyclicString()
+    {
+        var graph = TestCases.DirectedAcyclicString();
+        Assert.Equal(8, graph.Size);
+    }
+
+    [Fact]
+    public void Size_UndirectedString()
+    {
+        var graph = TestCases.UndirectedString();
+        Assert.Equal(8, graph.Size);
+    }
+
+    [Fact]
+    public void Size_UndirectedInt()
+    {
+        var graph = TestCases.UndirectedInt();
+        Assert.Equal(5, graph.Size);
     }
 
     [Fact]
@@ -186,7 +221,7 @@ public class GraphTNode
     {
         var graph = TestCases.UndirectedInt();
         int[] path = { 0, 1, 2, 4, 2, 1, 0, 3 };
-        double cost = graph.PathCost(path);
+        double cost = graph.PathCost(pathByNodeIndex: path);
         Assert.Equal(7, cost);
     }
 
@@ -194,8 +229,8 @@ public class GraphTNode
     public void PathCost_ByNode_UndirectedInt()
     {
         var graph = TestCases.UndirectedInt();
-        string[] path = { "1", "2", "3", "5", "3", "2", "1", "4" };
-        double cost = graph.PathCost(path);
+        int[] path = { 1, 2, 3, 5, 3, 2, 1, 4 };
+        double cost = graph.PathCost(pathByNode: path);
         Assert.Equal(7, cost);
     }
 
@@ -205,7 +240,7 @@ public class GraphTNode
         var graph = TestCases.UndirectedInt();
         graph.UpdateEdge(2, 4, 10);
         int[] path = { 0, 1, 2, 4, 2, 1, 0, 3 };
-        double cost = graph.PathCost(path);
+        double cost = graph.PathCost(pathByNodeIndex: path);
         Assert.Equal(16, cost);
     }
 
@@ -214,8 +249,8 @@ public class GraphTNode
     {
         var graph = TestCases.UndirectedInt();
         graph.UpdateEdge(2, 4, 10);
-        string[] path = { "1", "2", "3", "5", "3", "2", "1", "4" };
-        double cost = graph.PathCost(path);
+        int[] path = { 1, 2, 3, 5, 3, 2, 1, 4 };
+        double cost = graph.PathCost(pathByNode: path);
         Assert.Equal(16, cost);
     }
 
@@ -331,11 +366,11 @@ public class GraphTNode
         //    \  /     \
         //     e - f -  g
         var graph = TestCases.DirectedAcyclicString();
-        string[] walk = graph.WalkDepthFirst("a");
+        string[] walk = graph.WalkDepthFirst(startNode: "a");
         string[] expected = { "a", "b", "e", "f", "g", "f", "e", "b", "a",
                               "c", "d" };
         Assert.True(expected.SequenceEqual(walk));
-        walk = graph.WalkDepthFirst("a", false);
+        walk = graph.WalkDepthFirst(startNode: "a", false);
         expected = new string[] { "a", "b", "e", "f", "g", "c", "d" };
         Assert.True(expected.SequenceEqual(walk));
     }
@@ -349,7 +384,7 @@ public class GraphTNode
         //    \  /     \
         //     e - f -  g
         var graph = TestCases.UndirectedString();
-        string[] walk = graph.WalkDepthFirst("a");
+        string[] walk = graph.WalkDepthFirst(startNode: "a");
         string[] expected = { "a", "b", "e", "f", "g", "d", "c" };
         Assert.True(expected.SequenceEqual(walk));
     }
@@ -364,11 +399,12 @@ public class GraphTNode
         //           \
         //            5
         var graph = TestCases.DirectedAcyclicInt();
-        string[] walk = graph.WalkDepthFirst("1");
-        string[] expected = { "1", "2", "3", "5", "3", "2", "1", "4" };
+        int[] walk = graph.WalkDepthFirst(startNode: 1);
+        int[] expected = { 1, 2, 3, 5, 3, 2, 1, 4 };
         Assert.True(expected.SequenceEqual(walk));
-        walk = graph.WalkDepthFirst("1", false);
-        expected = new string[] { "1", "2", "3", "5", "4" };
+        walk = graph.WalkDepthFirst(startNode: 1, false);
+        expected = new int[] { 1, 2, 3, 5, 4 };
+        Assert.True(expected.SequenceEqual(walk));
     }
 
     [Fact]
@@ -380,11 +416,13 @@ public class GraphTNode
         //           \
         //            5
         var graph = TestCases.UndirectedInt();
-        string[] walk = graph.WalkDepthFirst("1");
-        string[] expected = { "1", "2", "3", "5", "3", "2", "1", "4" };
+        int[] walk = graph.WalkDepthFirst(startNode: 1,
+                                          includeBacktrack: true);
+        int[] expected = { 1, 2, 3, 5, 3, 2, 1, 4 };
         Assert.True(expected.SequenceEqual(walk));
-        walk = graph.WalkDepthFirst("1", false);
-        expected = new string[] { "1", "2", "3", "5", "4" };
+        walk = graph.WalkDepthFirst(startNode: 1, false);
+        expected = new int[] { 1, 2, 3, 5, 4 };
+        Assert.True(expected.SequenceEqual(walk));
     }
 
 }

@@ -43,6 +43,29 @@ public class Graph<TNode> where TNode : notnull
         matrix = new List<List<double>>();
     }
 
+    /// <summary>The number of nodes in the graph.</summary>
+    public int Order { get { return nodes.Count(); } }
+
+    /// <summary>The number of edges in the graph.</summary>
+    public int Size
+    {
+        get
+        {
+            if (matrix.Count() == 0) return 0;
+            int size = 0;
+            int duplicates = 0;
+            for (int from = 0; from < matrix.Count(); from++)
+                for (int to = 0; to < matrix[0].Count(); to++)
+                {
+                    if (matrix[from][to] != 0)
+                        size++;
+                    if (matrix[from][to] != 0 & matrix[to][from] != 0)
+                        duplicates++;
+                }
+            return size - (duplicates / 2);
+        }
+    }
+
     /// <summary>Add a node and expand the adjacency matrix.</summary>
     /// <param name="node">The node to add.</param>
     /// <exception cref="System.ArgumentException">
@@ -107,8 +130,8 @@ public class Graph<TNode> where TNode : notnull
     }
 
     /// <summary>Add an edge between nodes.</summary>
-    /// <param name="from">Index of from node (row).</param>
-    /// <param name="to">Index of to node (column).</param>
+    /// <param name="fromNodeIndex">Index of from node (row).</param>
+    /// <param name="toNodeIndex">Index of to node (column).</param>
     /// <param name="weight">Edge weight (defaults to 1).</param>
     /// <param name="undirected">
     /// Update edige in both directions if false.
@@ -117,33 +140,33 @@ public class Graph<TNode> where TNode : notnull
     /// Thrown if a from or to are outside of bounds.
     /// </exception>
     public void UpdateEdge(
-        int from, int to,
+        int fromNodeIndex, int toNodeIndex,
         double weight = 1.0,
         bool undirected = false
     )
     {
-        if (from > (matrix.Count - 1) | from < 0)
+        if (fromNodeIndex > (matrix.Count - 1) | fromNodeIndex < 0)
             throw new ArgumentException(ErrorMessages.E1);
-        if (to > (matrix[from].Count - 1) | to < 0)
+        if (toNodeIndex > (matrix[fromNodeIndex].Count - 1) | toNodeIndex < 0)
             throw new ArgumentException(ErrorMessages.E2);
-        matrix[from][to] = weight;
-        if (undirected) matrix[to][from] = weight;
+        matrix[fromNodeIndex][toNodeIndex] = weight;
+        if (undirected) matrix[toNodeIndex][fromNodeIndex] = weight;
     }
 
     /// <summary>Add an edge between nodes.</summary>
-    /// <param name="from">From node.</param>
-    /// <param name="to">To node.</param>
+    /// <param name="fromNode">From node.</param>
+    /// <param name="toNode">To node.</param>
     /// <param name="weight">Edge weight (defaults to 1).</param>
     /// <param name="undirected">
     /// Update edige in both directions if false.
     /// </param>
-    public void UpdateEdge(TNode from, TNode to,
+    public void UpdateEdge(TNode fromNode, TNode toNode,
         double weight = 1.0, bool undirected = false)
     {
-        int fromIdx = nodes.IndexOf(from);
+        int fromIdx = nodes.IndexOf(fromNode);
         if (fromIdx > (matrix.Count - 1) | fromIdx < 0)
             throw new ArgumentException(ErrorMessages.E1);
-        int toIdx = nodes.IndexOf(to);
+        int toIdx = nodes.IndexOf(toNode);
         if (toIdx > (matrix[fromIdx].Count - 1) | toIdx < 0)
             throw new ArgumentException(ErrorMessages.E2);
         UpdateEdge(fromIdx, toIdx, weight);
@@ -151,32 +174,32 @@ public class Graph<TNode> where TNode : notnull
     }
 
     /// <summary>Add edges between nodes.</summary>
-    /// <param name="fromtos">Array of from and to node tuples.</param>
+    /// <param name="fromToNodes">Array of from and to node tuples.</param>
     /// <param name="weight">Edge weight (defaults to 1).</param>
     /// <param name="undirected">
     /// Update edge in both directions if false.
     /// </param>
-    public void UpdateEdges((TNode, TNode)[] fromtos,
+    public void UpdateEdges((TNode, TNode)[] fromToNodes,
         double weight = 1.0, bool undirected = false)
     {
-        foreach ((TNode from, TNode to) in fromtos)
+        foreach ((TNode from, TNode to) in fromToNodes)
             UpdateEdge(from, to, weight, undirected);
     }
 
     /// <summary>Calculate the sum of weights of a path.</summary>
-    /// <param name="path">List of node index values.</param>
+    /// <param name="pathByNodeIndex">List of node index values.</param>
     /// <exception cref="System.ArgumentException">
     /// Thrown if a from or to are outside of bounds.
     /// </exception>
-    public double PathCost(int[] path)
+    public double PathCost(int[] pathByNodeIndex)
     {
         double cost = 0;
-        if (path.Length == 0) return cost;
-        int current = path[0];
+        if (pathByNodeIndex.Length == 0) return cost;
+        int current = pathByNodeIndex[0];
         if (current < 0 | current > nodes.Count - 1)
             throw new ArgumentException(ErrorMessages.E1);
         List<double> row;
-        foreach (int next in path)
+        foreach (int next in pathByNodeIndex)
         {
             row = matrix[current];
             if (next < 0 | next > row.Count - 1)
@@ -188,15 +211,15 @@ public class Graph<TNode> where TNode : notnull
     }
 
     /// <summary>Calculate the sum of weights of a path.</summary>
-    /// <param name="path">List of node index values.</param>
+    /// <param name="pathByNode">List of node index values.</param>
     /// <exception cref="System.ArgumentException">
     /// Thrown if a node cannot be found in the graph.
     /// </exception>
-    public double PathCost(TNode[] path)
+    public double PathCost(TNode[] pathByNode)
     {
         List<int> index = new();
         int idx;
-        foreach (TNode node in path)
+        foreach (TNode node in pathByNode)
         {
             idx = nodes.IndexOf(node);
             if (idx == -1)
@@ -210,8 +233,8 @@ public class Graph<TNode> where TNode : notnull
     /// Find the shortest path between two nodes, taking into account edge
     /// weights.
     /// </summary>
-    /// <param name="from">Index of start node.</param>
-    /// <param name="to">Index of end node.</param>
+    /// <param name="fromNodeIndex">Index of start node.</param>
+    /// <param name="toNodeIndex">Index of end node.</param>
     /// <returns>
     /// A tuple containing the sum of edge weights along the path (path cost)
     /// and path index list.
@@ -220,16 +243,17 @@ public class Graph<TNode> where TNode : notnull
     /// Thrown if a negative edge weight is found, which breaks the Dijkstra
     /// algorithm.
     /// </exception>
-    public (double, int[]) ShortestPathDijkstra(int from, int to)
+    public (double, int[]) ShortestPathDijkstra(
+        int fromNodeIndex, int toNodeIndex)
     {
-        if (from > (matrix.Count - 1) | from < 0)
+        if (fromNodeIndex > (matrix.Count - 1) | fromNodeIndex < 0)
             throw new ArgumentException(ErrorMessages.E1);
-        if (to > (matrix[from].Count - 1) | to < 0)
+        if (toNodeIndex > (matrix[fromNodeIndex].Count - 1) | toNodeIndex < 0)
             throw new ArgumentException(ErrorMessages.E2);
         bool[] visited = Enumerable.Repeat(false, nodes.Count).ToArray();
         double[] dist = Enumerable.Repeat(double.PositiveInfinity,
                                           nodes.Count).ToArray();
-        dist[from] = 0;
+        dist[fromNodeIndex] = 0;
         List<int> queue = Enumerable.Range(0, nodes.Count).ToList();
         List<int> prev = Enumerable.Repeat(0, nodes.Count).ToList();
         int current = 0;
@@ -260,24 +284,24 @@ public class Graph<TNode> where TNode : notnull
             }
         }
         // Extract path from closest node list (prev)
-        if (dist[to] == double.PositiveInfinity) return (0, Array.Empty<int>());
-        List<int> path = new() { to };
-        current = to;
-        while (current != from)
+        if (dist[toNodeIndex] == double.PositiveInfinity) return (0, Array.Empty<int>());
+        List<int> path = new() { toNodeIndex };
+        current = toNodeIndex;
+        while (current != fromNodeIndex)
         {
             path.Add(prev[current]);
             current = prev[current];
         }
         path.Reverse();
-        return (dist[to], path.ToArray());
+        return (dist[toNodeIndex], path.ToArray());
     }
 
     /// <summary>
     /// Find the shortest path between two nodes, taking into account edge
     /// weights.
     /// </summary>
-    /// <param name="from">Start node.</param>
-    /// <param name="to">End node.</param>
+    /// <param name="fromNode">Start node.</param>
+    /// <param name="toNode">End node.</param>
     /// <returns>
     /// A tuple containing the sum of edge weights along the path (path cost)
     /// and path as a node list.
@@ -286,11 +310,12 @@ public class Graph<TNode> where TNode : notnull
     /// Thrown if a negative edge weight is found, which breaks the Dijkstra
     /// algorithm.
     /// </exception>
-    public (double, TNode[]) ShortestPathDijkstra(TNode from, TNode to)
+    public (double, TNode[]) ShortestPathDijkstra(
+        TNode fromNode, TNode toNode)
     {
-        int fromIdx = nodes.IndexOf(from);
+        int fromIdx = nodes.IndexOf(fromNode);
         if (fromIdx == -1) throw new ArgumentException(ErrorMessages.E4);
-        int toIdx = nodes.IndexOf(to);
+        int toIdx = nodes.IndexOf(toNode);
         if (toIdx == -1) throw new ArgumentException(ErrorMessages.E4);
         (double distance, int[] path) = ShortestPathDijkstra(fromIdx, toIdx);
         return (distance, path.Select(x => nodes[x]).ToArray());
@@ -299,7 +324,7 @@ public class Graph<TNode> where TNode : notnull
     /// <summary>
     /// Walk along edges to all nodes possible using a depth first approach.
     /// </summary>
-    /// <param name="start">
+    /// <param name="startNodeIndex">
     /// The index of the node to start walking from.
     /// </param>
     /// <param name ="includeBacktrack">Include backtracking steps.</param>
@@ -311,12 +336,12 @@ public class Graph<TNode> where TNode : notnull
     /// Thrown if maxSearchSteps parameter is exceeded.
     /// </exception>
     public int[] WalkDepthFirst(
-        int start,
+        int startNodeIndex,
         bool includeBacktrack = true,
         int maxSearchSteps = 1_000_000
     )
     {
-        int idx = start;
+        int idx = startNodeIndex;
         if (idx < 0 | idx > nodes.Count - 1) return Array.Empty<int>();
         List<int> path = new();
         bool[] visited = Enumerable.Repeat(false, nodes.Count).ToArray();
@@ -361,7 +386,7 @@ public class Graph<TNode> where TNode : notnull
     /// <summary>
     /// Walk along edges to all nodes possible using a depth first approach.
     /// </summary>
-    /// <param name="start">The node to start walking from.</param>
+    /// <param name="startNode">The node to start walking from.</param>
     /// <param name ="includeBacktrack">Include backtracking steps.</param>
     /// <param name ="maxSteps">
     /// Maximum number steps before stopping (default 1 million).
@@ -371,12 +396,12 @@ public class Graph<TNode> where TNode : notnull
     /// Thrown if maxSearchSteps parameter is exceeded.
     /// </exception>
     public TNode[] WalkDepthFirst(
-        TNode start,
+        TNode startNode,
         bool includeBacktrack = true,
         int maxSteps = 1_000_000
     )
     {
-        int idx = nodes.IndexOf(start);
+        int idx = nodes.IndexOf(startNode);
         if (idx == -1) return Array.Empty<TNode>();
         int[] path = WalkDepthFirst(idx, includeBacktrack, maxSteps);
         return path.Select(x => nodes[x]).ToArray();
