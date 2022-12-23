@@ -44,18 +44,18 @@ public class Graph<TNode> where TNode : notnull
     }
 
     /// <summary>The number of nodes in the graph.</summary>
-    public int Order { get { return nodes.Count(); } }
+    public int Order { get { return nodes.Count; } }
 
     /// <summary>The number of edges in the graph.</summary>
     public int Size
     {
         get
         {
-            if (matrix.Count() == 0) return 0;
+            if (matrix.Count == 0) return 0;
             int size = 0;
             int duplicates = 0;
-            for (int from = 0; from < matrix.Count(); from++)
-                for (int to = 0; to < matrix[0].Count(); to++)
+            for (int from = 0; from < matrix.Count; from++)
+                for (int to = 0; to < matrix[0].Count; to++)
                 {
                     if (matrix[from][to] != 0)
                         size++;
