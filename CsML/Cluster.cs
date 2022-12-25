@@ -24,10 +24,17 @@ public class KMeansClusterer
 			_clusterLabels = Array<int>.Empty();
 	}
 	
+	public override string ToString()
+	{
+		return $"KMeansClusterer(centroids={_numberOfClusters})"
+	}
+	
 	/// <summary>
 	/// Cluster a matrix into the specified number of clusters.  Consider
   /// scaling data first e.g. z-scores.
 	/// </summary>
+	/// <param name="matrix">The features to find clusters in.</param>
+	/// <param name="clusters">The number clusters to create.</param>
 	/// <returns>
   /// An array containing the cluster number assigned to each row in
   /// the input matrix.
@@ -45,11 +52,6 @@ public class KMeansClusterer
 			if (!CentroidsMoving(mattix)) break;
 		}
 		return _clusterLabels;
-	}
-	
-	public override string ToString()
-	{
-		return $"K-Means Clusterer (centroids={_numberOfClusters})"
 	}
 	
 	private void InitialiseCentroids(double[,] matrix)
