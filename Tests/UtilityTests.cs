@@ -159,6 +159,15 @@ public class Arrays
     }
 
     [Fact]
+    public void DistanceEuclidian()
+    {
+        double[] a = {1, 2, 3, 4, 5}; 
+        double[] b = {2, 3, 4, 5, 6};
+        double result = CsML.Utility.Arrays.DistanceEuclidian(a, b);
+        Assert.Equal(2, result);
+    }
+
+    [Fact]
     public void ElementCounts_ints()
     {
         var vector = new int[] { 1, 1, 1, 2, 2 };
