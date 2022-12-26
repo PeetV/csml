@@ -159,7 +159,7 @@ public class Arrays
     }
 
     [Fact]
-    public void Split()
+    public void Split_doubleArray()
     {
         var vector = new double[] { 1, 1, 1, 2, 2 };
         var filter = new bool[] { true, true, true, false, false };
@@ -167,6 +167,17 @@ public class Arrays
         (lhs, rhs) = CsML.Utility.Arrays.Split(vector, filter);
         Assert.Equal(3, lhs.Sum());
         Assert.Equal(4, rhs.Sum());
+    }
+
+    [Fact]
+    public void Split_empty()
+    {
+        var vector = Array.Empty<double>();
+        var filter = Array.Empty<bool>();
+        double[] lhs, rhs;
+        (lhs, rhs) = CsML.Utility.Arrays.Split(vector, filter);
+        Assert.Equal(0, lhs.Length);
+        Assert.Equal(0, rhs.Length);
     }
 
     [Fact]
