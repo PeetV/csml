@@ -181,7 +181,7 @@ public class Arrays
     {
         var vector = new double[] { };
         var result = CsML.Utility.Arrays.ElementCounts(vector);
-        Assert.Empty(result.counts);
+        Assert.Empty(result);
     }
 
     [Fact]
