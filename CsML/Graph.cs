@@ -43,6 +43,9 @@ public class Graph<TNode> where TNode : notnull
         matrix = new List<List<double>>();
     }
 
+    /// <summary>Get a string representation of an instance.</summary>
+    public override string ToString() => $"Graph(Order: {Order}, Size:{Size})";
+
     /// <summary>The number of nodes in the graph.</summary>
     public int Order { get { return nodes.Count; } }
 

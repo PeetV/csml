@@ -730,6 +730,7 @@ public class KFoldIterator
                                     .Concat(Enumerable.Repeat(true, 90))
                                     .ToArray();
                 Assert.True(actual.SequenceEqual(expected));
+                Assert.Equal(1, iter.CurrentFold);
             }
             if (cntr == 3)
             {
@@ -737,12 +738,14 @@ public class KFoldIterator
                                 .Concat(Enumerable.Repeat(false, 10)).ToArray()
                                 .Concat(Enumerable.Repeat(true, 70)).ToArray();
                 Assert.True(actual.SequenceEqual(expected));
+                Assert.Equal(3, iter.CurrentFold);
             }
             if (cntr == 10)
             {
                 bool[] expected = Enumerable.Repeat(true, 90).ToArray()
                                 .Concat(Enumerable.Repeat(false, 10)).ToArray();
                 Assert.True(actual.SequenceEqual(expected));
+                Assert.Equal(10, iter.CurrentFold);
             }
             cntr++;
         }

@@ -980,6 +980,11 @@ public class KFoldIterator : IEnumerable<bool[]>
     /// <summary>The start and end index values of each fold.</summary>
     public List<(int, int)> foldIndeces;
 
+    /// <summary>Get the current fold number.</summary>
+    public int CurrentFold { get { return _currentFold; } }
+
+    private int _currentFold;
+
     /// <summary>Create a new k-fold iterator.</summary>
     public KFoldIterator(int size, int kfolds)
     {
@@ -994,13 +999,19 @@ public class KFoldIterator : IEnumerable<bool[]>
             foldEnd = foldStart + foldSize;
             foldIndeces.Add((foldStart, foldEnd));
         }
+        _currentFold = 0;
     }
+
+    /// <summary>Get a string representation of an instance.</summary>
+    public override string ToString() =>
+            $"KFoldIterator(kfolds:{kfolds}, CurrentFold:{CurrentFold})";
 
     /// <summary>Get the IEnumerator to iterate over.</summary>
     public IEnumerator<bool[]> GetEnumerator()
     {
         for (int currentFold = 0; currentFold < kfolds; currentFold++)
         {
+            _currentFold = currentFold + 1;
             (int, int) currentIndex = foldIndeces[currentFold];
             bool[] result = new bool[size];
             for (int idx = 0; idx < size; idx++)

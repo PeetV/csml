@@ -41,6 +41,9 @@ public static class Classification
             columnMeans = new Dictionary<int, Dictionary<T, (double, double)>> { };
         }
 
+        /// <summary>Get a string representation of an instance.</summary>
+        public override string ToString() => "NaiveBayesClassifier()";
+
         /// <summary>Train the model.</summary>
         /// <param name="matrix">The features to train the model on.</param>
         /// <param name="target">The target vector to train on.</param>
@@ -169,6 +172,9 @@ public static class Classification
             classes = Array.Empty<T>();
             weights = Array.Empty<double>();
         }
+
+        /// <summary>Get a string representation of an instance.</summary>
+        public override string ToString() => "RandomClassifier()";
 
         /// <summary>Train the model.</summary>
         /// <param name="matrix">The features to train the model on.</param>
@@ -307,6 +313,9 @@ public static class Distributions
         {
             table = new Dictionary<T, double>();
         }
+
+        /// <summary>Get a string representation of an instance.</summary>
+        public override string ToString() => "ProbabilityMassFunction()";
 
         /// <summary>
         /// Create a PMF from an array of hypotheses (each hypothesis is set to
@@ -693,6 +702,9 @@ public static class Sampling
             _random = new Random();
         }
 
+        /// <summary>Get a string representation of an instance.</summary>
+        public override string ToString() => "WeightedSampler()";
+
         /// <summary>
         /// Sample a specified number of times, returning index numbers in
         /// the target array set at construction. Use SampleTarget to sample
@@ -786,6 +798,9 @@ public class Counter<T> where T : notnull
     {
         counts = new Dictionary<T, int>();
     }
+
+    /// <summary>Get a string representation of an instance.</summary>
+    public override string ToString() => "Counter()";
 
     /// <summary>Reset the counter to empty.</summary>
     public void Clear()

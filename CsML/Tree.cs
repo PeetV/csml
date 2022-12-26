@@ -138,6 +138,9 @@ public class BinaryTree
         this.purityFn = purityFn;
     }
 
+    /// <summary>Get a string representation of an instance.</summary>
+    public override string ToString() => $"BinaryTree(Mode:{Mode})";
+
     /// <summary>Train the model.</summary>
     /// <param name="matrix">The features to train the model on.</param>
     /// <param name="target">The target vector to train on.</param>
@@ -452,6 +455,10 @@ public class RandomForest
         this.purityFn = purityFn;
         this.treeCount = treeCount;
     }
+
+    /// <summary>Get a string representation of an instance.</summary>
+    public override string ToString() =>
+        $"RandomForest(Mode:{Mode}, treeCount:{treeCount})";
 
     /// <summary>
     /// Calculate the number of features to include in node split.

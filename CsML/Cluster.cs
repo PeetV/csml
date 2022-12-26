@@ -24,10 +24,9 @@ public class KMeansClusterer
         _clusterLabels = Array.Empty<int>();
     }
 
-    public override string ToString()
-    {
-        return $"KMeansClusterer(clusters={_numberOfClusters})";
-    }
+    /// <summary>Get a string representation of an instance.</summary>
+    public override string ToString() =>
+            $"KMeansClusterer(clusters:{_numberOfClusters})";
 
     /// <summary>
     /// Cluster a matrix into the specified number of clusters.  Consider
@@ -96,11 +95,14 @@ public class KMeansClusterer
         return false;
     }
 
+    /// <summary>Determine the closest centroid to a new data point.</summary>
+    /// <param name="row">
+    /// Row of data containing same number of columns as matrix used to cluster
+    /// data.
+    /// </param>
+    /// <returns>The index of the closest centroid.</returns>
     public int ClosestCentroid(double[] row)
     {
-        //	"""
-        //    Determine the closest centroid to the new data point.
-        //    """
         //    if len(row) != self.min_columns:
         //        raise util.PymlError(f"want {self.min_columns} columns, got {len(row)}")
         //    distance_from_centroid = np.zeros(self.number_of_clusters)
@@ -111,17 +113,21 @@ public class KMeansClusterer
         return 0;
     }
 
+    /// <summary>
+    /// Determine the optimal number of clusters for kmeans using the elbow
+    /// method.
+    /// </summary>
+    /// <param name="matrix">The features to find clusters in.</param>
+    /// <returns>
+    /// The sum of squared error (SSE) of each cluster number in an array.
+    /// Array value 0 is the SSE for 1 cluster, array value 2 is the SSE for 2
+    /// clusters etc.
+    /// </returns>
     public static void OptimalKElbow(double[,] matrix)
     {
         //def optimal_k_elbow(
         //    cls, table: np.array, max_k: int = 15, callback: T.Optional[T.Callable] = None
         //	 ) -> np.array:
-        //    """
-        //    Determine the optimal number of clusters for kmeans using the elbow
-        //    method. Returns the sum of squared error (SSE) of each cluster number
-        //    in an array. Note: array value 0 is the SSE for 1 cluster, array
-        //    value 2 is the SSE for 2 clusters etc.
-        //    """
         //    result: np.array = np.zeros(max_k)
         //    for k in range(1, max_k + 1):
         //        if callback is not None:
