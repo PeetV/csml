@@ -45,7 +45,7 @@ public class IEnumerable
     [Fact]
     public void Delimted_empty()
     {
-        int[] x = Array.Empty<double>();
+        int[] x = Array.Empty<int>();
         Assert.Equal("", x.Delimited());
     }
 
