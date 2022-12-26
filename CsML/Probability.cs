@@ -302,8 +302,8 @@ public static class Distributions
             get
             {
                 return table.Keys
-                    .Zip(table.Values)
-                    .OrderBy(x => x.First)
+                    .Order()
+                    .Select(x => (x, table[x]))
                     .ToArray();
             }
         }
