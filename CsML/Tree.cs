@@ -4,6 +4,15 @@ using CsML.Extensions;
 
 namespace CsML.Tree;
 
+/// <summary>Enumeration of model types e.g. to set model mode.</summary>
+public enum ModelType
+{
+    /// <summary>Make inferences about class labels.</summary>
+    Classification,
+    /// <summary>Infer values.</summary>
+    Regression
+}
+
 /// <summary>
 /// A binary decision tree node used to capture decision criteria for decision
 /// nodes or inference data for leaf nodes.
@@ -113,27 +122,15 @@ public class BinaryTree
     /// </summary>
     public int[]? outOfBagIndeces;
 
-    private string _mode;
-
-    /// <summary>Mode can be either "classify" or "regress".</summary>
-    public string Mode
-    {
-        get { return _mode; }
-        set
-        {
-            if (value != "classify" & value != "regress")
-                throw new ArgumentException(Utility.ErrorMessages.E5);
-            _mode = value;
-        }
-    }
+    /// <summary>Mode defined by ModelType enum.</summary>
+    public ModelType Mode = ModelType.Classification;
 
     /// <summary>Create an untrained model.</summary>
-    public BinaryTree(string mode, Func<double[], double> purityFn)
+    public BinaryTree(ModelType mode, Func<double[], double> purityFn)
     {
         _recursions = 0;
         _splitCount = 0;
         _depth = 0;
-        _mode = "classify";
         nodes = new List<BinaryNode>();
         minColumns = 0;
         inputRecordCount = 0;
@@ -168,7 +165,7 @@ public class BinaryTree
         _recursions = 0;
         _splitCount = 0;
         _depth = 0;
-        if (_mode == "classify")
+        if (Mode == ModelType.Classification)
             classes = target.Distinct().ToArray();
         double[,] inputm;
         double[] inputt;
@@ -254,7 +251,7 @@ public class BinaryTree
                 throw new ArgumentException(Utility.ErrorMessages.E3);
             if (matrix.GetLength(1) != minColumns)
                 throw new ArgumentException(Utility.ErrorMessages.E4);
-            if (Mode == "regress")
+            if (Mode == ModelType.Regression)
                 throw new ArgumentException(Utility.ErrorMessages.E6);
         }
         Span2D<double> matrixSpan = matrix;
@@ -319,7 +316,7 @@ public class BinaryTree
         int recordCount = target.Length;
         Dictionary<double, int>? classCounts;
         double predicted;
-        if (_mode == "regress")
+        if (Mode == ModelType.Regression)
         {
             classCounts = null;
             predicted = target.Average();
@@ -438,22 +435,11 @@ public class RandomForest
     /// <summary>Keep out of bag indeces when bootstrap sampling.</summary>
     public bool retainOutOfBagIndeces = false;
 
-    private string _mode;
-
-    /// <summary>Mode can be either "classify" or "regress".</summary>
-    public string Mode
-    {
-        get { return _mode; }
-        set
-        {
-            if (value != "classify" & value != "regress")
-                throw new ArgumentException(Utility.ErrorMessages.E5);
-            _mode = value;
-        }
-    }
+    /// <summary>Mode defined by ModelType enum.</summary>
+    public ModelType Mode = ModelType.Classification;
 
     /// <summary>Create an untrained random forest.</summary>
-    public RandomForest(string mode,
+    public RandomForest(ModelType mode,
         Func<double[], double> purityFn,
         int treeCount = 103,
         int randomFeatures = 0)
@@ -461,7 +447,6 @@ public class RandomForest
         trees = new List<BinaryTree>();
         minColumns = 0;
         inputRecordCount = 0;
-        _mode = "classify";
         this.randomFeatures = randomFeatures;
         Mode = mode;
         this.purityFn = purityFn;
@@ -494,7 +479,7 @@ public class RandomForest
             throw new ArgumentException(Utility.ErrorMessages.E2);
         trees = new List<BinaryTree>();
         minColumns = matrix.GetLength(1);
-        if (_mode == "classify")
+        if (Mode == ModelType.Classification)
             classes = target.Distinct().ToArray();
         randomFeatures = randomFeatures == 0 ?
                          DefaultFeatureCount(minColumns) :
@@ -536,7 +521,7 @@ public class RandomForest
             var input = new List<double[]>();
             input = input.Append(
                 Utility.Matrix.GetRow(matrix, i, false)).ToList();
-            if (Mode == "regress")
+            if (Mode == ModelType.Regression)
             {
                 var predictions = new List<double>(trees.Count);
                 foreach (var tree in trees)
@@ -581,7 +566,7 @@ public class RandomForest
                 throw new ArgumentException(Utility.ErrorMessages.E3);
             if (matrix.GetLength(1) != minColumns)
                 throw new ArgumentException(Utility.ErrorMessages.E4);
-            if (Mode == "regress")
+            if (Mode == ModelType.Regression)
                 throw new ArgumentException(Utility.ErrorMessages.E6);
         }
         var result = new (double, Dictionary<double, double>)[inputRecordCount];
