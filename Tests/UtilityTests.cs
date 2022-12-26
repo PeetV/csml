@@ -176,8 +176,8 @@ public class Arrays
         var filter = Array.Empty<bool>();
         double[] lhs, rhs;
         (lhs, rhs) = CsML.Utility.Arrays.Split(vector, filter);
-        Assert.Equal(0, lhs.Length);
-        Assert.Equal(0, rhs.Length);
+        Assert.Empty(lhs);
+        Assert.Empty(rhs);
     }
 
     [Fact]
