@@ -27,6 +27,14 @@ public class IEnumerable
     }
 
     [Fact]
+    public void CumulativeSum_empty()
+    {
+        var input = Array.Empty<double>();
+        double[] result = input.Cumulative().ToArray();
+        Assert.Empty(result);
+    }
+
+    [Fact]
     public void Delimted()
     {
         int[] x = { 1, 2, 3, 4, 5 };
