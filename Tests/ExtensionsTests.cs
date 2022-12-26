@@ -68,11 +68,19 @@ public class IEnumerable
     }
 
     [Fact]
-    public void Product()
+    public void Product_ints()
     {
         var vector = new int[] { 1, 2, 3 };
         var result = vector.Product();
         Assert.Equal(6, result);
+    }
+
+    [Fact]
+    public void Product_empty()
+    {
+        var vector = Array.Empty<int>();;
+        var result = vector.Product();
+        Assert.Equal(0, result);
     }
 
     [Fact]
