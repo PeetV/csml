@@ -815,7 +815,7 @@ public enum ModelType
 {
     /// <summary>Make inferences about class labels.</summary>
     Classification,
-    /// <summary>Infer values.</summary>
+    /// <summary>Make inferences about values.</summary>
     Regression
 }
 

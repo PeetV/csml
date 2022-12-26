@@ -1,6 +1,7 @@
 using Microsoft.Toolkit.HighPerformance;
 
 using CsML.Extensions;
+using CsML.Utility;
 
 namespace CsML.Tree;
 
@@ -114,7 +115,7 @@ public class BinaryTree
     public int[]? outOfBagIndeces;
 
     /// <summary>Mode defined by ModelType enum.</summary>
-    public CsML.Util.ModelType Mode = CsML.Util.ModelType.Classification;
+    public ModelType Mode = ModelType.Classification;
 
     /// <summary>Create an untrained model.</summary>
     public BinaryTree(ModelType mode, Func<double[], double> purityFn)
@@ -159,7 +160,7 @@ public class BinaryTree
         _recursions = 0;
         _splitCount = 0;
         _depth = 0;
-        if (Mode == CsML.Util.ModelType.Classification)
+        if (Mode == ModelType.Classification)
             classes = target.Distinct().ToArray();
         double[,] inputm;
         double[] inputt;
@@ -430,7 +431,7 @@ public class RandomForest
     public bool retainOutOfBagIndeces = false;
 
     /// <summary>Mode defined by ModelType enum.</summary>
-    public CsML.Util.ModelType Mode = CsML.Util.ModelType.Classification;
+    public ModelType Mode = ModelType.Classification;
 
     /// <summary>Create an untrained random forest.</summary>
     public RandomForest(ModelType mode,
@@ -477,7 +478,7 @@ public class RandomForest
             throw new ArgumentException(Utility.ErrorMessages.E2);
         trees = new List<BinaryTree>();
         minColumns = matrix.GetLength(1);
-        if (Mode == CsML.Util.ModelType.Classification)
+        if (Mode == ModelType.Classification)
             classes = target.Distinct().ToArray();
         randomFeatures = randomFeatures == 0 ?
                          DefaultFeatureCount(minColumns) :

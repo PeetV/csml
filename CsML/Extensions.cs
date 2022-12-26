@@ -51,6 +51,7 @@ public static class IEnumerable
     public static T Product<T>(this IEnumerable<T> values)
      where T : INumber<T>
     {
+        if (values.Count() == 0) return T.Zero;
         return values.Aggregate((a, b) => a * b);
     }
 

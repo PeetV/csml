@@ -24,7 +24,7 @@ public class BinaryTree
             };
         double[] target = { 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1 };
         var tree = new CsML.Tree.BinaryTree(
-                            CsML.Tree.ModelType.Classification,
+                            CsML.Utility.ModelType.Classification,
                             CsML.Utility.Statistics.Gini);
         tree.Train(features, target);
         Assert.Equal(0.5, tree.nodes[0].splitPoint);
@@ -55,7 +55,7 @@ public class BinaryTree
             };
         double[] target = { 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1 };
         var tree = new CsML.Tree.BinaryTree(
-                        CsML.Tree.ModelType.Regression,
+                        CsML.Utility.ModelType.Regression,
                         CsML.Utility.Statistics.Gini);
         tree.Train(features, target);
         Assert.Equal(0.5, tree.nodes[0].splitPoint);
@@ -70,7 +70,7 @@ public class BinaryTree
     public void Train_input_exceptions()
     {
         var tree = new CsML.Tree.BinaryTree(
-                            CsML.Tree.ModelType.Classification,
+                            CsML.Utility.ModelType.Classification,
                             CsML.Utility.Statistics.Gini);
         Assert.Throws<ArgumentException>(() =>
         {
@@ -101,9 +101,9 @@ public class BinaryTree
         };
         var target = new double[] { 1, 2, 1, 1, 2, 2.1, 1, 2, 5, 5, 5, 5 };
         var tree = new CsML.Tree.BinaryTree(
-                        CsML.Tree.ModelType.Regression,
+                        CsML.Utility.ModelType.Regression,
                         CsML.Utility.Statistics.StdevP);
-        Assert.Equal(CsML.Tree.ModelType.Regression, tree.Mode);
+        Assert.Equal(CsML.Utility.ModelType.Regression, tree.Mode);
         tree.Train(matrix, target);
         Assert.Equal(0, tree.nodes[0].columnIndex);
         Assert.Equal(1.5, tree.nodes[0].splitPoint);
@@ -124,7 +124,7 @@ public class BinaryTree
     private static CsML.Tree.BinaryTree ManualTree()
     {
         var tree = new CsML.Tree.BinaryTree(
-                            CsML.Tree.ModelType.Classification,
+                            CsML.Utility.ModelType.Classification,
                             CsML.Utility.Statistics.Gini);
         tree.minColumns = 3;
         tree.classes = new double[] { 3, 4, 5, 6 };
@@ -300,7 +300,7 @@ public class BinaryTree
         ((ftrain, ttrain), (ftest, ttest)) = CsML.Utility.Features.Split(
                                                 features, target, 0.8);
         var tree = new CsML.Tree.BinaryTree(
-                            CsML.Tree.ModelType.Classification,
+                            CsML.Utility.ModelType.Classification,
                             CsML.Utility.Statistics.Gini);
         tree.Train(ftrain, ttrain);
         Assert.True(tree.nodes.Count > 0);
@@ -314,7 +314,7 @@ public class RandomForest
     private static CsML.Tree.RandomForest BuildForestManually()
     {
         var tree = new CsML.Tree.BinaryTree(
-                            CsML.Tree.ModelType.Classification,
+                            CsML.Utility.ModelType.Classification,
                             CsML.Utility.Statistics.Gini);
         tree.inputRecordCount = 20;
         tree.minColumns = 2;
@@ -347,7 +347,7 @@ public class RandomForest
         tree.nodes.Add(node3);
 
         var forest = new CsML.Tree.RandomForest(
-                                CsML.Tree.ModelType.Classification,
+                                CsML.Utility.ModelType.Classification,
                                 CsML.Utility.Statistics.Gini);
         forest.minColumns = 2;
         forest.trees = new List<CsML.Tree.BinaryTree> { tree, tree, tree };
@@ -409,7 +409,7 @@ public class RandomForest
         ((ftrain, ttrain), (ftest, ttest)) = CsML.Utility.Features.Split(
                                                 features, target, 0.8);
         var forest = new CsML.Tree.RandomForest(
-                                CsML.Tree.ModelType.Classification,
+                                CsML.Utility.ModelType.Classification,
                                 CsML.Utility.Statistics.Gini);
         forest.Train(ftrain, ttrain);
         Assert.True(forest.trees.Count > 0);
