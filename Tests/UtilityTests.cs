@@ -110,7 +110,7 @@ public class Array
     public void ClassificationError_empty()
     {
 
-        var result = CsML.Utility.Array.ClassificationAccuracy(
+        var result = CsML.Utility.Array.ClassificationError(
                             System.Array.Empty<double>(),
                             System.Array.Empty<double>());
         Assert.Equal(0.0, result);
