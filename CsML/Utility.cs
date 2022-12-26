@@ -810,6 +810,15 @@ public static class Matrix
     }
 }
 
+/// <summary>Enumeration of model types e.g. to set model mode.</summary>
+public enum ModelType
+{
+    /// <summary>Make inferences about class labels.</summary>
+    Classification,
+    /// <summary>Infer values.</summary>
+    Regression
+}
+
 /// <summary>A collection of statistics utility functions.</summary>
 public static class Statistics
 {
