@@ -176,6 +176,22 @@ public static class Arrays
         return result;
     }
 
+    /// <summary>
+    /// Calculate the Euclidian distqnce between two double arrays.
+    /// </summary>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if inputs aren't the same length.
+    /// </exception>
+    public static double DistanceEuclidian(double[] a, double[] b)
+    {
+       if (a.Length != b.Length)
+            throw new ArgumentException(ErrorMessages.E2);
+       return Math.Sqrt(
+                a.Zip(b)
+                 .Select(x => Math.Pow(x.Item1 - x.Item2, 2))
+                 .Sum());
+    }
+
     /// <summary>Count of ocurrences of each array element.</summary>
     /// <returns>
     /// A dictionary containing array elements as keys and element counts as
