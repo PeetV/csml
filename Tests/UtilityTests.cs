@@ -48,6 +48,19 @@ public class Array
     }
 
     [Fact]
+    public void BestSplit_empty()
+    {
+        double[] values = Array.Empty<double>();
+        double[] target = Array.Empty<double>();
+        var result = CsML.Utility.Array.BestSplit(
+            values,
+            target,
+            CsML.Utility.Statistics.Gini);
+        Assert.Equal(0.0, result.Item1);
+        Assert.Equal(0.0, result.Item2);
+    }
+
+    [Fact]
     public void ClassificationAccuracy_all_match()
     {
         double[] values = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
