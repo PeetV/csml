@@ -159,6 +159,32 @@ public class Arrays
     }
 
     [Fact]
+    public void ElementCounts_ints()
+    {
+        var vector = new int[] { 1, 1, 1, 2, 2 };
+        var result = CsML.Utility.Arrays.ElementCounts(vector);
+        Assert.Equal(3, result[1]);
+        Assert.Equal(2, result[2]);
+    }
+
+    [Fact]
+    public void ElementCounts_strings()
+    {
+        var vector = new string[] { "1", "1", "1", "2", "2" };
+        var result = CsML.Utility.Arrays.ElementCounts(vector);
+        Assert.Equal(3, result["1"]);
+        Assert.Equal(2, result["2"]);
+    }
+
+    [Fact]
+    public void ElementCounts_empty()
+    {
+        var vector = new double[] { };
+        var result = CsML.Utility.Arrays.ElementCounts(vector);
+        Assert.Empty(result.counts);
+    }
+
+    [Fact]
     public void Split_doubleArray()
     {
         var vector = new double[] { 1, 1, 1, 2, 2 };
@@ -178,15 +204,6 @@ public class Arrays
         (lhs, rhs) = CsML.Utility.Arrays.Split(vector, filter);
         Assert.Empty(lhs);
         Assert.Empty(rhs);
-    }
-
-    [Fact]
-    public void ToElementCounts()
-    {
-        var vector = new double[] { 1, 1, 1, 2, 2 };
-        var result = CsML.Utility.Arrays.ElementCounts(vector);
-        Assert.Equal(3, result[1]);
-        Assert.Equal(2, result[2]);
     }
 }
 
