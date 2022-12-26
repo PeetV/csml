@@ -184,12 +184,12 @@ public static class Arrays
     /// </exception>
     public static double DistanceEuclidian(double[] a, double[] b)
     {
-       if (a.Length != b.Length)
+        if (a.Length != b.Length)
             throw new ArgumentException(ErrorMessages.E2);
-       return Math.Sqrt(
-                a.Zip(b)
-                 .Select(x => Math.Pow(x.Item1 - x.Item2, 2))
-                 .Sum());
+        return Math.Sqrt(
+                 a.Zip(b)
+                  .Select(x => Math.Pow(x.Item1 - x.Item2, 2))
+                  .Sum());
     }
 
     /// <summary>Count of ocurrences of each array element.</summary>
