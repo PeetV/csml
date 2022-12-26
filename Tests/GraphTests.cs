@@ -147,6 +147,13 @@ public class GraphTNode
     }
 
     [Fact]
+    public void Order_empty()
+    {
+        var graph = new Graph<string>();
+        Assert.Equal(0, graph.Order);
+    }
+
+    [Fact]
     public void Size_DirectedAcyclicString()
     {
         var graph = TestCases.DirectedAcyclicString();
@@ -165,6 +172,13 @@ public class GraphTNode
     {
         var graph = TestCases.UndirectedInt();
         Assert.Equal(5, graph.Size);
+    }
+
+    [Fact]
+    public void Size_empty()
+    {
+        var graph = new Graph<string>();
+        Assert.Equal(0, graph.Size);
     }
 
     [Fact]
