@@ -35,11 +35,18 @@ public class IEnumerable
     }
 
     [Fact]
-    public void Delimted()
+    public void Delimted_ints()
     {
         int[] x = { 1, 2, 3, 4, 5 };
         Assert.Equal("1,2,3,4,5", x.Delimited());
         Assert.Equal("1|2|3|4|5", x.Delimited(delimiter: "|"));
+    }
+
+    [Fact]
+    public void Delimted_empty()
+    {
+        int[] x = Array.Empty<double>();
+        Assert.Equal("", x.Delimited());
     }
 
     [Fact]
