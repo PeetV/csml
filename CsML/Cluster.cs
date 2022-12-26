@@ -148,3 +148,54 @@ public class KMeansClusterer
         //    return result
     }
 }
+
+// class KNearestNeighbourClassifier:
+//     """
+//     A k-nearest neighbour classifier.
+//     """
+
+//     def __init__(self):
+//         self.min_columns: int = 0
+//         self.neighbour_count: int = DEFAULT_NEIGHBOUR_COUNT
+//         self.train_table: np.array = np.empty(0)
+//         self.labels: np.array = np.empty(0)
+//         self.distancefn: T.Callable = util.distance_euclidian
+
+//     def train(self, table: np.array, target: np.array) -> None:
+//         """
+//         Train the classifier by saving a copy of the data points and their
+//         labels. Consider scaling data first e.g. z-scores.
+//         """
+//         util.checks_before_training(table, target)
+//         self.min_columns = table.shape[1]
+//         self.train_table = table.copy()
+//         self.labels = target.copy()
+
+//     def predict(self, table: np.array) -> np.array:
+//         """
+//         Predict class labels of new data.
+//         """
+//         if len(self.train_table) == 0:
+//             raise util.PymlError("classifier has not been trained")
+//         util.check_table_dimensions(table, self.min_columns)
+//         util.raise_if_contains_nanNone(table)
+//         result: T.List[int] = []
+//         for row_index in range(table.shape[0]):
+//             row = np.array([table[row_index]])
+//             len_train_table = len(self.train_table)
+//             distances = np.zeros(len_train_table)
+//             for train_row_index in range(len_train_table):
+//                 distances[train_row_index] = self.distancefn(
+//                     row, self.train_table[train_row_index]
+//                 )
+//             # find the neighbour_count number of closest points
+//             index_closest = np.argpartition(distances, self.neighbour_count)[
+//                 : self.neighbour_count
+//             ]
+//             votes = self.labels[index_closest]
+//             counts: dict = collections.Counter(votes)
+//             result.append(max(counts, key=lambda k: counts[k]))
+//         return np.array(result)
+
+//     def __str__(self):
+//         return "K-Nearest Neighbour Classifier"
