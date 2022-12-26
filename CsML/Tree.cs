@@ -148,7 +148,7 @@ public class BinaryTree
     /// Skip input checks if true. Used in random forest to avoid repeated
     /// checking of same input data.
     /// </param>
-    /// /// <exception cref="System.ArgumentException">
+    /// <exception cref="System.ArgumentException">
     /// Thrown if inputs aren't the same length.
     /// </exception>
     public void Train(
