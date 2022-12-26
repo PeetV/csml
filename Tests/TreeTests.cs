@@ -305,7 +305,7 @@ public class BinaryTree
         tree.Train(ftrain, ttrain);
         Assert.True(tree.nodes.Count > 0);
         double[] predictions = tree.Predict(ftest);
-        Assert.True(CsML.Utility.Array.ClassificationAccuracy(
+        Assert.True(CsML.Utility.Arrays.ClassificationAccuracy(
                     ttest, predictions) > 0.8);
     }
 }
@@ -414,7 +414,7 @@ public class RandomForest
         forest.Train(ftrain, ttrain);
         Assert.True(forest.trees.Count > 0);
         double[] predictions = forest.Predict(ftest);
-        Assert.True(CsML.Utility.Array.ClassificationAccuracy(
+        Assert.True(CsML.Utility.Arrays.ClassificationAccuracy(
                     ttest, predictions) > 0.8);
     }
 }

@@ -42,7 +42,7 @@ public static class IEnumerable
         this IEnumerable<T> sequence)
         where T : notnull
     {
-        return CsML.Utility.Array.ElementCounts<T>(sequence.ToArray());
+        return CsML.Utility.Arrays.ElementCounts<T>(sequence.ToArray());
     }
 
     /// <summary>
@@ -66,6 +66,6 @@ public static class IEnumerable
         bool[] filter
     )
     {
-        return CsML.Utility.Array.Split(sequence.ToArray(), filter);
+        return CsML.Utility.Arrays.Split(sequence.ToArray(), filter);
     }
 }

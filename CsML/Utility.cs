@@ -5,7 +5,7 @@ using CsML.Extensions;
 namespace CsML.Utility;
 
 /// <summary>A collection of array utility functions.</summary>
-public static class Array
+public static class Arrays
 {
     /// <summary>
     /// Determine which value to split an array on to maximise the weighted
@@ -31,6 +31,7 @@ public static class Array
     )
         where T : notnull
     {
+        if (vector.Length == 0) return (0.0, 0.0);
         double bestsplit = 0.0, bestgain = 0.0;
         int lenVals = vector.Length;
         (double, T)[] zipped = vector
@@ -584,7 +585,7 @@ public static class Matrix
             double[] columnToCheck = matrixSpan
                                         .GetColumn(columnIndex)
                                         .ToArray();
-            (split, gain) = Array.BestSplit(columnToCheck, target, purityfn);
+            (split, gain) = Arrays.BestSplit(columnToCheck, target, purityfn);
             if (gain > bestgain)
             {
                 bestgain = gain;

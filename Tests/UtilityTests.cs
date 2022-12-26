@@ -2,7 +2,7 @@ using Xunit;
 
 namespace CsML.Tests.Utility;
 
-public class Array
+public class Arrays
 {
     [Fact]
     public void BestSplit_accuracy_test1()
@@ -11,7 +11,7 @@ public class Array
                             3.0, 1.0 };
         double[] target = { 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0,
                             0.0, 1.0 };
-        var result = CsML.Utility.Array.BestSplit(
+        var result = CsML.Utility.Arrays.BestSplit(
             values,
             target,
             CsML.Utility.Statistics.Gini);
@@ -26,7 +26,7 @@ public class Array
         1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
         double[] target = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0,
         0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
-        var result = CsML.Utility.Array.BestSplit(
+        var result = CsML.Utility.Arrays.BestSplit(
             values,
             target,
             CsML.Utility.Statistics.Gini);
@@ -39,7 +39,7 @@ public class Array
     {
         double[] values = { 5.0, 5.0, 5.0, 5.0, 5.0 };
         double[] target = { 1.0, 2.0, 1.0, 2.0, 1.0 };
-        var result = CsML.Utility.Array.BestSplit(
+        var result = CsML.Utility.Arrays.BestSplit(
             values,
             target,
             CsML.Utility.Statistics.Gini);
@@ -50,9 +50,9 @@ public class Array
     [Fact]
     public void BestSplit_empty()
     {
-        double[] values = Array.Empty<double>();
-        double[] target = Array.Empty<double>();
-        var result = CsML.Utility.Array.BestSplit(
+        double[] values = System.Array.Empty<double>();
+        double[] target = System.Array.Empty<double>();
+        var result = CsML.Utility.Arrays.BestSplit(
             values,
             target,
             CsML.Utility.Statistics.Gini);
@@ -65,14 +65,14 @@ public class Array
     {
         double[] values = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         double[] target = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
-        double result = CsML.Utility.Array.ClassificationAccuracy(values, target);
+        double result = CsML.Utility.Arrays.ClassificationAccuracy(values, target);
         Assert.Equal(1, result);
     }
 
     [Fact]
     public void ClassificationAccuracy_empty()
     {
-        double result = CsML.Utility.Array.ClassificationAccuracy(
+        double result = CsML.Utility.Arrays.ClassificationAccuracy(
                             System.Array.Empty<double>(),
                             System.Array.Empty<double>());
         Assert.Equal(0.0, result);
@@ -83,7 +83,7 @@ public class Array
     {
         double[] values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         double[] target = new double[] { 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 };
-        double result = CsML.Utility.Array.ClassificationAccuracy(values, target);
+        double result = CsML.Utility.Arrays.ClassificationAccuracy(values, target);
         Assert.Equal(0.5, result);
     }
 
@@ -92,7 +92,7 @@ public class Array
     {
         var values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         var target = new double[] { 5.0, 5.0, 1.0, 5.0, 5.0, 5.0 };
-        var result = CsML.Utility.Array.ClassificationAccuracy(values, target);
+        var result = CsML.Utility.Arrays.ClassificationAccuracy(values, target);
         Assert.Equal(2.0 / 6.0, result);
     }
 
@@ -101,7 +101,7 @@ public class Array
     {
         double[] values = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         double[] target = { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
-        double result = CsML.Utility.Array.ClassificationError(values, target);
+        double result = CsML.Utility.Arrays.ClassificationError(values, target);
         Assert.Equal(0, result);
 
     }
@@ -110,10 +110,10 @@ public class Array
     public void ClassificationError_empty()
     {
 
-        var result = CsML.Utility.Array.ClassificationError(
+        var result = CsML.Utility.Arrays.ClassificationError(
                             System.Array.Empty<double>(),
                             System.Array.Empty<double>());
-        Assert.Equal(0.0, result);
+        Assert.Equal(1.0, result);
     }
 
     [Fact]
@@ -121,7 +121,7 @@ public class Array
     {
         var values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         var target = new double[] { 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 };
-        var result = CsML.Utility.Array.ClassificationError(values, target);
+        var result = CsML.Utility.Arrays.ClassificationError(values, target);
         Assert.Equal(0.5, result);
     }
 
@@ -130,7 +130,7 @@ public class Array
     {
         var values = new double[] { 5.0, 5.0, 5.0, 1.0, 1.0, 1.0 };
         var target = new double[] { 5.0, 5.0, 1.0, 5.0, 5.0, 5.0 };
-        var result = CsML.Utility.Array.ClassificationError(values, target);
+        var result = CsML.Utility.Arrays.ClassificationError(values, target);
         Assert.True(4.0 / 6.0 - result < 0.00000001);
     }
 
@@ -141,7 +141,7 @@ public class Array
                                      "C", "B" };
         var predicted = new string[] { "A", "B", "B", "A", "C", "C", "C",
                                        "A", "B" };
-        var result = CsML.Utility.Array.ClassificationMetrics(actuals, predicted);
+        var result = CsML.Utility.Arrays.ClassificationMetrics(actuals, predicted);
         Assert.Equal(0.6666666666666666, result["A"].Item1);
         Assert.Equal(0.6666666666666666, result["B"].Item1);
         Assert.Equal(0.6666666666666666, result["C"].Item1);
@@ -153,7 +153,7 @@ public class Array
     [Fact]
     public void ClassificationMetrics_empty()
     {
-        var result = CsML.Utility.Array.ClassificationMetrics(
+        var result = CsML.Utility.Arrays.ClassificationMetrics(
             System.Array.Empty<string>(), System.Array.Empty<string>());
         Assert.True(result.Keys.Count == 0);
     }
@@ -164,7 +164,7 @@ public class Array
         var vector = new double[] { 1, 1, 1, 2, 2 };
         var filter = new bool[] { true, true, true, false, false };
         double[] lhs, rhs;
-        (lhs, rhs) = CsML.Utility.Array.Split(vector, filter);
+        (lhs, rhs) = CsML.Utility.Arrays.Split(vector, filter);
         Assert.Equal(3, lhs.Sum());
         Assert.Equal(4, rhs.Sum());
     }
@@ -173,7 +173,7 @@ public class Array
     public void ToElementCounts()
     {
         var vector = new double[] { 1, 1, 1, 2, 2 };
-        var result = CsML.Utility.Array.ElementCounts(vector);
+        var result = CsML.Utility.Arrays.ElementCounts(vector);
         Assert.Equal(3, result[1]);
         Assert.Equal(2, result[2]);
     }

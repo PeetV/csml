@@ -92,7 +92,7 @@ public class Classification
                             .NaiveBayesClassifier<double>();
             nbc.Train(ftrain, ttrain);
             double[] predictions = nbc.Predict(ftest);
-            Assert.True(CsML.Utility.Array.ClassificationAccuracy(
+            Assert.True(CsML.Utility.Arrays.ClassificationAccuracy(
                 ttest, predictions) > 0.8);
         }
     }
