@@ -451,8 +451,8 @@ public static class Distributions
         /// </returns>
         public (T, double) Max()
         {
-            T mostProbablyHypothesis = table.MaxBy(kvp => kvp.Value).Key;
-            return (mostProbablyHypothesis, table[mostProbablyHypothesis]);
+            T mostProbableHypothesis = table.MaxBy(kvp => kvp.Value).Key;
+            return (mostProbableHypothesis, table[mostProbableHypothesis]);
         }
 
         /// <summary>Calculate the mean of the PMF.</summary>
