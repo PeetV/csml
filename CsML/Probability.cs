@@ -782,7 +782,7 @@ public class Counter<T> where T : notnull
     public Dictionary<T, int> counts;
 
     /// <summary>
-    /// Overload the square-bracket operator to work on the table field.
+    /// Overload the square-bracket operator to work on the counts field.
     /// </summary>
     public object this[T target]
     {
@@ -799,10 +799,7 @@ public class Counter<T> where T : notnull
         counts = new Dictionary<T, int>();
     }
 
-    /// <summary>
-    /// Create a counter and count input array.
-    /// </summary>
-    // TODO: Unit test.
+    /// <summary>Create a counter and count input array.</summary>
     public Counter(T[] input, int increment = 1)
     {
         counts = new Dictionary<T, int>();
@@ -810,7 +807,7 @@ public class Counter<T> where T : notnull
     }
 
     /// <summary>Get a string representation of an instance.</summary>
-    public override string ToString() => "Counter()";
+    public override string ToString() => $"Counter(keys={counts.Keys})";
 
     /// <summary>Reset the counter to empty.</summary>
     public void Clear()
