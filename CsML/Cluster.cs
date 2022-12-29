@@ -13,10 +13,14 @@ public class KMeans
     /// <summary>Cluster labels.</summary>
     public int[] ClusterLabels { get { return _clusterLabels; } }
 
+    /// <summary>
+    /// The number of matrix columns the model was trained on.
+    /// </summary>
+    public int minColumns;
+
     private int _numberOfClusters;
     private int _maxIterations;
     private double[,] _centroids;
-    private int _minColumns;
     private int[] _clusterLabels;
 
     /// <summary>Create a new k-means clusterer.</summary>
@@ -25,8 +29,8 @@ public class KMeans
         _numberOfClusters = 0;
         _maxIterations = 10_000;
         _centroids = new double[,] { };
-        _minColumns = 0;
         _clusterLabels = Array.Empty<int>();
+        minColumns = 0;
     }
 
     /// <summary>Get a string representation of an instance.</summary>
@@ -47,7 +51,7 @@ public class KMeans
     public int[] Cluster(double[,] matrix, int clusters = 5)
     {
         _numberOfClusters = clusters;
-        _minColumns = matrix.GetLength(1);
+        minColumns = matrix.GetLength(1);
         InitialiseCentroids(matrix);
         int iterations = 0;
         while (iterations < _maxIterations)
@@ -134,7 +138,7 @@ public class KMeans
     /// <returns>The index of the closest centroid.</returns>
     public int ClosestCentroid(double[] row)
     {
-        if (row.Length != _minColumns)
+        if (row.Length != minColumns)
             throw new ArgumentException(Utility.ErrorMessages.E4);
         Span2D<double> centroidsSpan = _centroids;
         var distancesFromCentroid = Enumerable.Repeat(0.0, _numberOfClusters).ToList();
@@ -214,7 +218,10 @@ public class NearestNeighbour
     /// <summary>Mode defined by ModelType enum.</summary>
     public ModelType Mode = ModelType.Classification;
 
-    private int _minColumns;
+    /// <summary>
+    /// The number of matrix columns the model was trained on.
+    /// </summary>
+    public int minColumns;
 
     /// <summary>Create an untrained model.</summary>
     public NearestNeighbour(ModelType mode)
@@ -223,7 +230,7 @@ public class NearestNeighbour
         train = new double[,]{};
         target = new double[] {};
         numberOfNeighbours = 5;
-        _minColumns = 0;
+        minColumns = 0;
     }
 
     /// <summary>Get a string representation of an instance.</summary>
@@ -237,7 +244,7 @@ public class NearestNeighbour
     /// </exception>
     public void Train(double[,] matrix, double[] target)
     {
-        _minColumns = matrix.GetLength(1);
+        minColumns = matrix.GetLength(1);
         train = matrix;
         this.target = target;
     }
@@ -250,7 +257,7 @@ public class NearestNeighbour
     /// </exception>
     public double[] Predict(double[,] matrix)
     {
-        if (matrix.GetLength(1) != _minColumns)
+        if (matrix.GetLength(1) != minColumns)
             throw new ArgumentException(Utility.ErrorMessages.E4);
         Span2D<double> matrixSpan = matrix;
         Span2D<double> trainSpan = train;
