@@ -1,36 +1,43 @@
+using Microsoft.Toolkit.HighPerformance;
+
+using CsML.Utility;
+
 namespace CsML.Cluster;
 
 /// <summary>
 /// Cluster data using a k-means clustering algorithm.
 /// </summary>
-public class KMeansClusterer
+public class KMeans
 {
-    /// <summary>Number of clusters with centroids.</summary>
-    public int numberOfClusters { get { return _numberOfClusters; } }
+    /// <summary>Number of clusters, each with a centroid.</summary>
+    public int NumberOfClusters { get { return _numberOfClusters; } }
 
+    /// <summary>Cluster labels.</summary>
+    public int ClusterLabels { get { return _clusterLabels; } }
+    
     private int _numberOfClusters;
     private int _maxIterations;
-    private int[] _centroids;
+    private double[,] _centroids;
     private int _minColumns;
     private int[] _clusterLabels;
 
     /// <summary>Create a new k-means clusterer.</summary>
-    public KMeansClusterer()
+    public KMeans()
     {
         _numberOfClusters = 0;
         _maxIterations = 10_000;
-        _centroids = Array.Empty<int>();
+        _centroids = new(){};
         _minColumns = 0;
         _clusterLabels = Array.Empty<int>();
     }
 
     /// <summary>Get a string representation of an instance.</summary>
     public override string ToString() =>
-            $"KMeansClusterer(clusters:{_numberOfClusters})";
+            $"KMeans(clusters:{_numberOfClusters})";
 
     /// <summary>
-    /// Cluster a matrix into the specified number of clusters.  Consider
-    /// scaling data first e.g. z-scores.
+    /// Cluster a matrix into the specified number of clusters. Consider
+    /// scaling data first e.g. using Z-scores.
     /// </summary>
     /// <param name="matrix">The features to find clusters in.</param>
     /// <param name="clusters">The number clusters to create.</param>
@@ -38,9 +45,10 @@ public class KMeansClusterer
     /// An array containing the cluster number assigned to each row in
     /// the input matrix.
     /// </returns>
+    // TODO: Throw an error if maximum iterations are exceeded.
     public int[] Cluster(double[,] matrix, int clusters = 5)
     {
-        _numberOfClusters = clusters;
+        _numberOfClusters = clusters
         _minColumns = matrix.GetLength(1);
         InitialiseCentroids(matrix);
         int iterations = 0;
@@ -53,46 +61,72 @@ public class KMeansClusterer
         return _clusterLabels;
     }
 
+    // Create centroids at random points within max and min
+    // bounds of each column.
     private void InitialiseCentroids(double[,] matrix)
     {
-        //self.cluster_labels = np.zeros(len(table))
-        //    self.centroids = np.zeros((self.number_of_clusters, table.shape[1]))
-        //    for centroid_index in range(self.number_of_clusters):
-        //        for column_index in range(table.shape[1]):
-        //            min_val = np.amin(table[:, column_index])
-        //            max_val = np.amax(table[:, column_index])
-        //            rand = np.random.random_sample()
-        //            rand_val = (max_val - min_val) * rand + min_val
-        //            self.centroids[centroid_index, column_index] = rand_val				
+        Span2D<double> matrixSpan = matrix;
+        Random random = new Random();
+        _clusterLabels = Enumerable.Repeat(0, matrix.GetLength(0));
+        _centroids = new double[_numberOfClusters,
+                                matrix.GetLength(1)]();
+        double colMin, colMax;
+        for (int colIdx = 0; colIdx < matrix.GetLength(1); colIdx++)
+        {
+            var col = matrixSpan.GetColumn(colIdx);
+            colMin = col.Min();
+            colMax = col.Max();
+            for (int centroidIdx = 0; centroidIdx < _numberOfClusters; centroidIdx++)
+                _centroids[centroidIdx, colIdx] = ((colMax - colMin) *
+                                                    random.NextDouble()) +
+                                                    colMin;
+        }
     }
 
+    //  Assign each record to its closest centroid.
     private void AssignCentroids(double[,] matrix)
     {
-        //# Form k clusters by assigning each record to its closest centroid.
-        //    distance_from_centroid = np.zeros(self.number_of_clusters)
-        //    for row_index in range(len(table)):
-        //        row_data = table[row_index]
-        //        for centroid_index in range(self.number_of_clusters):
-        //            centroid_data = self.centroids[centroid_index]
-        //            distance = util.distance_euclidian(row_data, centroid_data)
-        //            distance_from_centroid[centroid_index] = distance
-        //        self.cluster_labels[row_index] = np.argmin(distance_from_centroid)
+        Span2D<double> matrixSpan = matrix;
+        Span2D<double> centroidSpan = _centroids;
+        double[] distancesFromCentroid = Enumerable.Range(0, _numberOfClusters).ToArray();
+        double distance, minDistance;
+        for (int rowIdx = 0; rowIdx < matrix.GetLength(0); rowIdx++)
+        {
+            var row = matrixSpan.GetRow(rowIdx).ToArray();
+            for (int centroidIdx = 0; centroidIdx < _numberOfClusters; centroidIdx++)
+            {
+                var centroid = centroidSpan.GetRow(centroidIdx).ToArray();
+                distance = Utility.Arrays.DistanceEuclidian(row, centroid);
+                distancesFromCentroid[centroidIdx] = distance;
+            }
+            minDistance = distancesFromCentroid.Min();
+            _clusterLabels[rowIdx] = distancesFromCentroid.IndexOf(minDistance);
+        }
     }
 
+    // Recompute the centroid for each cluster. Return true if centroids
+    // are still moving, false if they have stopped.
+    // TODO: Cache columns filtered by centroidIdx.
     private bool CentroidsMoving(double[,] matrix)
     {
-        // # Recompute the centroid for each cluster. Return true if centroids
-        //    # are still moving, false if they have stopped.
-        //    old_centroids = np.copy(self.centroids)
-        //    for centroid_index in range(self.number_of_clusters):
-        //        filter = self.cluster_labels == centroid_index
-        //        for column_index in range(table.shape[1]):
-        //            vals = table[filter, column_index]
-        //            if len(vals) > 0:
-        //                new_val = np.mean(vals)
-        //                self.centroids[centroid_index, column_index] = new_val
-        //									return not np.array_equal(old_centroids, self.centroids)
-        return false;
+        Span2D<double> matrixSpan = matrix;
+        double[,] oldCentroids = (double[])_centroids.Clone();
+        bool[] filter;
+        for (int centroidIdx = 0; centroidIdx < _numberOfClusters; centroidIdx++)
+        {
+            filter = _clusterLabels.Select(x => x == centroidIdx).ToArray();
+            for (int colIdx = 0; colIdx < matrix.GetLength(1); colIdx++)
+            {
+                var col = matrixSpan.GetColumn(colIdx);
+                col = col.Zip(filter)
+                         .Where(x => x.Item2)
+                         .Select(x => x.Item1)
+                         .ToArray();
+                if (col.Length == 0) continue;
+                _centroids[centroidIdx, colIdx] = col.Average();
+            }
+        }
+        return !_centroids.SequenceEqual(oldCentroids);
     }
 
     /// <summary>Determine the closest centroid to a new data point.</summary>
@@ -103,14 +137,17 @@ public class KMeansClusterer
     /// <returns>The index of the closest centroid.</returns>
     public int ClosestCentroid(double[] row)
     {
-        //    if len(row) != self.min_columns:
-        //        raise util.PymlError(f"want {self.min_columns} columns, got {len(row)}")
-        //    distance_from_centroid = np.zeros(self.number_of_clusters)
-        //    for centroid_index, centroid_data in enumerate(self.centroids):
-        //        distance = util.distance_euclidian(row, centroid_data)
-        //        distance_from_centroid[centroid_index] = distance
-        //    return np.argmin(distance_from_centroid)
-        return 0;
+        if (row.Length != minColumns)
+            throw new ArgumentException(Utility.ErrorMessages.E4);
+        double[] distancesFromCentroid = Enumerable.Range(0, _numberOfClusters).ToArray();
+        double distance;
+        for (int centroidIdx = 0; centroidIdx < _numberOfClusters; centroidIdx++)
+        {
+            distance = Utility.Arrays.DistanceEuclidian(row, centroid);
+            distancesFromCentroid[centroidIdx] = distance;
+        }
+        minDistance = distancesFromCentroid.Min();
+        return distancesFromCentroid.IndexOf(minDistance);
     }
 
     /// <summary>
@@ -123,79 +160,133 @@ public class KMeansClusterer
     /// Array value 0 is the SSE for 1 cluster, array value 2 is the SSE for 2
     /// clusters etc.
     /// </returns>
-    public static void OptimalKElbow(double[,] matrix)
+    public static void OptimalKElbow(double[,] matrix, int k = 15)
     {
-        //def optimal_k_elbow(
-        //    cls, table: np.array, max_k: int = 15, callback: T.Optional[T.Callable] = None
-        //	 ) -> np.array:
-        //    result: np.array = np.zeros(max_k)
-        //    for k in range(1, max_k + 1):
-        //        if callback is not None:
-        //            callback()
-        //        km = KMeansClusterer()
-        //        km.cluster(table, k)
-        //        sse: float = 0.0
-        //        for centroid_index in range(km.number_of_clusters):
-        //            centroid_filter = km.cluster_labels == centroid_index
-        //            if centroid_filter.sum() == 0:
-        //                continue
-        //            for column_index in range(table.shape[1]):
-        //                column_values = table[centroid_filter, column_index]
-        //                mn = column_values.mean()
-        //                se = np.square(column_values - mn)
-        //                sse += se.sum()
-        //        result[k - 1] = sse
-        //    return result
+        double[] result = Enumerable.Repeat(0, k).ToArray();
+        Span2D<double> matrixSpan = matrix;
+        double sse;
+        bool[] filter;
+        for (int i = 0; i < k; i++)
+        {
+            KMeans km = new();
+            km.Cluster(matrix, i);
+            sse = 0;
+            for (int centroidIdx = 0; centroidIdx < i; centroidIdx++)
+            {
+                filter = km.ClusterLabels.Select(x => x == centroidIdx).ToArray();
+                for (int colIdx = 0; colIdx < matrix.GetLength(1); colIdx++)
+                var col = matrixSpan.GetColumn(colIdx);
+                col = col.Zip(filter)
+                         .Where(x => x.Item2)
+                         .Select(x => x.Item1)
+                         .ToArray();
+                if (col.Length == 0) continue;
+                sse += CsML.Utility.SSE(col);
+            }
+            result[i] = sse;
+        }
+        return result;
     }
 }
 
-// class KNearestNeighbourClassifier:
-//     """
-//     A k-nearest neighbour classifier.
-//     """
+/// <summary>A nearest neighbour model.</summary>
+public class NearestNeighbour
+{
+    /// <summary>
+    /// A copy of the training data. Consider scaling
+    /// data first e.g. using Z-scores.
+    /// </summary>
+    public double[,] train;
+ 
+    /// <summary>A copy of training data labels.</summary>
+    public double[] target;
 
-//     def __init__(self):
-//         self.min_columns: int = 0
-//         self.neighbour_count: int = DEFAULT_NEIGHBOUR_COUNT
-//         self.train_table: np.array = np.empty(0)
-//         self.labels: np.array = np.empty(0)
-//         self.distancefn: T.Callable = util.distance_euclidian
+    /// <summary>
+    /// Number of neighbours taken into account when
+    /// deciding class labels.
+    /// </summary>
+    public int numberOfNeighbours;
+    
+    /// <summary>
+    /// The function to use to calculate the nearest neighbour
+    /// distance.
+    /// <see> See
+    /// <seealso cref="Utility.Arrays.DistanceEuclidian" />
+    /// for default function to use.
+    /// </see>
+    /// </summary>
+    public Func<(double[], double[]), double> distanceFn;
+ 
+    /// <summary>Mode defined by ModelType enum.</summary>
+    public ModelType Mode = ModelType.Classification;
 
-//     def train(self, table: np.array, target: np.array) -> None:
-//         """
-//         Train the classifier by saving a copy of the data points and their
-//         labels. Consider scaling data first e.g. z-scores.
-//         """
-//         util.checks_before_training(table, target)
-//         self.min_columns = table.shape[1]
-//         self.train_table = table.copy()
-//         self.labels = target.copy()
+    private int _minColumns;
 
-//     def predict(self, table: np.array) -> np.array:
-//         """
-//         Predict class labels of new data.
-//         """
-//         if len(self.train_table) == 0:
-//             raise util.PymlError("classifier has not been trained")
-//         util.check_table_dimensions(table, self.min_columns)
-//         util.raise_if_contains_nanNone(table)
-//         result: T.List[int] = []
-//         for row_index in range(table.shape[0]):
-//             row = np.array([table[row_index]])
-//             len_train_table = len(self.train_table)
-//             distances = np.zeros(len_train_table)
-//             for train_row_index in range(len_train_table):
-//                 distances[train_row_index] = self.distancefn(
-//                     row, self.train_table[train_row_index]
-//                 )
-//             # find the neighbour_count number of closest points
-//             index_closest = np.argpartition(distances, self.neighbour_count)[
-//                 : self.neighbour_count
-//             ]
-//             votes = self.labels[index_closest]
-//             counts: dict = collections.Counter(votes)
-//             result.append(max(counts, key=lambda k: counts[k]))
-//         return np.array(result)
+    /// <summary>Create an untrained model.</summary>
+    public NearestNeighbour(ModelType mode, Func<(double[], double[]), double> distanceFn)
+    {
+        Mode = mode;
+        train = new();
+        target = new();
+        numberOfNeighbours = 5;
+        _minColumns = 0;
+        this.distanceFn = distanceFn;
+    }
 
-//     def __str__(self):
-//         return "K-Nearest Neighbour Classifier"
+    /// <summary>Get a string representation of an instance.</summary>
+    public override string ToString() => $"NearestNeighbour(mode:{mode})";
+
+    /// <summary>Train the model.</summary>
+    /// <param name="matrix">The features to train the model on.</param>
+    /// <param name="target">The target vector to train on.</param>
+    /// <exception cref="System .ArgumentException">
+    /// Thrown if inputs aren't the same length.
+    /// </exception>
+    public void Train(double[,] matrix, double[] target)
+    {
+        _minColumns = matrix.GetLength(1);
+        train = matrix;
+        this.target = target;
+    }
+    
+    /// <summary>Make predictions using the model.</summary>
+    /// <param name="matrix">New data to infer predictions from.</param>
+    /// <exception cref="System.ArgumentException">
+    /// Thrown if input is empty, or model has not been trained, or if trained
+    /// on a different number of columns.
+    /// </exception>
+    public double[] Predict(double[,] matrix)
+    {
+        if (matrix.GetLength(1) != minColumns)
+            throw new ArgumentException(Utility.ErrorMessages.E4);
+        Span2D<double> matrixSpan = matrix;
+        Span2D<double> trainSpan = train;
+        inputRecordCount = matrix.GetLength(0);
+        trainRecordCount = train.GetLength(0);
+        var result = new double[inputRecordCount];
+        double[] row, trainRow, distances;
+        int[] neighbours;
+        for (int i = 0; i < inputRecordCount; i++)
+        {
+            row = matrixSpan.GetRow(i).ToArray();
+            distances = Enumerable.Repeat(0, trainRecordCount).ToArray();
+            for (int t = 0; t < trainRecordCount; t++)
+            {
+                trainrow = trainSpan.GetRow(t).ToArray();
+                distances[t] = distanceFn(row, trainRow);
+            }
+            neighbours = distances.Zip(Enumerable.Range(0, distances.Length))
+                                  .OrderBy(x => x.Item1)
+                                  .Select(x => x.Item2)
+                                  .ToArray();
+            if (Mode == ModelType.Regression)
+                result[i] = neighbours.Select(x => target[x]).Mean();
+            else
+            {
+                var counter = CsML.Probability.Counter<int>(neighbours);
+                result[i] = counter.MaxKey();
+            }
+        }
+        return result;
+    }
+}
