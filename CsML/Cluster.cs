@@ -1,5 +1,3 @@
-using System.Linq;
-
 using Microsoft.Toolkit.HighPerformance;
 
 using CsML.Utility;
@@ -157,6 +155,7 @@ public class KMeans
     /// method.
     /// </summary>
     /// <param name="matrix">The features to find clusters in.</param>
+    /// <param name="k"></param>
     /// <returns>
     /// The sum of squared error (SSE) of each cluster number in an array.
     /// Array value 0 is the SSE for 1 cluster, array value 2 is the SSE for 2
@@ -185,7 +184,7 @@ public class KMeans
                                      .Select(x => x.Item1)
                                      .ToArray();
                     if (colFiltered.Length == 0) continue;
-                    sse += CsML.Utility.Statistics.SSE(colFiltered);
+                    sse += CsML.Utility.Statistics.SSEvsMean(colFiltered);
                 }
             }
             result[i] = sse;
@@ -212,34 +211,23 @@ public class NearestNeighbour
     /// </summary>
     public int numberOfNeighbours;
 
-    /// <summary>
-    /// The function to use to calculate the nearest neighbour
-    /// distance.
-    /// <see> See
-    /// <seealso cref="Utility.Arrays.DistanceEuclidian" />
-    /// for default function to use.
-    /// </see>
-    /// </summary>
-    public Func<(double[], double[]), double> distanceFn;
-
     /// <summary>Mode defined by ModelType enum.</summary>
     public ModelType Mode = ModelType.Classification;
 
     private int _minColumns;
 
     /// <summary>Create an untrained model.</summary>
-    public NearestNeighbour(ModelType mode, Func<(double[], double[]), double> distanceFn)
+    public NearestNeighbour(ModelType mode)
     {
         Mode = mode;
-        train = new();
-        target = new();
+        train = new double[,]{};
+        target = new double[] {};
         numberOfNeighbours = 5;
         _minColumns = 0;
-        this.distanceFn = distanceFn;
     }
 
     /// <summary>Get a string representation of an instance.</summary>
-    public override string ToString() => $"NearestNeighbour(mode:{mode})";
+    public override string ToString() => $"NearestNeighbour(mode:{Mode})";
 
     /// <summary>Train the model.</summary>
     /// <param name="matrix">The features to train the model on.</param>
@@ -262,33 +250,34 @@ public class NearestNeighbour
     /// </exception>
     public double[] Predict(double[,] matrix)
     {
-        if (matrix.GetLength(1) != minColumns)
+        if (matrix.GetLength(1) != _minColumns)
             throw new ArgumentException(Utility.ErrorMessages.E4);
         Span2D<double> matrixSpan = matrix;
         Span2D<double> trainSpan = train;
-        inputRecordCount = matrix.GetLength(0);
-        trainRecordCount = train.GetLength(0);
+        int inputRecordCount = matrix.GetLength(0);
+        int trainRecordCount = train.GetLength(0);
         var result = new double[inputRecordCount];
         double[] row, trainRow, distances;
         int[] neighbours;
         for (int i = 0; i < inputRecordCount; i++)
         {
             row = matrixSpan.GetRow(i).ToArray();
-            distances = Enumerable.Repeat(0, trainRecordCount).ToArray();
+            distances = Enumerable.Repeat(0.0, trainRecordCount).ToArray();
             for (int t = 0; t < trainRecordCount; t++)
             {
-                trainrow = trainSpan.GetRow(t).ToArray();
-                distances[t] = distanceFn(row, trainRow);
+                trainRow = trainSpan.GetRow(t).ToArray();
+                distances[t] = CsML.Utility.Arrays.DistanceEuclidian(row, trainRow);
             }
             neighbours = distances.Zip(Enumerable.Range(0, distances.Length))
                                   .OrderBy(x => x.Item1)
                                   .Select(x => x.Item2)
                                   .ToArray();
             if (Mode == ModelType.Regression)
-                result[i] = neighbours.Select(x => target[x]).Mean();
+                result[i] = neighbours.Select(x => target[x]).ToArray()
+                                      .Average();
             else
             {
-                var counter = CsML.Probability.Counter<int>(neighbours);
+                var counter = new CsML.Probability.Counter<int>(neighbours);
                 result[i] = counter.MaxKey();
             }
         }

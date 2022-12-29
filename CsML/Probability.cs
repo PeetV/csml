@@ -802,6 +802,7 @@ public class Counter<T> where T : notnull
     /// <summary>
     /// Create a counter and count input array.
     /// </summary>
+    // TODO: Unit test.
     public Counter(T[] input, int increment = 1)
     {
         counts = new Dictionary<T, int>();
