@@ -59,8 +59,8 @@ public class BinaryTree
     private int _recursions;
     private int _splitCount;
     private int _depth;
-    private readonly int _maxrecursions = 10000;
-    private readonly int _maxsplits = 10000;
+    private readonly int _maxrecursions = 10_000;
+    private readonly int _maxsplits = 10_000;
 
     /// <summary>The list containing nodes in the tree once trained.</summary>
     public List<BinaryNode> nodes;
