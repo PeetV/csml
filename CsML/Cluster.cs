@@ -1,20 +1,20 @@
+using System.Linq;
+
 using Microsoft.Toolkit.HighPerformance;
 
 using CsML.Utility;
 
 namespace CsML.Cluster;
 
-/// <summary>
-/// Cluster data using a k-means clustering algorithm.
-/// </summary>
+/// <summary>Cluster data using a k-means clustering algorithm.</summary>
 public class KMeans
 {
     /// <summary>Number of clusters, each with a centroid.</summary>
     public int NumberOfClusters { get { return _numberOfClusters; } }
 
     /// <summary>Cluster labels.</summary>
-    public int ClusterLabels { get { return _clusterLabels; } }
-    
+    public int[] ClusterLabels { get { return _clusterLabels; } }
+
     private int _numberOfClusters;
     private int _maxIterations;
     private double[,] _centroids;
@@ -26,14 +26,14 @@ public class KMeans
     {
         _numberOfClusters = 0;
         _maxIterations = 10_000;
-        _centroids = new(){};
+        _centroids = new double[,] { };
         _minColumns = 0;
         _clusterLabels = Array.Empty<int>();
     }
 
     /// <summary>Get a string representation of an instance.</summary>
-    public override string ToString() =>
-            $"KMeans(clusters:{_numberOfClusters})";
+    public override string ToString()
+            => $"KMeans(clusters:{_numberOfClusters})";
 
     /// <summary>
     /// Cluster a matrix into the specified number of clusters. Consider
@@ -48,7 +48,7 @@ public class KMeans
     // TODO: Throw an error if maximum iterations are exceeded.
     public int[] Cluster(double[,] matrix, int clusters = 5)
     {
-        _numberOfClusters = clusters
+        _numberOfClusters = clusters;
         _minColumns = matrix.GetLength(1);
         InitialiseCentroids(matrix);
         int iterations = 0;
@@ -67,13 +67,12 @@ public class KMeans
     {
         Span2D<double> matrixSpan = matrix;
         Random random = new Random();
-        _clusterLabels = Enumerable.Repeat(0, matrix.GetLength(0));
-        _centroids = new double[_numberOfClusters,
-                                matrix.GetLength(1)]();
+        _clusterLabels = Enumerable.Repeat(0, matrix.GetLength(0)).ToArray();
+        _centroids = new double[_numberOfClusters, matrix.GetLength(1)];
         double colMin, colMax;
         for (int colIdx = 0; colIdx < matrix.GetLength(1); colIdx++)
         {
-            var col = matrixSpan.GetColumn(colIdx);
+            var col = matrixSpan.GetColumn(colIdx).ToArray();
             colMin = col.Min();
             colMax = col.Max();
             for (int centroidIdx = 0; centroidIdx < _numberOfClusters; centroidIdx++)
@@ -88,7 +87,7 @@ public class KMeans
     {
         Span2D<double> matrixSpan = matrix;
         Span2D<double> centroidSpan = _centroids;
-        double[] distancesFromCentroid = Enumerable.Range(0, _numberOfClusters).ToArray();
+        var distancesFromCentroid = Enumerable.Repeat(0.0, _numberOfClusters).ToList();
         double distance, minDistance;
         for (int rowIdx = 0; rowIdx < matrix.GetLength(0); rowIdx++)
         {
@@ -110,14 +109,14 @@ public class KMeans
     private bool CentroidsMoving(double[,] matrix)
     {
         Span2D<double> matrixSpan = matrix;
-        double[,] oldCentroids = (double[])_centroids.Clone();
+        double[,] oldCentroids = (double[,])_centroids.Clone();
         bool[] filter;
         for (int centroidIdx = 0; centroidIdx < _numberOfClusters; centroidIdx++)
         {
             filter = _clusterLabels.Select(x => x == centroidIdx).ToArray();
             for (int colIdx = 0; colIdx < matrix.GetLength(1); colIdx++)
             {
-                var col = matrixSpan.GetColumn(colIdx);
+                var col = matrixSpan.GetColumn(colIdx).ToArray();
                 col = col.Zip(filter)
                          .Where(x => x.Item2)
                          .Select(x => x.Item1)
@@ -126,7 +125,7 @@ public class KMeans
                 _centroids[centroidIdx, colIdx] = col.Average();
             }
         }
-        return !_centroids.SequenceEqual(oldCentroids);
+        return !CsML.Utility.Matrix.Equal(_centroids, oldCentroids);
     }
 
     /// <summary>Determine the closest centroid to a new data point.</summary>
@@ -137,12 +136,15 @@ public class KMeans
     /// <returns>The index of the closest centroid.</returns>
     public int ClosestCentroid(double[] row)
     {
-        if (row.Length != minColumns)
+        if (row.Length != _minColumns)
             throw new ArgumentException(Utility.ErrorMessages.E4);
-        double[] distancesFromCentroid = Enumerable.Range(0, _numberOfClusters).ToArray();
-        double distance;
+        Span2D<double> centroidsSpan = _centroids;
+        var distancesFromCentroid = Enumerable.Repeat(0.0, _numberOfClusters).ToList();
+        double distance, minDistance;
+        double[] centroid;
         for (int centroidIdx = 0; centroidIdx < _numberOfClusters; centroidIdx++)
         {
+            centroid = centroidsSpan.GetRow(centroidIdx).ToArray();
             distance = Utility.Arrays.DistanceEuclidian(row, centroid);
             distancesFromCentroid[centroidIdx] = distance;
         }
@@ -160,12 +162,13 @@ public class KMeans
     /// Array value 0 is the SSE for 1 cluster, array value 2 is the SSE for 2
     /// clusters etc.
     /// </returns>
-    public static void OptimalKElbow(double[,] matrix, int k = 15)
+    public static double[] OptimalKElbow(double[,] matrix, int k = 15)
     {
-        double[] result = Enumerable.Repeat(0, k).ToArray();
+        double[] result = Enumerable.Repeat(0.0, k).ToArray();
         Span2D<double> matrixSpan = matrix;
         double sse;
         bool[] filter;
+        double[] col, colFiltered;
         for (int i = 0; i < k; i++)
         {
             KMeans km = new();
@@ -175,13 +178,15 @@ public class KMeans
             {
                 filter = km.ClusterLabels.Select(x => x == centroidIdx).ToArray();
                 for (int colIdx = 0; colIdx < matrix.GetLength(1); colIdx++)
-                var col = matrixSpan.GetColumn(colIdx);
-                col = col.Zip(filter)
-                         .Where(x => x.Item2)
-                         .Select(x => x.Item1)
-                         .ToArray();
-                if (col.Length == 0) continue;
-                sse += CsML.Utility.SSE(col);
+                {
+                    col = matrixSpan.GetColumn(colIdx).ToArray();
+                    colFiltered = col.Zip(filter)
+                                     .Where(x => x.Item2)
+                                     .Select(x => x.Item1)
+                                     .ToArray();
+                    if (colFiltered.Length == 0) continue;
+                    sse += CsML.Utility.Statistics.SSE(colFiltered);
+                }
             }
             result[i] = sse;
         }
@@ -197,7 +202,7 @@ public class NearestNeighbour
     /// data first e.g. using Z-scores.
     /// </summary>
     public double[,] train;
- 
+
     /// <summary>A copy of training data labels.</summary>
     public double[] target;
 
@@ -206,7 +211,7 @@ public class NearestNeighbour
     /// deciding class labels.
     /// </summary>
     public int numberOfNeighbours;
-    
+
     /// <summary>
     /// The function to use to calculate the nearest neighbour
     /// distance.
@@ -216,7 +221,7 @@ public class NearestNeighbour
     /// </see>
     /// </summary>
     public Func<(double[], double[]), double> distanceFn;
- 
+
     /// <summary>Mode defined by ModelType enum.</summary>
     public ModelType Mode = ModelType.Classification;
 
@@ -248,7 +253,7 @@ public class NearestNeighbour
         train = matrix;
         this.target = target;
     }
-    
+
     /// <summary>Make predictions using the model.</summary>
     /// <param name="matrix">New data to infer predictions from.</param>
     /// <exception cref="System.ArgumentException">
