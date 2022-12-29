@@ -748,6 +748,20 @@ public class Statistics
     }
 
     [Fact]
+    public void SSEvsMean_withInput()
+    {
+        double[] input = {2, 5, 3, 7, 5, 3, 2, 7, 8, 9, 7, 5, 5, 6, 9};
+        Assert.Equal(75.73333333333334, CsML.Utility.Statistics.SSEvsMean(input));
+    }
+
+    [Fact]
+    public void SSEvsMean_emptyInput()
+    {
+        double[] input = {};
+        Assert.Equal(0.0, CsML.Utility.Statistics.SSEvsMean(input));
+    }
+
+    [Fact]
     public void StdevP()
     {
         var input = new double[] { 1, 2, 3, 4 };

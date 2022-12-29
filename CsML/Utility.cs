@@ -975,9 +975,9 @@ public static class Statistics
     /// Calculate the sum of the squared difference between array values and the
     /// mean value.
     /// </summary>
-    /// TODO: Unit tests including empty input.
     public static double SSEvsMean(double[] input)
     {
+        if (input.Length == 0) return 0.0;
         double m = input.Average();
         return input.Select(x => Math.Pow(x - m, 2)).Sum();
     }
