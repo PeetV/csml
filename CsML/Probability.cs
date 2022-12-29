@@ -799,6 +799,15 @@ public class Counter<T> where T : notnull
         counts = new Dictionary<T, int>();
     }
 
+    /// <summary>
+    /// Create a counter and count input array.
+    /// </summary>
+    public Counter(T[] input, int increment = 1)
+    {
+        counts = new Dictionary<T, int>();
+        Increment(input, increment);
+    }
+
     /// <summary>Get a string representation of an instance.</summary>
     public override string ToString() => "Counter()";
 
