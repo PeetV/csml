@@ -767,7 +767,7 @@ public static class Matrix
     /// other arrays using Split1D.
     /// </returns>
     public static (double[,], double[,], bool[])
-        Split(
+    Split(
             double[,] matrix,
             int columnIndex,
             double splitPoint
@@ -1009,13 +1009,13 @@ public static class Statistics
 public class KFoldIterator : IEnumerable<bool[]>
 {
     /// <summary>The number of records to split into folds.</summary>
-    public int size;
+    private int size;
 
     /// <summary>The number of folds to iterate over.</summary>
-    public int kfolds;
+    private int kfolds;
 
     /// <summary>The start and end index values of each fold.</summary>
-    public List<(int, int)> foldIndeces;
+    private List<(int, int)> foldIndeces;
 
     /// <summary>Get the current fold number.</summary>
     public int CurrentFold { get { return _currentFold; } }
@@ -1023,10 +1023,10 @@ public class KFoldIterator : IEnumerable<bool[]>
     private int _currentFold;
 
     /// <summary>Create a new k-fold iterator.</summary>
-    public KFoldIterator(int size, int kfolds)
+    public KFoldIterator(int size, int k)
     {
         this.size = size;
-        this.kfolds = kfolds;
+        this.kfolds = k;
         int foldSize = (int)((double)size / (double)kfolds);
         foldIndeces = new List<(int, int)>();
         int foldStart, foldEnd;
@@ -1041,7 +1041,7 @@ public class KFoldIterator : IEnumerable<bool[]>
 
     /// <summary>Get a string representation of an instance.</summary>
     public override string ToString() =>
-            $"KFoldIterator(kfolds:{kfolds}, CurrentFold:{CurrentFold})";
+            $"KFoldIterator(k:{kfolds}, CurrentFold:{CurrentFold})";
 
     /// <summary>Get the IEnumerator to iterate over.</summary>
     public IEnumerator<bool[]> GetEnumerator()
