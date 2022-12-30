@@ -23,4 +23,19 @@ public class Kmeans
         Assert.True(val >= 2.0);
         Assert.True(val <= 4.0);
     }
+
+    [Fact]
+    public void Cluster()
+    {
+        double[,] matrix = {
+          {1.1, 1}, {1.2, 3}, {2, 2}, {10, 11}, {12, 13}, {9, 12}
+        };
+        var km = new CsML.Cluster.KMeans();
+        int[] result = km.Cluster(matrix, 2);
+        Assert.Equal(6, result.Length);
+        Assert.Equal(result[0], result[1]);
+        Assert.Equal(result[0], result[2]);
+        Assert.Equal(result[3], result[4]);
+        Assert.Equal(result[3], result[5]);
+    }
 }
