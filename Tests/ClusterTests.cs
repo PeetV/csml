@@ -38,4 +38,16 @@ public class Kmeans
         Assert.Equal(result[3], result[4]);
         Assert.Equal(result[3], result[5]);
     }
+
+    [Fact]
+    public void ClosestCentroid()
+    {
+        double[,] matrix = {
+          {1.1, 1}, {1.2, 3}, {2, 2}, {10, 11}, {12, 13}, {9, 12}
+        };
+        var km = new CsML.Cluster.KMeans();
+        int[] result = km.Cluster(matrix, 2);
+        int clust = km.ClosestCentroid(new double[]{0.9, 1.5});
+        Assert.Equal(result[0], clust);
+    }
 }
