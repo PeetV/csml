@@ -257,6 +257,9 @@ public static class ErrorMessages
 
     /// <summary>Error message if method does not apply given mode.</summary>
     public const string E6 = "Method only valid if method is 'classify'";
+
+    /// <summary>Error message if maximum iterations are exceeded.</summary>
+    public const string E7 = "Maximum iterations exceeded";
 }
 
 /// <summary>
