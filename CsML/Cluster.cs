@@ -47,7 +47,6 @@ public class KMeans
     /// An array containing the cluster number assigned to each row in
     /// the input matrix.
     /// </returns>
-    // TODO: Throw an error if maximum iterations are exceeded.
     public int[] Cluster(double[,] matrix, int clusters = 5)
     {
         _numberOfClusters = clusters;
@@ -60,6 +59,8 @@ public class KMeans
             AssignCentroids(matrix);
             if (!CentroidsMoving(matrix)) break;
         }
+        if (iterations >= _maxIterations)
+            throw new ArgumentException(ErrorMessages.E7);
         return _clusterLabels;
     }
 
