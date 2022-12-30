@@ -63,9 +63,11 @@ public class KMeans
         return _clusterLabels;
     }
 
-    // Create centroids at random points within max and min
-    // bounds of each column.
-    private void InitialiseCentroids(double[,] matrix)
+    /// <summary>
+    /// Create centroids at random points within max and min
+    /// bounds of each column.
+    /// </summary>
+    public void InitialiseCentroids(double[,] matrix)
     {
         Span2D<double> matrixSpan = matrix;
         Random random = new Random();
@@ -84,8 +86,10 @@ public class KMeans
         }
     }
 
-    //  Assign each record to its closest centroid.
-    private void AssignCentroids(double[,] matrix)
+    /// <summary>
+    ///  Assign each record to its closest centroid.
+    /// </summary>
+    public void AssignCentroids(double[,] matrix)
     {
         Span2D<double> matrixSpan = matrix;
         Span2D<double> centroidSpan = _centroids;
@@ -105,10 +109,12 @@ public class KMeans
         }
     }
 
-    // Recompute the centroid for each cluster. Return true if centroids
-    // are still moving, false if they have stopped.
+    /// <summary>
+    /// Recompute the centroid for each cluster. Return true if centroids
+    /// are still moving, false if they have stopped.
+    /// </summary>
     // TODO: Cache columns filtered by centroidIdx.
-    private bool CentroidsMoving(double[,] matrix)
+    public bool CentroidsMoving(double[,] matrix)
     {
         Span2D<double> matrixSpan = matrix;
         double[,] oldCentroids = (double[,])_centroids.Clone();
