@@ -221,6 +221,8 @@ public class BinaryTree
                     node = nodes[(int)node.yesIndex!];
                 else node = nodes[(int)node.noIndex!];
             }
+            if (iterations >= _maxrecursions)
+            throw new ArgumentException(ErrorMessages.E7);
         }
         return result;
     }
@@ -233,7 +235,8 @@ public class BinaryTree
     /// Thrown if input is empty, or model has not been trained, or if trained
     /// on a different number of columns.
     /// </exception>
-    public (double, Dictionary<double, double>)[] PredictWithProbabilities(
+    public (double, Dictionary<double, double>)[]
+    PredictWithProbabilities(
         double[,] matrix,
         bool skipchecks = false)
     {
@@ -269,6 +272,8 @@ public class BinaryTree
                     node = nodes[(int)node.yesIndex!];
                 else node = nodes[(int)node.noIndex!];
             }
+            if (iterations >= _maxrecursions)
+                throw new ArgumentException(ErrorMessages.E7);
         }
         return result;
     }
@@ -336,11 +341,12 @@ public class BinaryTree
     private int Grow(double[,]? matrix, double[]? target, int parentDepth)
     {
         _recursions += 1;
+        if (_recursions >= _maxrecursions)
+            throw new ArgumentException(ErrorMessages.E7);
         int depth = parentDepth + 1;
         int recordCount = matrix!.GetLength(0);
         if (depth > _depth) _depth = depth;
-        if (_recursions > _maxrecursions ||
-            _depth > maxdepth ||
+        if (_depth > maxdepth ||
             recordCount < minrows ||
             target!.All(val => val.Equals(target![0])) ||
             _splitCount > _maxsplits)
