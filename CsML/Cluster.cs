@@ -29,7 +29,7 @@ public class KMeans
     /// <summary>Create a new k-means clusterer.</summary>
     public KMeans()
     {
-        numberOfClusters = 0;
+        numberOfClusters = 5;
         centroids = new double[,] { };
         minColumns = 0;
         _maxIterations = 10_000;
@@ -182,7 +182,7 @@ public class KMeans
         double sse;
         bool[] filter;
         double[] col, colFiltered;
-        for (int i = 0; i < k; i++)
+        for (int i = 1; i <= k; i++)
         {
             KMeans km = new();
             km.Cluster(matrix, i);
@@ -201,7 +201,7 @@ public class KMeans
                     sse += CsML.Utility.Statistics.SSEvsMean(colFiltered);
                 }
             }
-            result[i] = sse;
+            result[i - 1] = sse;
         }
         return result;
     }

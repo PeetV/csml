@@ -50,4 +50,15 @@ public class Kmeans
         int clust = km.ClosestCentroid(new double[]{0.9, 1.5});
         Assert.Equal(result[0], clust);
     }
+
+    [Fact]
+    public void OptimalKElbow()
+    {
+        double[,] matrix = {
+          {1.1, 1}, {1.2, 3}, {2, 2}, {10, 11}, {12, 13}, {9, 12}
+        };
+        double[] sses = CsML.Cluster.KMeans.OptimalKElbow(matrix, k: 5);
+        Assert.Equal(5, sses.Length);
+        Assert.True(sses[0] > sses[1]);
+    }
 }
