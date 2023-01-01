@@ -17,12 +17,20 @@ public static class Classify
     double[,] features;
     double[] target;
     (features, target) = dataSet switch
-        {
+    {
         CsML.Examples.DataSet.Iris => CsML.Examples.Data.Load.Iris();
         CsML.Examples.DataSet.Led => CsML.Examples.Data.Load.Led();
         CsML.Examples.DataSet.Sonar => CsML.Examples.Data.Load.Sonar();
-        }
+    }
     (features, target) = Features.Shuffle(features, target);
+
+    CsML.Utility.IClassifier cfier = classifier switch
+    {
+        CsML.Examples.Classifier.Random => new CsML.Probability.RandomClassifier<double>();
+        CsML.Examples.Classifier.RandomForest => new CsML.Tree.RandomForest(
+                CsML.Utility.ModelType.Classification,
+                CsML.Utility.Statistics.Gini);
+    }
 }
 
 // // Random classifier
@@ -90,7 +98,7 @@ public static class Classify
 //     var props = CsML.Utility.Features.ClassProportions<double>(ttrain)
 //         .Select(x => Math.Round(x.Item3, 4));
 //     Console.Write(String.Join(",", props));
-//     var tree = new CsML.Tree.RandomForest("classify", Statistics.Gini);
+//     var tree = new CsML.Tree.RandomForest("ctlassify", Statistics.Gini);
 //     tree.Train(ftrain, ttrain);
 //     double[] predictions = tree.Predict(ftest);
 //     var accuracy = Array.ClassificationAccuracy(ttest, predictions);
