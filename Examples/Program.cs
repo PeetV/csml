@@ -47,6 +47,6 @@ class Program
             { CsML.Examples.Classification.Classify.RunExample(dataSet, classifier); },
             dataSetOption, classifierOption);
 
-        return rootCommand.InvokeAsync(args).Result;
+        return rootCommand.Invoke(args);
     }
 }
