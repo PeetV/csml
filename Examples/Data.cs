@@ -1,5 +1,7 @@
 namespace CsML.Examples.Data;
 
+using CsML.Utility;
+
 public static class Load
 {
     public static (double[,], double[]) Iris()
