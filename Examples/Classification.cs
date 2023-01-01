@@ -13,9 +13,17 @@ public static class Classify
         Console.WriteLine($"Dataset: {dataSet}");
         Console.WriteLine($"Classifier: {classifier}");
     }
-}
 
-// (features, target) = Features.Shuffle(features, target);
+    double[,] features;
+    double[] target;
+    (features, target) = dataSet switch
+        {
+        CsML.Examples.DataSet.Iris => CsML.Examples.Data.Load.Iris();
+        CsML.Examples.DataSet.Led => CsML.Examples.Data.Load.Led();
+        CsML.Examples.DataSet.Sonar => CsML.Examples.Data.Load.Sonar();
+        }
+    (features, target) = Features.Shuffle(features, target);
+}
 
 // // Random classifier
 
