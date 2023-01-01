@@ -551,13 +551,6 @@ public static class Features
     }
 }
 
-/// <summary>Interface for classification models.</summary>
-interface IClassifier
-{
-    void Train(double[,] matrix, double[] target);
-    double[] Predict(double[,] matrix);
-}
-
 /// <summary>
 /// A collection of matrix utility functions, using 2D arrays.
 /// </summary>
