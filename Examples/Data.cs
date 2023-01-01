@@ -9,7 +9,12 @@ public static class Load
         {
             { "versicolor", 0 }, {"virginica", 1 }, {"setosa", 2}
         };
-        string inputPath = "/Users/peet/Sources/csml/Tests/Data/iris.csv";
+        string strWorkPath = Directory
+                                .GetParent(Environment.CurrentDirectory)!
+                                .Parent!
+                                .Parent!
+                                .FullName;
+        string inputPath = Path.Combine(strWorkPath, "Data/iris.csv");
         double[,] data = Matrix.FromCSV(inputPath, mapping, loadFromRow: 1);
 
         int dataLength = data.GetLength(0);
