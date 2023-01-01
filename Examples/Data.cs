@@ -16,7 +16,7 @@ public static class Load
                                 .Parent!
                                 .Parent!
                                 .FullName;
-        string inputPath = Path.Combine(strWorkPath, "Data/iris.csv");
+        string inputPath = Path.Combine(strWorkPath, "Tests/Data/iris.csv");
         double[,] data = Matrix.FromCSV(inputPath, mapping, loadFromRow: 1);
 
         int dataLength = data.GetLength(0);
@@ -35,7 +35,12 @@ public static class Load
 
     public static (double[,], double[]) Led()
     {
-        var inputPath = "/Users/peet/Sources/csml/Tests/Data/led7.csv";
+        string strWorkPath = Directory
+                                .GetParent(Environment.CurrentDirectory)!
+                                .Parent!
+                                .Parent!
+                                .FullName;
+        string inputPath = Path.Combine(strWorkPath, "Tests/Data/led7.csv");
         var data = CsML.Utility.Matrix.FromCSV(inputPath, null, loadFromRow: 1);
 
         var dataLength = data.GetLength(0);
@@ -56,7 +61,12 @@ public static class Load
     {
         var mapping = new Dictionary<int, Dictionary<string, double>>();
         mapping[60] = new Dictionary<string, double>{ { "R", 0 }, {"M", 1 }};
-        var inputPath = "/Users/peet/Sources/csml/Tests/Data/sonar.csv";
+        string strWorkPath = Directory
+                                .GetParent(Environment.CurrentDirectory)!
+                                .Parent!
+                                .Parent!
+                                .FullName;
+        string inputPath = Path.Combine(strWorkPath, "Tests/Data/sonar.csv");
         var data = CsML.Utility.Matrix.FromCSV(inputPath, mapping, loadFromRow: 0);
 
         var dataLength = data.GetLength(0);
