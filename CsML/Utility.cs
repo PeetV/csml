@@ -192,7 +192,10 @@ public static class Arrays
                   .Sum());
     }
 
-    /// <summary>Count of ocurrences of each array element.</summary>
+    /// <summary>
+    /// Count of ocurrences of each array element.
+    /// <see>Also see <seealso cref="CsML.Probability.Counter">Counter
+    /// </seealso></see></summary>
     /// <returns>
     /// A dictionary containing array elements as keys and element counts as
     /// values.
