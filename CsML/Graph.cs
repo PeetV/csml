@@ -286,8 +286,10 @@ public class Graph<TNode> where TNode : notnull
                 }
             }
         }
-        // Extract path from closest node list (prev)
-        if (dist[toNodeIndex] == double.PositiveInfinity) return (0, Array.Empty<int>());
+        // Return an empty path if the end node wasn't reached
+        if (dist[toNodeIndex] == double.PositiveInfinity)
+            return (0, Array.Empty<int>());
+        // Extract the path from closest node list (prev)
         List<int> path = new() { toNodeIndex };
         current = toNodeIndex;
         while (current != fromNodeIndex)
