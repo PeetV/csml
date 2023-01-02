@@ -783,7 +783,13 @@ public class Counter<T> where T : notnull
     /// </summary>
     public object this[T target]
     {
-        get { return counts[target]; }
+        get
+        {
+            int count;
+            if (counts.TryGetValue(target, out count))
+                return count;
+            return 0;
+        }
         set { counts[target] = (int)value; }
     }
 
