@@ -290,11 +290,16 @@ public class NearestNeighbour
                                   .Select(x => x.Item2)
                                   .ToArray();
             if (Mode == ModelType.Regression)
-                result[i] = neighbours.Select(x => target[x]).ToArray()
+                result[i] = neighbours[0..numberOfNeighbours]
+                                      .Select(x => target[x])
+                                      .ToArray()
                                       .Average();
             else
             {
-                var counter = new CsML.Probability.Counter<int>(neighbours);
+                double[] nearest = neighbours[0..numberOfNeighbours]
+                                    .Select(x => target[x])
+                                    .ToArray();
+                var counter = new CsML.Probability.Counter<double>(nearest);
                 result[i] = counter.MaxKey();
             }
         }

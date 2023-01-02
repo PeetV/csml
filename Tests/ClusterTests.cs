@@ -1,6 +1,8 @@
 using Microsoft.Toolkit.HighPerformance;
 using Xunit;
 
+using CsML.Extensions;
+
 namespace CsML.Tests.Cluster;
 
 public class Kmeans
@@ -97,10 +99,11 @@ public class NearestNeighbour
         double[] ttrain, ttest;
         ((ftrain, ttrain), (ftest, ttest)) = CsML.Utility.Features.Split(
                                                 features, target, 0.8);
+        Assert.Equal(120, ftrain.GetLength(0));
         var n = new CsML.Cluster.NearestNeighbour(CsML.Utility.ModelType.Classification);
         n.Train(ftrain, ttrain);
         double[] predictions = n.Predict(ftest);
-        Assert.True(CsML.Utility.Arrays.ClassificationAccuracy(
-                    ttest, predictions) > 0.8);
+        Assert.True(
+                CsML.Utility.Arrays.ClassificationAccuracy(ttest, predictions) > 0.8);
     }
 }
