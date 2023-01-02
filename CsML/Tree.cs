@@ -54,7 +54,7 @@ public class BinaryNode
 /// <summary>
 /// A binary decision tree for classification and regression.
 /// </summary>
-public class BinaryTree
+public class BinaryTree : IModel
 {
     private int _recursions;
     private int _splitCount;
@@ -179,6 +179,10 @@ public class BinaryTree
         Grow(inputm, inputt, 0);
     }
 
+    /// <summary>Implement CsML.Utility.IModel interface.</summary>
+    public void Train(double[,] matrix, double[] target) =>
+        Train(matrix, target, skipchecks: false);
+
     /// <summary>Make predictions using the model.</summary>
     /// <param name="matrix">New data to infer predictions from.</param>
     /// <param name="skipchecks">
@@ -226,6 +230,10 @@ public class BinaryTree
         }
         return result;
     }
+
+    /// <summary>Implement CsML.Utility.IModel interface.</summary>
+    public double[] Predict(double[,] matrix) =>
+        Predict(matrix, skipchecks: false);    
 
     /// <summary>
     /// Predict labels for new data and return corresponding class probability
@@ -386,7 +394,7 @@ public class BinaryTree
 /// <summary>
 /// A forest of binary decision trees for classification and regression.
 /// </summary>
-public class RandomForest
+public class RandomForest : IModel
 {
     /// <summary>The trees that make up the forest once trained.</summary>
     public List<BinaryTree> trees;

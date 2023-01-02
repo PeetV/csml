@@ -206,7 +206,7 @@ public class KMeans
 }
 
 /// <summary>A nearest neighbour model.</summary>
-public class NearestNeighbour
+public class NearestNeighbour : IModel
 {
     /// <summary>
     /// A copy of the training data. Consider scaling

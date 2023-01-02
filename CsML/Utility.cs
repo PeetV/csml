@@ -551,6 +551,15 @@ public static class Features
     }
 }
 
+/// <summary>CsML model interface.</summary>
+public interface IModel
+{
+    /// <summary>Train the model.</summary>
+    public void Train(double[,] matrix, double[] target);
+    /// <summary>Infer target values from new data.</summary>
+    public double[] Predict(double[,] matrix);
+}
+
 /// <summary>
 /// A collection of matrix utility functions, using 2D arrays.
 /// </summary>

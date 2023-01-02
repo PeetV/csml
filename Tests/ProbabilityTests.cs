@@ -17,7 +17,7 @@ public class Classification
             };
             var target = new double[] { 0, 0, 0, 1, 1 };
             var nbc = new CsML.Probability.Classification
-                            .NaiveBayesClassifier<double>();
+                                          .NaiveBayesClassifier();
             nbc.Train(matrix, target);
             var col0 = nbc.columnMeans[0];
             var col1 = nbc.columnMeans[1];
@@ -51,7 +51,7 @@ public class Classification
             };
             double[] target = new double[] { 0, 0, 0, 1, 1 };
             var nbc = new CsML.Probability.Classification
-                            .NaiveBayesClassifier<double>();
+                                          .NaiveBayesClassifier();
             nbc.Train(matrix, target);
             Assert.Equal(3.0 / 5.0, nbc.classProbabilities[0]);
             Assert.Equal(2.0 / 5.0, nbc.classProbabilities[1]);
@@ -89,7 +89,7 @@ public class Classification
             ((ftrain, ttrain), (ftest, ttest)) = CsML.Utility.Features.Split(
                                                         features, target, 0.8);
             var nbc = new CsML.Probability.Classification
-                            .NaiveBayesClassifier<double>();
+                                          .NaiveBayesClassifier();
             nbc.Train(ftrain, ttrain);
             double[] predictions = nbc.Predict(ftest);
             Assert.True(CsML.Utility.Arrays.ClassificationAccuracy(
@@ -102,23 +102,23 @@ public class Classification
         public void Train_predict()
         {
             var cfier = new CsML.Probability.Classification
-                                .RandomClassifier<string>();
-            string[] target = Enumerable.Repeat("a", 50)
-                                .Concat(Enumerable.Repeat("b", 30))
-                                .Concat(Enumerable.Repeat("c", 10))
-                                .Concat(Enumerable.Repeat("d", 5))
-                                .Concat(Enumerable.Repeat("e", 5))
+                                            .RandomClassifier();
+            double[] target = Enumerable.Repeat(1.0, 50)
+                                .Concat(Enumerable.Repeat(2.0, 30))
+                                .Concat(Enumerable.Repeat(3.0, 10))
+                                .Concat(Enumerable.Repeat(4.0, 5))
+                                .Concat(Enumerable.Repeat(5.0, 5))
                                 .ToArray();
             Assert.Equal(100, target.Length);
             cfier.Train(new double[,] { }, target);
-            string[] result = cfier.Predict(new double[1000, 1]);
+            double[] result = cfier.Predict(new double[1000, 1]);
             var counts = result.ElementCounts();
             Assert.Equal(1000, result.Length);
-            Assert.InRange((double)counts["a"] / 1000.0, 0.45, 0.55);
-            Assert.InRange((double)counts["b"] / 1000.0, 0.25, 0.35);
-            Assert.InRange((double)counts["c"] / 1000.0, 0.05, 0.15);
-            Assert.InRange((double)counts["d"] / 1000.0, 0.01, 0.1);
-            Assert.InRange((double)counts["e"] / 1000.0, 0.01, 0.1);
+            Assert.InRange((double)counts[1] / 1000.0, 0.45, 0.55);
+            Assert.InRange((double)counts[2] / 1000.0, 0.25, 0.35);
+            Assert.InRange((double)counts[3] / 1000.0, 0.05, 0.15);
+            Assert.InRange((double)counts[4] / 1000.0, 0.01, 0.1);
+            Assert.InRange((double)counts[5] / 1000.0, 0.01, 0.1);
         }
     }
 }

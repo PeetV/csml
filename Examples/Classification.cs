@@ -44,7 +44,7 @@ public static class Classify
                     predictions = bt.Predict(ftest);
                     break;
                 case CsML.Examples.Classifier.NaiveBayes:
-                    var nb = new CsML.Probability.Classification.NaiveBayesClassifier<double>();
+                    var nb = new CsML.Probability.Classification.NaiveBayesClassifier();
                     nb.Train(ftrain, ttrain);
                     predictions = nb.Predict(ftest);
                     break;
@@ -59,7 +59,7 @@ public static class Classify
                     predictions = rf.Predict(ftest);
                     break;
                 default:
-                    var rnd = new CsML.Probability.Classification.RandomClassifier<double>();
+                    var rnd = new CsML.Probability.Classification.RandomClassifier();
                     rnd.Train(ftrain, ttrain);
                     predictions = rnd.Predict(ftest);
                     break;

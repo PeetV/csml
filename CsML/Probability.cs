@@ -1,6 +1,7 @@
 using Microsoft.Toolkit.HighPerformance;
 
 using CsML.Extensions;
+using CsML.Utility;
 
 namespace CsML.Probability;
 
@@ -11,14 +12,13 @@ public static class Classification
     /// A naive Bayesian classifier (naive given assumption of column
     /// independence and normal distribution of features).
     /// </summary>
-    public class NaiveBayesClassifier<T>
-        where T : IComparable<T>
+    public class NaiveBayesClassifier : IModel
     {
         /// <summary>
         /// The probability of each class, estimated from data in model
         /// training.
         /// </summary>
-        public Dictionary<T, double> classProbabilities;
+        public Dictionary<double, double> classProbabilities;
 
         /// <summary>
         /// Mean values calculated from each column. The outer dictionary maps
@@ -27,7 +27,7 @@ public static class Classification
         /// labels as keys (i.e. for column values related to each class
         /// label).
         /// </summary>
-        public Dictionary<int, Dictionary<T, (double, double)>> columnMeans;
+        public Dictionary<int, Dictionary<double, (double, double)>> columnMeans;
 
         /// <summary>
         /// The number of matrix columns the model was trained on.
@@ -37,8 +37,8 @@ public static class Classification
         /// <summary>Create an untrained Naive Bayes classifier.</summary>
         public NaiveBayesClassifier()
         {
-            classProbabilities = new Dictionary<T, double> { };
-            columnMeans = new Dictionary<int, Dictionary<T, (double, double)>> { };
+            classProbabilities = new Dictionary<double, double> { };
+            columnMeans = new Dictionary<int, Dictionary<double, (double, double)>> { };
         }
 
         /// <summary>Get a string representation of an instance.</summary>
@@ -50,7 +50,7 @@ public static class Classification
         /// <exception cref="System.ArgumentException">
         /// Thrown if inputs aren't the same length or empty.
         /// </exception> 
-        public void Train(double[,] matrix, T[] target)
+        public void Train(double[,] matrix, double[] target)
         {
             int inputRecordCount = matrix.GetLength(0);
             int targetLength = target.Length;
@@ -58,8 +58,8 @@ public static class Classification
                 throw new ArgumentException(CsML.Utility.ErrorMessages.E1);
             if (inputRecordCount != targetLength)
                 throw new ArgumentException(CsML.Utility.ErrorMessages.E2);
-            classProbabilities = new Dictionary<T, double> { };
-            columnMeans = new Dictionary<int, Dictionary<T, (double, double)>> { };
+            classProbabilities = new Dictionary<double, double> { };
+            columnMeans = new Dictionary<int, Dictionary<double, (double, double)>> { };
             minColumns = matrix.GetLength(1);
             CalculateClassProbabilities(target);
             foreach (var colidx in Enumerable.Range(0, minColumns))
@@ -72,7 +72,7 @@ public static class Classification
         /// Thrown if input empty, or if the model has not been trained or if
         /// it has been trained on a different number of columns.
         /// </exception>
-        public T[] Predict(double[,] matrix)
+        public double[] Predict(double[,] matrix)
         {
             int inputRecordCount = matrix.GetLength(0);
             if (inputRecordCount == 0)
@@ -81,10 +81,10 @@ public static class Classification
                 throw new ArgumentException(CsML.Utility.ErrorMessages.E3);
             if (matrix.GetLength(1) != minColumns)
                 throw new ArgumentException(CsML.Utility.ErrorMessages.E4);
-            T[] result = new T[inputRecordCount];
+            double[] result = new double[inputRecordCount];
             Span2D<double> matrixSpan = matrix;
-            Dictionary<T, double> probs;
-            Dictionary<T, (double, double)> colvals;
+            Dictionary<double, double> probs;
+            Dictionary<double, (double, double)> colvals;
             double prob, mn, var;
             for (int i = 0; i < inputRecordCount; i++)
             {
@@ -116,7 +116,7 @@ public static class Classification
             return result;
         }
 
-        private void CalculateClassProbabilities(T[] target)
+        private void CalculateClassProbabilities(double[] target)
         {
             int lenTarget = target.Length;
             var counts = target.ElementCounts();
@@ -126,14 +126,14 @@ public static class Classification
         }
 
         private void CalculateColumnMeans(
-            double[,] matrix, T[] target, int columnIndex)
+            double[,] matrix, double[] target, int columnIndex)
         {
             Span2D<double> matrixSpan = matrix;
             double[] workingColumn = matrixSpan.GetColumn(columnIndex)
                                                .ToArray();
             double[] values;
             double mean, variance;
-            var valuesDict = new Dictionary<T, (double, double)> { };
+            var valuesDict = new Dictionary<double, (double, double)> { };
             foreach (var classLabel in classProbabilities.Keys)
             {
                 values = workingColumn.Zip(target)
@@ -152,13 +152,12 @@ public static class Classification
     /// A classifier making a weighted random guess from potential class labels
     /// for benchmarking purposes.
     /// </summary>
-    public class RandomClassifier<T>
-        where T : notnull
+    public class RandomClassifier : IModel
     {
         /// <summary>
         /// The distinct class labels from the target vector.
         /// </summary>
-        public T[] classes;
+        public double[] classes;
 
         /// <summary>
         /// Weights to apply to class labels. As the size of the sample
@@ -169,7 +168,7 @@ public static class Classification
         /// <summary>Create an untrained model.</summary>
         public RandomClassifier()
         {
-            classes = Array.Empty<T>();
+            classes = Array.Empty<double>();
             weights = Array.Empty<double>();
         }
 
@@ -179,12 +178,12 @@ public static class Classification
         /// <summary>Train the model.</summary>
         /// <param name="matrix">The features to train the model on.</param>
         /// <param name="target">The target vector to train on.</param>
-        public void Train(double[,] matrix, T[] target)
+        public void Train(double[,] matrix, double[] target)
         {
             var counts = target.ElementCounts();
             classes = counts.Keys.OrderBy(x => x).ToArray();
             weights = new double[classes.Length];
-            T key;
+            double key;
             for (int i = 0; i < classes.Length; i++)
             {
                 key = classes[i];
@@ -194,9 +193,9 @@ public static class Classification
 
         /// <summary>Make predictions using the model.</summary>
         /// <param name="matrix">New data to infer predictions from.</param>
-        public T[] Predict(double[,] matrix)
+        public double[] Predict(double[,] matrix)
         {
-            var sampler = new Sampling.WeightedSampler<T>(classes, weights);
+            var sampler = new Sampling.WeightedSampler<double>(classes, weights);
             return sampler.SampleTarget(matrix.GetLength(0));
         }
     }
