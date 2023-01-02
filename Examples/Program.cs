@@ -18,6 +18,13 @@ public enum Classifier
     RandomForest,
 }
 
+public enum Regressor
+{
+    DecisionTree,
+    NearestNeighbour,
+    RandomForest,
+}
+
 class Program
 {
     static int Main(string[] args)
@@ -33,6 +40,12 @@ class Program
             description: "Classification algorithm to use",
             getDefaultValue: () => Classifier.Random);
         classifierOption.AddAlias("-c");
+
+        var regressorOption = new Option<Regressor>(
+            name: "--regressor",
+            description: "Regression algorithm to use",
+            getDefaultValue: () => Classifier.DecisionTree);
+        classifierOption.AddAlias("-r");
 
         var rootCommand = new RootCommand("CsML examples");
 
