@@ -29,7 +29,7 @@ public static class Arrays
         T[] target,
         Func<T[], double> purityfn
     )
-        where T : notnull
+    where T : notnull
     {
         if (vector.Length == 0) return (0.0, 0.0);
         double bestsplit = 0.0, bestgain = 0.0;
@@ -79,11 +79,12 @@ public static class Arrays
     /// <exception cref="System.ArgumentException">
     /// Thrown if inputs aren't the same length.
     /// </exception>
-    public static double ClassificationAccuracy<T>(
+    public static double
+    ClassificationAccuracy<T>(
         T[] actuals,
         T[] predictions
     )
-        where T : IComparable<T>
+    where T : IComparable<T>
     {
         int lenActuals = actuals.Length, lenPredictions = predictions.Length;
         if (lenActuals != lenPredictions)
@@ -101,8 +102,12 @@ public static class Arrays
     /// <exception cref="System.ArgumentException">
     /// Thrown if inputs aren't the same length.
     /// </exception>
-    public static double ClassificationError<T>(
-        T[] actuals, T[] predictions) where T : IComparable<T>
+    public static double
+    ClassificationError<T>(
+        T[] actuals,
+        T[] predictions
+    )
+    where T : IComparable<T>
     {
         return 1.0 - ClassificationAccuracy(actuals, predictions);
     }
@@ -124,7 +129,7 @@ public static class Arrays
         T[] actuals,
         T[] predictions
     )
-        where T : IComparable<T>
+    where T : IComparable<T>
     {
         int lenActuals = actuals.Length, lenPredictions = predictions.Length;
         if (lenActuals != lenPredictions)
@@ -181,7 +186,11 @@ public static class Arrays
     /// <exception cref="System.ArgumentException">
     /// Thrown if inputs aren't the same length.
     /// </exception>
-    public static double DistanceEuclidian(double[] a, double[] b)
+    public static double
+    DistanceEuclidian(
+        double[] a,
+        double[] b
+    )
     {
         if (a.Length != b.Length)
             throw new ArgumentException(ErrorMessages.E2);
@@ -193,14 +202,15 @@ public static class Arrays
 
     /// <summary>
     /// Count of ocurrences of each array element.
-    /// <see>Also see <seealso cref="CsML.Probability.Counter{T}">Counter
+    /// <see>Also see <seealso cref="CsML.Probability.Counter{T}">Counter.
     /// </seealso></see></summary>
     /// <returns>
     /// A dictionary containing array elements as keys and element counts as
     /// values.
     /// </returns>
-    public static Dictionary<T, int> ElementCounts<T>(T[] input)
-        where T : notnull
+    public static Dictionary<T, int>
+    ElementCounts<T>(T[] input)
+    where T : notnull
     {
         Dictionary<T, int> counts = new();
         foreach (T item in input)
@@ -218,9 +228,11 @@ public static class Arrays
     /// <exception cref="System.ArgumentException">
     /// Thrown if inputs aren't the same length.
     /// </exception>
-    public static (T[], T[]) Split<T>(
+    public static (T[], T[])
+    Split<T>(
         T[] input,
-        bool[] filter)
+        bool[] filter
+    )
     {
         if (input.Length != filter.Length)
             throw new ArgumentException(ErrorMessages.E2);
@@ -275,8 +287,9 @@ public static class Features
     /// <returns>
     /// An array of tuples containing class labels and proportions.
     /// </returns>
-    public static (T, int, double)[] ClassProportions<T>(T[] target)
-        where T : notnull
+    public static (T, int, double)[]
+    ClassProportions<T>(T[] target)
+    where T : notnull
     {
         var counts = target.ElementCounts();
         int total = counts.Values.Sum();
@@ -302,7 +315,8 @@ public static class Features
     Bootstrap(
         double[,] matrix,
         double[] target,
-        bool returnOobIdx = false)
+        bool returnOobIdx = false
+    )
     {
         int numRows = matrix.GetLength(0), numCols = matrix.GetLength(1);
         if (numRows != target.Length)
@@ -598,7 +612,7 @@ public static class Matrix
         Func<T[], double> purityfn,
         int randomFeatures
     )
-        where T : notnull
+    where T : notnull
     {
         Span2D<double> matrixSpan = matrix;
         int[] columnIndeces;
@@ -653,11 +667,13 @@ public static class Matrix
     /// <param name="loadFromRow">
     /// The index of the row to load from, e.g. 1 skips the first row.
     /// </param>
-    public static double[,] FromCSV(
+    public static double[,]
+    FromCSV(
         string inputfile,
         Dictionary<int, Dictionary<string, double>>? mapping,
         string separator = ",",
-        int loadFromRow = 0)
+        int loadFromRow = 0
+    )
     {
         var rawdata = File
                         .ReadLines(inputfile)
@@ -782,10 +798,10 @@ public static class Matrix
     /// </returns>
     public static (double[,], double[,], bool[])
     Split(
-            double[,] matrix,
-            int columnIndex,
-            double splitPoint
-        )
+        double[,] matrix,
+        int columnIndex,
+        double splitPoint
+    )
     {
         List<double[]> lhs = new(), rhs = new();
         Span2D<double> matrixSpan = matrix;
