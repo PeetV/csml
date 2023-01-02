@@ -793,10 +793,7 @@ public class Counter<T> where T : notnull
     public int Total { get { return counts.Values.Sum(); } }
 
     /// <summary>Create an empty counter.</summary>
-    public Counter()
-    {
-        counts = new Dictionary<T, int>();
-    }
+    public Counter() => counts = new Dictionary<T, int>();
 
     /// <summary>Create a counter and count input array.</summary>
     public Counter(T[] input, int increment = 1)
@@ -809,10 +806,7 @@ public class Counter<T> where T : notnull
     public override string ToString() => $"Counter(keys={counts.Keys})";
 
     /// <summary>Reset the counter to empty.</summary>
-    public void Clear()
-    {
-        counts.Clear();
-    }
+    public void Clear() => counts.Clear();
 
     /// <summary>Increment target count.</summary>
     public void Increment(T target, int increment = 1)
@@ -837,8 +831,5 @@ public class Counter<T> where T : notnull
     }
 
     /// <summary>Get the item (key) with highest count.</summary>
-    public T MaxKey()
-    {
-        return counts.MaxBy(kvp => kvp.Value).Key;
-    }
+    public T MaxKey() => counts.MaxBy(kvp => kvp.Value).Key;
 }
