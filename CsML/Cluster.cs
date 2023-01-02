@@ -83,30 +83,29 @@ public class KMeans
             var col = matrixSpan.GetColumn(colIdx).ToArray();
             colMin = col.Min();
             colMax = col.Max();
-            for (int centroidIdx = 0; centroidIdx < numberOfClusters; centroidIdx++)
-                centroids[centroidIdx, colIdx] = ((colMax - colMin) *
-                                                random.NextDouble()) +
-                                                colMin;
+            for (int cIdx = 0; cIdx < numberOfClusters; cIdx++)
+                centroids[cIdx, colIdx] = ((colMax - colMin) *
+                                            random.NextDouble()) +
+                                            colMin;
         }
     }
 
-    /// <summary>
-    ///  Assign each record to its closest centroid.
-    /// </summary>
+    /// <summary>Assign each record to its closest centroid.</summary>
     public void AssignCentroids(double[,] matrix)
     {
         Span2D<double> matrixSpan = matrix;
         Span2D<double> centroidSpan = centroids;
-        var distancesFromCentroid = Enumerable.Repeat(0.0, numberOfClusters).ToList();
+        var distancesFromCentroid = Enumerable.Repeat(0.0, numberOfClusters)
+                                              .ToList();
         double distance, minDistance;
         for (int rowIdx = 0; rowIdx < matrix.GetLength(0); rowIdx++)
         {
             var row = matrixSpan.GetRow(rowIdx).ToArray();
-            for (int centroidIdx = 0; centroidIdx < numberOfClusters; centroidIdx++)
+            for (int cIdx = 0; cIdx < numberOfClusters; cIdx++)
             {
-                var centroid = centroidSpan.GetRow(centroidIdx).ToArray();
+                var centroid = centroidSpan.GetRow(cIdx).ToArray();
                 distance = Utility.Arrays.DistanceEuclidian(row, centroid);
-                distancesFromCentroid[centroidIdx] = distance;
+                distancesFromCentroid[cIdx] = distance;
             }
             minDistance = distancesFromCentroid.Min();
             _clusterLabels[rowIdx] = distancesFromCentroid.IndexOf(minDistance);
@@ -117,7 +116,6 @@ public class KMeans
     /// Recompute the centroid for each cluster. Return true if centroids
     /// are still moving, false if they have stopped.
     /// </summary>
-    // TODO: Cache columns filtered by centroidIdx.
     public bool CentroidsMoving(double[,] matrix)
     {
         Span2D<double> matrixSpan = matrix;
@@ -142,8 +140,8 @@ public class KMeans
 
     /// <summary>Determine the closest centroid to a new data point.</summary>
     /// <param name="row">
-    /// Row of data containing same number of columns as matrix used to cluster
-    /// data.
+    /// Row of data containing same number of columns as the matrix used to
+    /// cluster data.
     /// </param>
     /// <returns>The index of the closest centroid.</returns>
     public int ClosestCentroid(double[] row)
@@ -283,7 +281,8 @@ public class NearestNeighbour
             for (int t = 0; t < trainRecordCount; t++)
             {
                 trainRow = trainSpan.GetRow(t).ToArray();
-                distances[t] = CsML.Utility.Arrays.DistanceEuclidian(row, trainRow);
+                distances[t] = CsML.Utility.Arrays
+                                    .DistanceEuclidian(row, trainRow);
             }
             neighbours = distances.Zip(Enumerable.Range(0, distances.Length))
                                   .OrderBy(x => x.Item1)
