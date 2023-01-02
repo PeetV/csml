@@ -1,12 +1,11 @@
 namespace CsML.Examples.Classification;
 
 using CsML.Utility;
+using CsML.Examples;
 
 public static class Classify
 {
-    public static void RunExample(
-        CsML.Examples.DataSet dataSet,
-        CsML.Examples.Classifier classifier
+    public static void RunExample(DataSet dataSet, Classifier classifier
     )
     {
         Console.WriteLine("----------------------");
@@ -36,34 +35,20 @@ public static class Classify
             Console.Write($"Fold {fold}: ");
             (ftrain, ftest) = Matrix.Split(features, f);
             (ttrain, ttest) = Arrays.Split(target, f);
-            switch (classifier)
+            IModel m = classifier switch
             {
-                case CsML.Examples.Classifier.DecisionTree:
-                    var bt = new CsML.Tree.BinaryTree(ModelType.Classification, Statistics.Gini);
-                    bt.Train(ftrain, ttrain);
-                    predictions = bt.Predict(ftest);
-                    break;
-                case CsML.Examples.Classifier.NaiveBayes:
-                    var nb = new CsML.Probability.Classification.NaiveBayesClassifier();
-                    nb.Train(ftrain, ttrain);
-                    predictions = nb.Predict(ftest);
-                    break;
-                case CsML.Examples.Classifier.NearestNeighbour:
-                    var nn =new CsML.Cluster.NearestNeighbour(ModelType.Classification);
-                    nn.Train(ftrain, ttrain);
-                    predictions = nn.Predict(ftest);
-                    break;
-                case CsML.Examples.Classifier.RandomForest:
-                    var rf = new CsML.Tree.RandomForest(ModelType.Classification, Statistics.Gini);
-                    rf.Train(ftrain, ttrain);
-                    predictions = rf.Predict(ftest);
-                    break;
-                default:
-                    var rnd = new CsML.Probability.Classification.RandomClassifier();
-                    rnd.Train(ftrain, ttrain);
-                    predictions = rnd.Predict(ftest);
-                    break;
-            }
+                Classifier.DecisionTree => 
+                    new CsML.Tree.BinaryTree(ModelType.Classification, Statistics.Gini),
+                Classifier.NaiveBayes => 
+                    new CsML.Probability.Classification.NaiveBayesClassifier(),
+                Classifier.NearestNeighbour => 
+                    new CsML.Cluster.NearestNeighbour(ModelType.Classification),
+                Classifier.RandomForest => 
+                    new CsML.Tree.RandomForest(ModelType.Classification, Statistics.Gini),
+                _ => new CsML.Probability.Classification.RandomClassifier()
+            };
+            m.Train(ftrain, ttrain);
+            predictions = m.Predict(ftest);
             var accuracy = Arrays.ClassificationAccuracy(ttest, predictions);
             Console.WriteLine($" Accuracy: {accuracy:0.0000}");
             results.Add(accuracy);
