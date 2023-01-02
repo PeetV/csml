@@ -19,16 +19,15 @@ public static class Classify
         double[] target;
         (features, target) = dataSet switch
         {
-            CsML.Examples.DataSet.Iris => CsML.Examples.Data.Load.Iris(),
-            CsML.Examples.DataSet.Led => CsML.Examples.Data.Load.Led(),
-            CsML.Examples.DataSet.Sonar => CsML.Examples.Data.Load.Sonar(),
+            DataSet.Iris => Data.Load.Iris(),
+            DataSet.Led => Data.Load.Led(),
+            DataSet.Sonar => Data.Load.Sonar(),
             _ => throw new ArgumentException("Dataset option error")
         };
         (features, target) = Features.Shuffle(features, target);
         List<double> results = new List<double>() { };
         double[,] ftrain, ftest;
-        double[] ttrain, ttest;
-        double[] predictions;
+        double[] ttrain, ttest, predictions;
         Console.WriteLine("10-fold cross validation:");
         var iter = new KFoldIterator(features.GetLength(0), 10);
         int fold = 1;
@@ -47,7 +46,9 @@ public static class Classify
                     new CsML.Cluster.NearestNeighbour(ModelType.Classification),
                 Classifier.RandomForest => 
                     new CsML.Tree.RandomForest(ModelType.Classification, Statistics.Gini),
-                _ => new CsML.Probability.Classification.RandomClassifier()
+                Classifier.Random => 
+                    new CsML.Probability.Classification.RandomClassifier()
+                _ => throw new ArgumentException("Classifier option error")
             };
             m.Train(ftrain, ttrain);
             predictions = m.Predict(ftest);
