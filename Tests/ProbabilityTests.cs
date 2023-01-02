@@ -555,7 +555,16 @@ public class Shuffling
 public class Counter
 {
     [Fact]
-    public void Counter_withInput()
+    public void BracketOperator()
+    {
+        string[] input = { "a", "a", "b" };
+        var counter = new CsML.Probability.Counter<string>(input);
+        Assert.Equal(2, counter["a"]);
+        Assert.Equal(0, counter["x"]);
+    }
+
+    [Fact]
+    public void WithInput()
     {
         string[] input = { "a", "a", "b" };
         var counter = new CsML.Probability.Counter<string>(input);
@@ -564,7 +573,7 @@ public class Counter
     }
 
     [Fact]
-    public void Counter_emptyInput()
+    public void EmptyInput()
     {
         string[] input = {};
         var counter = new CsML.Probability.Counter<string>(input);
