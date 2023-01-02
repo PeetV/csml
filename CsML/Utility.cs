@@ -90,9 +90,8 @@ public static class Arrays
             throw new ArgumentException(ErrorMessages.E2);
         if (lenActuals == 0) return 0.0;
         return actuals.Zip(predictions)
-                      .Select(x => x.First.CompareTo(x.Second) == 0
-                                   ? 1.0 : 0.0)
-                      .Sum() / lenActuals;
+                .Select(x => x.First.CompareTo(x.Second) == 0 ? 1.0 : 0.0)
+                .Sum() / lenActuals;
     }
 
     /// <summary>
@@ -194,7 +193,7 @@ public static class Arrays
 
     /// <summary>
     /// Count of ocurrences of each array element.
-    /// <see>Also see <seealso cref="CsML.Probability.Counter">Counter
+    /// <see>Also see <seealso cref="CsML.Probability.Counter{T}">Counter
     /// </seealso></see></summary>
     /// <returns>
     /// A dictionary containing array elements as keys and element counts as
