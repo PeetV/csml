@@ -775,9 +775,7 @@ public static class Shuffling
 /// <summary>Count occurences of T.</summary>
 public class Counter<T> where T : notnull
 {
-    /// <summary>
-    /// A dictionary containing counts.
-    /// </summary>
+    /// <summary>A dictionary containing counts.</summary>
     public Dictionary<T, int> counts;
 
     /// <summary>
