@@ -5,7 +5,9 @@ using CsML.Examples;
 
 public static class Classify
 {
-    public static void RunExample(DataSet dataSet, Classifier classifier
+    public static void RunExample(
+        DataSet dataSet, 
+        Classifier classifier
     )
     {
         Console.WriteLine("----------------------");
