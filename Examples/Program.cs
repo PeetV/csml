@@ -30,7 +30,7 @@ class Program
 
         var classifierOption = new Option<Classifier>(
             name: "--classifier",
-            description: "Example dataset to use",
+            description: "Classification algorithm to use",
             getDefaultValue: () => Classifier.Random);
         classifierOption.AddAlias("-c");
 

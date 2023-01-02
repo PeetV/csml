@@ -29,7 +29,7 @@ public static class Classify
         double[] ttrain, ttest;
         double[] predictions;
         Console.WriteLine("10-fold cross validation:");
-        var iter = new KFoldIterator(150, 10);
+        var iter = new KFoldIterator(features.GetLength(0), 10);
         int fold = 1;
         foreach (bool[] f in iter)
         {
