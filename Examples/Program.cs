@@ -57,7 +57,7 @@ class Program
         rootCommand.AddCommand(classifyCommand);
 
         classifyCommand.SetHandler((dataSet, classifier) =>
-            { CsML.Examples.Classification.Classify.RunExample(dataSet, classifier); },
+            { CsML.Examples.Classification.Classification.RunExample(dataSet, classifier); },
             dataSetOption, classifierOption);
 
         return rootCommand.Invoke(args);
