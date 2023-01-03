@@ -3,7 +3,7 @@ namespace CsML.Examples.Classification;
 using CsML.Utility;
 using CsML.Examples;
 
-public static class Classify
+public static class Classification
 {
     public static void RunExample(
         DataSet dataSet, 
