@@ -50,7 +50,7 @@ public class IEnumerable
     }
 
     [Fact]
-    public void ElementCounts_int()
+    public void ElementCounts_doubles()
     {
         var vector = new double[] { 1, 1, 1, 2, 2 };
         var result = vector.ElementCounts();
