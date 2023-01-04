@@ -7,7 +7,7 @@ public class IEnumerable
 {
 
     [Fact]
-    public void CumulativeSum_int()
+    public void CumulativeSum_ints()
     {
         var input = new int[] { 1, 2, 3 };
         var expected = new int[] { 1, 3, 6 };
@@ -16,7 +16,7 @@ public class IEnumerable
     }
 
     [Fact]
-    public void CumulativeSum_double()
+    public void CumulativeSum_doubles()
     {
         var input = new double[] { 1.1, 2.2, 3.3 };
         var expected = new double[] { 1.1, 3.3, 6.6 };
@@ -84,7 +84,7 @@ public class IEnumerable
     }
 
     [Fact]
-    public void Split()
+    public void Split_doubles()
     {
         var vector = new double[] { 1, 1, 1, 2, 2 };
         var filter = new bool[] { true, true, true, false, false };
