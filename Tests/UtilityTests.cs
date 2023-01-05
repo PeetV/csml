@@ -241,6 +241,14 @@ public class Features
     }
 
     [Fact]
+    public void ClassProportions_empty()
+    {
+        var target = new double[] { };
+        var result = CsML.Utility.Features.ClassProportions(target);
+        Assert.Empty(result);
+    }
+
+    [Fact]
     public void Bootstrap()
     {
         var matrix = new double[,]
