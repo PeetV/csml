@@ -94,4 +94,15 @@ public class IEnumerable
         Assert.Equal(4, rhs.Sum());
     }
 
+    [Fact]
+    public void Split_empty()
+    {
+        var vector = new double[] { };
+        var filter = new bool[] { };
+        double[] lhs, rhs;
+        (lhs, rhs) = vector.Split(filter);
+        Assert.Empty(lhs);
+        Assert.Empty(rhs);
+    }
+
 }
