@@ -194,6 +194,7 @@ public static class Arrays
     {
         if (a.Length != b.Length)
             throw new ArgumentException(ErrorMessages.E2);
+        if (a.Length == 0) return 0;
         return Math.Sqrt(
                  a.Zip(b)
                   .Select(x => Math.Pow(x.Item1 - x.Item2, 2))
