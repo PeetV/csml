@@ -292,6 +292,8 @@ public static class Features
     ClassProportions<T>(T[] target)
     where T : notnull
     {
+        if (target.Length == 0)
+            return new (T, int, double)[] {};
         var counts = target.ElementCounts();
         int total = counts.Values.Sum();
         return counts.Keys
