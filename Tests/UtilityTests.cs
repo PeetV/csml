@@ -756,12 +756,30 @@ public class Statistics
     }
 
     [Fact]
+    public void RSquared_empty()
+    {
+        var acts = new double[] { };
+        var preds = new double[] { };
+        var result = CsML.Utility.Statistics.RSquared(acts, preds, null);
+        Assert.Equal((0, 0), result);
+    }
+
+    [Fact]
     public void SSE()
     {
         var actuals = new double[] { 1, 2, 3, 4, 5 };
         var predicted = new double[] { 1, 3, 5, 4, 5 };
         var result = CsML.Utility.Statistics.SSE(actuals, predicted);
         Assert.Equal(5, result);
+    }
+
+    [Fact]
+    public void SSE_empty()
+    {
+        var actuals = new double[] { };
+        var predicted = new double[] { };
+        var result = CsML.Utility.Statistics.SSE(actuals, predicted);
+        Assert.Equal(0, result);
     }
 
     [Fact]
@@ -786,10 +804,24 @@ public class Statistics
     }
 
     [Fact]
+    public void StdevP_empty()
+    {
+        var input = new double[] { };
+        Assert.Equal(0, CsML.Utility.Statistics.StdevP(input));
+    }
+
+    [Fact]
     public void Variance()
     {
         var input = new double[] { 1, 2, 3, 4 };
         Assert.Equal(1.25, CsML.Utility.Statistics.Variance(input));
+    }
+
+    [Fact]
+    public void Variance_empty()
+    {
+        var input = new double[] { };
+        Assert.Equal(0, CsML.Utility.Statistics.Variance(input));
     }
 }
 
