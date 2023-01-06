@@ -380,7 +380,7 @@ public class Features
         }
 
         [Fact]
-        public void HasOutliers_fasle()
+        public void HasOutliers_false()
         {
             var matrix = new double[,]
             {
@@ -772,7 +772,7 @@ public class Statistics
     }
 
     [Fact]
-    public void SSEvsMean_emptyInput()
+    public void SSEvsMean_empty()
     {
         double[] input = {};
         Assert.Equal(0.0, CsML.Utility.Statistics.SSEvsMean(input));
