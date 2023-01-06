@@ -45,7 +45,13 @@ class Program
             name: "--regressor",
             description: "Regression algorithm to use",
             getDefaultValue: () => Classifier.DecisionTree);
-        classifierOption.AddAlias("-r");
+        regressorOption.AddAlias("-r");
+
+        var zScoreOption = new Option<bool>(
+            name: "--zscore",
+            description: "Z-score data",
+            getDefaultValue: () => false);
+        zScoreOption.AddAlias("-z");
 
         var rootCommand = new RootCommand("CsML examples");
 
