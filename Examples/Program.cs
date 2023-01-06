@@ -44,7 +44,7 @@ class Program
         var regressorOption = new Option<Regressor>(
             name: "--regressor",
             description: "Regression algorithm to use",
-            getDefaultValue: () => Classifier.DecisionTree);
+            getDefaultValue: () => Regressor.DecisionTree);
         regressorOption.AddAlias("-r");
 
         var zScoreOption = new Option<bool>(

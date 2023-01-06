@@ -978,6 +978,7 @@ public static class Statistics
     {
         if (actuals.Length != predictions.Length)
             throw new ArgumentException(ErrorMessages.E2);
+        if (actuals.Length == 0) return (0, 0);
         double mn = actuals.Average();
         double sseVal = SSE(actuals, predictions);
         double sstVal = actuals.Select(x => Math.Pow(x - mn, 2)).Sum();
@@ -998,6 +999,7 @@ public static class Statistics
     {
         if (actuals.Length != predictions.Length)
             throw new ArgumentException(ErrorMessages.E2);
+        if (actuals.Length == 0) return 0;
         IEnumerable<(double, double)> zipped = actuals.Zip(predictions);
         return zipped
                 .Select(x => Math.Pow((x.Item1 - x.Item2), 2))
@@ -1020,6 +1022,7 @@ public static class Statistics
     /// </summary>
     public static double StdevP(double[] input)
     {
+        if (input.Length == 0) return 0;
         return Math.Sqrt(Variance(input));
     }
 
@@ -1029,6 +1032,7 @@ public static class Statistics
     /// </summary>
     public static double Variance(double[] input)
     {
+        if (input.Length == 0) return 0;
         double mn = input.Average();
         return input.Select(x => Math.Pow(x - mn, 2)).Average();
     }

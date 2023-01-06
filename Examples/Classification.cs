@@ -47,7 +47,7 @@ public static class Classification
                 Classifier.RandomForest => 
                     new CsML.Tree.RandomForest(ModelType.Classification, Statistics.Gini),
                 Classifier.Random => 
-                    new CsML.Probability.Classification.RandomClassifier()
+                    new CsML.Probability.Classification.RandomClassifier(),
                 _ => throw new ArgumentException("Classifier option error")
             };
             m.Train(ftrain, ttrain);
