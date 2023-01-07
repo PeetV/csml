@@ -216,7 +216,9 @@ public static class Arrays
         Dictionary<T, int> counts = new();
         foreach (T item in input)
         {
-            if (counts.ContainsKey(item)) counts[item] += 1;
+            int count;
+            if (counts.TryGetValue(item, out count)) 
+                counts[item] = count + 1;
             else counts[item] = 1;
         }
         return counts;
