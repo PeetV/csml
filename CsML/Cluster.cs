@@ -19,7 +19,8 @@ public class KMeans
     public int minColumns;
 
     /// <summary>
-    /// Centroid locations with columns equivalent to training data.
+    /// Centroid locations with columns related to training data
+    /// colums.
     /// </summary>
     public double[,] centroids;
 
