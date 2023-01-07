@@ -130,6 +130,11 @@ public class BinaryTree : IModel
         this.purityFn = purityFn;
     }
 
+    /// <summary>
+    /// Create an untrained model using a default Gini purity function.
+    /// </summary>
+    public BinaryTree(ModelType mode) => BinaryTree(mode, Statistics.Gini);
+
     /// <summary>Get a string representation of an instance.</summary>
     public override string ToString() => $"BinaryTree(Mode:{Mode})";
 
